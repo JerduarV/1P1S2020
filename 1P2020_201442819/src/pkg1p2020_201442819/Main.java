@@ -18,6 +18,7 @@ public class Main {
      */
     public static void main(String[] args) {
         new VentanaEditor();
+        System.out.println("HOLA MUNDO");
     }
     
 }

@@ -5,6 +5,8 @@
  */
 package pkg1p2020_201442819;
 
+import Editor.VentanaEditor;
+
 /**
  *
  * @author Jerduar
@@ -15,7 +17,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        new VentanaEditor();
     }
     
 }

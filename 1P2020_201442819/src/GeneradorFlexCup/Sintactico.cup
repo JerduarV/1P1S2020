@@ -1,0 +1,526 @@
+/*
+ * Desarrollado por Jerson Villatoro
+ */
+package GramaticaFlexCup; 
+
+import Editor.VentanaErrores;
+import InterpreteFS.Expresiones.*;
+import InterpreteFS.Expresiones.Expresion.TipoExp;
+import InterpreteFS.Instruccion.*;
+import InterpreteFS.Instruccion.Asignacion.TipoAsig;
+import InterpreteFS.Expresiones.ExpIncDec.TipoID;
+import InterpreteFS.Expresiones.ExpOrdenamiento.T;
+import InterpreteFS.Expresiones.ExpDibujo.*;
+import InterpreteFS.Expresiones.ExpMaxMin.TipoMM;
+import java.util.LinkedList;
+import java_cup.runtime.*;
+
+parser code 
+{:
+    /**
+     * Variable en la que se almacena el arbol de sintaxis abstracta que se 
+     * genera luego del analisis sintáctico.
+     */
+     Arbol AST = null;
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+            String error = "No se esperaba este componente: " +s.value+".\n";
+            error += "Se esperaba : ";
+            for(int i : expected_token_ids()){
+                error += symbl_name_from_id(i) + " ";
+            }
+            System.err.println(error);
+            VentanaErrores.getVenErrores().AgregarError("Sintactico",error, s.left , s.right);
+    } 
+    /**
+     * Método al que se llama en el momento en que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+            System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
+    }  
+    /**
+     * Método que devuelve el AST que se generó después de realizar el análisis sintáctico. 
+     * @return árbol de sintaxis abstacta que será utilizado posteriormente en la ejecución.
+     */
+    public Arbol getAST(){
+        return AST;
+    }
+    
+:} 
+
+//SIGNOS DE PUNTUACION
+terminal String IGUAL,PARIZQ,PARDER,LLAVEIZQ,LLAVEDER,COMA,PTCOMA,PUNTO,CORIZQ,CORDER,DOSPUNTOS;
+terminal String IDENTIFICADOR;
+
+//PALABRAS RESERVADAS
+terminal String RNULO,RVAR,RIMPRIMIR,RIMPORTAR,RDETENER,RSELECCIONA,RVERDADERO,RFALSO;
+terminal String RCASO,RRETORNAR,RSI,RSINO,RDEFECTO,RFUNCION,RDESCENDENTE,RASCENDENTE,RCREARDESDEARCHIVO;
+terminal String RINVERTIR,RMAXIMO,RMINIMO,RFILTRAR,RMAP,RREDUCE,RTODOS,RALGUNO,RLEERGXML,RBUSCAR;
+terminal String ROBTENERPORETIQUETA,ROBTENERPORID,ROBTENERPORNOMBRE,RCREARVENTANA,RCREARCONTENEDOR;
+terminal String RCREARTEXTO,RCREARCAJATEXTO,RCREARAREATEXTO,RCREARCONTROLNUMERICO,RCREARDESPLEGABLE;
+terminal String RCREARBOTON,RCREARIMAGEN,RCREARREPRODUCTOR,RCREARVIDEO,RALCLIC,RALCARGAR,RALCERRAR;
+//FIN PALABRAS RESERVADAS
+
+//PRIMITIVOS
+terminal String ENTERO, DECIMAL, CADENA;
+
+//OPERADORES
+terminal String MAS,MENOS,POR,DIV,POT,MENOR,MAYOR,MENORIGUAL,MAYORIGUAL,IGUALQUE,DIFERENTE,UMENOS, UMAS;
+terminal String AND,OR,NOT,AUMENTO,DECREMENTO,PORIGUAL,MASIGUAL,MENOSIGUAL,DIVIGUAL;
+terminal String TERNARIO;
+
+//NO TERMINALES
+
+//INSTRUCCIONES
+non terminal Arbol INI;
+non terminal LinkedList<Instruccion> LINST, BLOQUE, L_ELSE, LISTA_CASOS, LINST2;
+non terminal LinkedList<ImportarFS> LIMPORT;
+non terminal Instruccion IMPRIME, INST, DECLARACION, ASIGNACION, INS_SI, ELSE, DECLARA_FUNCION, INS_RETORNO, INS_DETENER, INST2;
+non terminal Instruccion LLAMADA_ALCARGAR, INS_SWITCH, CASO, LLAMADA_ALCLIC, LLAMADA_ALCERRAR;
+non terminal ImportarFS IMPORT;
+
+//EXPRESIONES
+non terminal Expresion EXP,EXP2,EXP3,NUMERO,BOOLEANO, OBJETO, ARREGLO, EXP_TERNARIA,POS, LLAMADA_FUNCION, PRIMITIVO;
+non terminal Expresion LLAMADA_CONTENEDOR, LLAMADA_CREARTEXTO, LLAMADA_BOTON, LLAMADA_CREARCAJATEXTO, LLAMADA_AREATEXTO;
+non terminal Expresion LLAMADA_DESPLEGABLE, LLAMADA_NUMERICO, LLAMADA_IMG, LLAMADA_VIDEO;
+non terminal Expresion.TipoExp OP_REL;
+non terminal Expresion LLAMADA_CREARVENTANA, INCDEC, LLAMADA_MAXMIN, LLAMADA_TODOS,LLAMADA_REDUCE,LLAMADA_LEERGXML;
+non terminal LinkedList<Expresion> LISTA_EXPRESIONES, LISTA_POS;
+non terminal Acceso LISTA_ACCESO, ACCESO, LLAMADA_INVERTIR, LLAMADA_FILTRAR, LLAMADA_BUSCAR;
+non terminal Acceso LLAMADA_ALGUNO, LLAMADA_DESCASC, LLAMADA_LEERGDATO, LLAMADA_MAP,LLAMADA_BUSCARETQ, LLAMADA_BUSCARID, LLAMADA_BUSCARNOMBRE;
+non terminal LinkedList<String> LISTA_IDS, LISTA_PARAM;
+non terminal LinkedList<Atributo> LISTA_ATRIBUTOS;
+non terminal Atributo ATRIBUTO;
+
+
+//Operaciones logicas
+precedence right TERNARIO;
+precedence left  OR;
+precedence left  AND;
+precedence nonassoc NOT;
+
+//Operaciones Relacionales
+precedence left DIFERENTE,IGUALQUE;
+precedence left  MENOR,MAYOR,MENORIGUAL,MAYORIGUAL;
+
+//Operaciones numericas
+precedence left  MAS,MENOS;
+precedence left  POR,DIV;
+precedence right UMENOS, UMAS;
+precedence nonassoc POT;
+
+start with INI; 
+
+INI ::= 
+        LINST2:lista             {:AST = new Arbol(listaleft,listaright,lista);:}
+    |   LIMPORT:i LINST2:lista   {:AST = new Arbol(i,listaleft,listaright,lista);:}
+;
+
+LIMPORT ::=
+        LIMPORT:l IMPORT:i  {:RESULT = l; RESULT.add(i);:}
+    |   IMPORT:i            {:RESULT = new LinkedList<ImportarFS>(); RESULT.add(i);:}
+;
+
+IMPORT  ::=
+        RIMPORTAR PARIZQ CADENA:c PARDER PTCOMA {:RESULT = new ImportarFS(c,cleft,cright);:}
+;
+
+LINST2  ::= 
+        LINST2:lista INST2:inst     {:RESULT = lista; RESULT.add(inst);:}
+    |   INST2:ins                   {:RESULT = new LinkedList<Instruccion>();RESULT.add(ins);:}
+;
+
+INST2   ::=
+        IMPRIME:i PTCOMA                {:RESULT = i;:}
+    |   DECLARACION:d PTCOMA            {:RESULT = d;:}
+    |   ASIGNACION:a PTCOMA             {:RESULT = a;:}
+    |   INS_SI:si                       {:RESULT = si;:}
+    |   LLAMADA_INVERTIR:e PTCOMA       {:RESULT = new Ins_Invertir(e,eleft,eright);:}
+    |   LLAMADA_FUNCION:e PTCOMA        {:RESULT = new InsCallFuncion(e,eleft,eright);:}
+    |   LLAMADA_ALCARGAR:e PTCOMA       {:RESULT = e;:}
+    |   LLAMADA_ALCERRAR:e PTCOMA       {:RESULT = e;:}
+    |   LLAMADA_ALCLIC:e PTCOMA         {:RESULT = e;:}
+    |   LLAMADA_CREARCAJATEXTO:e PTCOMA {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_AREATEXTO:e PTCOMA      {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   DECLARA_FUNCION:d               {:RESULT = d;:}
+    |   INS_RETORNO:r PTCOMA            {:RESULT = r;:}
+    |   INS_SWITCH:i                    {:RESULT = i;:}
+    |   INS_DETENER:d PTCOMA            {:RESULT = d;:}
+    |   INCDEC:e PTCOMA                 {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_DESCASC:e PTCOMA        {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_CREARTEXTO:e PTCOMA     {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_DESPLEGABLE:e PTCOMA    {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_NUMERICO:e PTCOMA       {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_IMG:e PTCOMA            {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_VIDEO:e PTCOMA          {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_MAP:e PTCOMA            {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_LEERGDATO:e PTCOMA      {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   error   {:System.out.println("Intenteré recuperarme");:} PTCOMA
+;
+
+LINST ::= 
+        LINST:lista INST:inst   {:RESULT = lista; RESULT.add(inst);:}
+    |   INST:ins                {:RESULT = new LinkedList<Instruccion>();RESULT.add(ins);:}
+;
+
+INST ::=
+        IMPRIME:i PTCOMA                {:RESULT = i;:}
+    |   DECLARACION:d PTCOMA            {:RESULT = d;:}
+    |   ASIGNACION:a PTCOMA             {:RESULT = a;:}
+    |   INS_SI:si                       {:RESULT = si;:}
+    |   LLAMADA_INVERTIR:e PTCOMA       {:RESULT = new Ins_Invertir(e,eleft,eright);:}
+    |   LLAMADA_FUNCION:e PTCOMA        {:RESULT = new InsCallFuncion(e,eleft,eright);:}
+    |   LLAMADA_ALCARGAR:e PTCOMA       {:RESULT = e;:}
+    |   LLAMADA_ALCERRAR:e PTCOMA       {:RESULT = e;:}
+    |   LLAMADA_ALCLIC:e PTCOMA         {:RESULT = e;:}
+    |   LLAMADA_CREARCAJATEXTO:e PTCOMA {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_AREATEXTO:e PTCOMA      {:RESULT = new Envoltura(e,eleft,eright);:}
+    //|   DECLARA_FUNCION:d               {:RESULT = d;:}
+    |   INS_RETORNO:r PTCOMA            {:RESULT = r;:}
+    |   INS_SWITCH:i                    {:RESULT = i;:}
+    |   INS_DETENER:d PTCOMA            {:RESULT = d;:}
+    |   INCDEC:e PTCOMA                 {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_DESCASC:e PTCOMA        {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_CREARTEXTO:e PTCOMA     {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_DESPLEGABLE:e PTCOMA    {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_NUMERICO:e PTCOMA       {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_IMG:e PTCOMA            {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_VIDEO:e PTCOMA          {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_MAP:e PTCOMA            {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   LLAMADA_LEERGDATO:e PTCOMA      {:RESULT = new Envoltura(e,eleft,eright);:}
+    |   error   {:System.out.println("Intenteré recuperarme");:} PTCOMA              
+;
+
+DECLARA_FUNCION ::= 
+        RFUNCION IDENTIFICADOR:id PARIZQ PARDER BLOQUE:lista                    {:RESULT = new DeclaraFuncion(id,lista,idleft,idright);:}
+    |   RFUNCION IDENTIFICADOR:id PARIZQ LISTA_PARAM:ids PARDER BLOQUE:lista    {:RESULT = new DeclaraFuncion(id,ids,lista,idleft,idright);:}
+;
+
+LLAMADA_FUNCION ::=
+        IDENTIFICADOR:id PARIZQ LISTA_EXPRESIONES:lista PARDER  {:RESULT = new CallFuncion(id,lista,idleft,idright);:}
+    |   IDENTIFICADOR:id PARIZQ PARDER                          {:RESULT = new CallFuncion(id,idleft,idright);:}
+;
+
+DECLARACION ::=
+        RVAR LISTA_IDS:lista IGUAL EXP:e            {:RESULT = new Declaracion(lista,e,listaleft,listaright);:}
+    |   RVAR LISTA_IDS:lista                        {:RESULT = new Declaracion(lista,listaleft,listaright);:}
+;
+
+ASIGNACION  ::=
+        LISTA_ACCESO:e1 IGUAL EXP:e2        {:RESULT = new Asignacion(TipoAsig.IGUAL,e1,e2,e1left,e1right);:}
+    |   LISTA_ACCESO:e1 PORIGUAL EXP:e2     {:RESULT = new Asignacion(TipoAsig.PORIGUAL,e1,e2,e1left,e1right);:}
+    |   LISTA_ACCESO:e1 MASIGUAL EXP:e2     {:RESULT = new Asignacion(TipoAsig.MASIGUAL,e1,e2,e1left,e1right);:}
+    |   LISTA_ACCESO:e1 MENOSIGUAL EXP:e2   {:RESULT = new Asignacion(TipoAsig.MENOSIGUAL,e1,e2,e1left,e1right);:}
+    |   LISTA_ACCESO:e1 DIVIGUAL EXP:e2     {:RESULT = new Asignacion(TipoAsig.DIVIGUAL,e1,e2,e1left,e1right);:}
+;
+
+INS_RETORNO ::=
+        RRETORNAR EXP:e  {:RESULT = new Retorno(e,eleft,eright);:}
+    |   RRETORNAR:r      {:RESULT = new Retorno(rleft,rright);:}
+;
+
+INS_DETENER ::=
+        RDETENER:r      {:RESULT = new Detener(rleft,rright);:}
+;
+
+INS_SWITCH  ::=
+        RSELECCIONA PARIZQ EXP:e PARDER LLAVEIZQ LISTA_CASOS:lista LLAVEDER {:RESULT = new Selecciona(e,eleft,eright,lista);:}
+;
+
+LISTA_CASOS ::=
+        LISTA_CASOS:lista CASO:c    {:RESULT = lista; RESULT.add(c);:}
+    |   CASO:c                      {:RESULT = new LinkedList<Instruccion>();RESULT.add(c);:}    
+;
+
+CASO    ::=
+        RCASO PRIMITIVO:p DOSPUNTOS BLOQUE:b    {:RESULT = new Caso(p,b,pleft,pright);:}
+    |   RDEFECTO DOSPUNTOS BLOQUE:b             {:RESULT = new Caso(b,bleft,bright);:}    
+;
+
+INS_SI  ::=
+        RSI PARIZQ EXP:e PARDER BLOQUE:b                            {:RESULT = new Si(e,b,eleft,eright);:}
+    |   RSI PARIZQ EXP:e PARDER BLOQUE:b RSINO BLOQUE:b1            {:RESULT = new Si(e,b,b1,eleft,eright);:}
+    |   RSI PARIZQ EXP:e PARDER BLOQUE:b L_ELSE:l RSINO BLOQUE:b1   {:RESULT = new Si(e,b,l,b1,eleft,eright);:}
+    |   RSI PARIZQ EXP:e PARDER BLOQUE:b L_ELSE:l                   {:RESULT = new Si(e,b,eleft,eright,l);:}
+;
+
+L_ELSE  ::=
+        L_ELSE:lista ELSE:e {:RESULT = lista; RESULT.add(e);:}
+    |   ELSE:e              {:RESULT = new LinkedList<Instruccion>(); RESULT.add(e);:}
+;
+
+ELSE    ::=
+        RSINO RSI PARIZQ EXP:e PARDER BLOQUE:b  {:RESULT = new Si(e,b,eleft,eright);:}
+;
+
+BLOQUE  ::=
+        LLAVEIZQ LINST:lista LLAVEDER   {:RESULT = lista;:}
+    |   LLAVEIZQ LLAVEDER               {:RESULT = new LinkedList<Instruccion>();:}
+;
+
+OBJETO  ::=
+    LLAVEIZQ LISTA_ATRIBUTOS:lista LLAVEDER {:RESULT = new Objeto(lista,listaleft,listaright);:}
+;
+
+LISTA_ATRIBUTOS ::=
+        LISTA_ATRIBUTOS:lista COMA ATRIBUTO:a   {:RESULT = lista; RESULT.add(a);:}
+    |   ATRIBUTO:a                              {:RESULT = new LinkedList<Atributo>();RESULT.add(a);:}
+;
+
+ATRIBUTO    ::=
+        IDENTIFICADOR:id DOSPUNTOS EXP:e     {:RESULT = new Atributo(id,e,idleft,idright);:}
+;
+
+ARREGLO ::=
+        CORIZQ:c CORDER                         {:RESULT = new Arreglo(new LinkedList<Expresion>(),cleft,cright);:}
+    |   CORIZQ  LISTA_EXPRESIONES:lista CORDER  {:RESULT = new Arreglo(lista,listaleft,listaright);:}
+;
+
+LISTA_EXPRESIONES   ::=
+        LISTA_EXPRESIONES:lista COMA EXP:e      {:RESULT = lista;RESULT.add(e);:}
+    |   EXP:e                                   {:RESULT = new LinkedList<Expresion>();RESULT.add(e);:}
+;
+
+LISTA_IDS    ::=
+        LISTA_IDS:lista COMA IDENTIFICADOR:id   {:RESULT = lista; RESULT.add(id);:}
+    |   IDENTIFICADOR:id                        {:RESULT = new LinkedList<String>();RESULT.add(id);:}
+;
+
+LISTA_PARAM ::=
+        LISTA_PARAM:lista COMA RVAR IDENTIFICADOR:id    {:RESULT = lista; RESULT.add(id);:}
+    |   RVAR IDENTIFICADOR:id                           {:RESULT = new LinkedList<String>();RESULT.add(id);:}    
+;
+
+IMPRIME ::= 
+        RIMPRIMIR PARIZQ EXP:e PARDER   {:RESULT = new Imprimir(e,eleft,eright);:}
+;
+
+NUMERO ::=
+        ENTERO:e        {:RESULT = new ExpAritmetica(TipoExp.ENTERO,Integer.parseInt(e),eleft,eright);:}
+    |   DECIMAL:c       {:RESULT = new ExpAritmetica(TipoExp.DECIMAL,Double.parseDouble(c),cleft,cright);:}    
+;
+
+BOOLEANO::=
+        RVERDADERO:r    {:RESULT = new ExpLogica(TipoExp.BOOL,true,rleft,rright);:}
+    |   RFALSO:r        {:RESULT = new ExpLogica(TipoExp.BOOL,false,rleft,rright);:}
+;
+
+EXP ::= 
+        EXP:a  OR   EXP:b   {:RESULT = new ExpLogica(TipoExp.OR,a,b,aleft,aright);:}
+    |   EXP:a  AND  EXP:b   {:RESULT = new ExpLogica(TipoExp.AND,a,b,aleft,aright);:}
+    |   EXP_TERNARIA:b      {:RESULT = b;:}
+    |   EXP2:e              {:RESULT = e;:}
+;
+
+
+EXP2 ::= 
+        EXP3:e1 OP_REL:op EXP3:e2   {:RESULT = new ExpRel(op,e1,e2,e1left,e1right);:}
+    |   EXP3:e                      {:RESULT = e;:}
+;
+
+OP_REL ::=
+        MAYOR       {:RESULT = TipoExp.MAYORQUE;:}
+    |   MENORIGUAL  {:RESULT = TipoExp.MENORIGUAL;:}
+    |   MAYORIGUAL  {:RESULT = TipoExp.MAYORIGUAL;:}
+    |   IGUALQUE    {:RESULT = TipoExp.IGUALQUE;:}
+    |   DIFERENTE   {:RESULT = TipoExp.DIFERENTE;:}
+    |   MENOR       {:RESULT = TipoExp.MENORQUE;:}
+;
+
+EXP3 ::=
+        MENOS       EXP3:e1                     {:RESULT = new ExpAritmetica(e1,TipoExp.NEGATIVO,e1left,e1right);:}    %prec UMENOS
+    |   MAS         EXP3:e1                     {:RESULT = e1;:}    %prec UMAS
+    |   NOT         EXP3:e                      {:RESULT = new ExpLogica(TipoExp.NOT,e,eleft,eright);:}
+    |   EXP3:e1     MAS     EXP3:e2             {:RESULT = new ExpAritmetica(TipoExp.SUMA,e1,e2,e1left,e1right);:}
+    |   EXP3:e1     MENOS   EXP3:e2             {:RESULT = new ExpAritmetica(TipoExp.RESTA,e1,e2,e1left,e1right);:}
+    |   EXP3:e1     POR     EXP3:e2             {:RESULT = new ExpAritmetica(TipoExp.MULT,e1,e2,e1left,e1right);:}
+    |   EXP3:e1     DIV     EXP3:e2             {:RESULT = new ExpAritmetica(TipoExp.DIV,e1,e2,e1left,e1right);:}
+    |   EXP3:e1     POT     EXP3:e2             {:RESULT = new ExpAritmetica(TipoExp.POT,e1,e2,e1left,e1right);:}
+    |   PARIZQ      EXP:e   PARDER              {:RESULT = e;:}
+    |   ARREGLO:a                               {:RESULT = a;:}
+    |   OBJETO:o                                {:RESULT = o;:}
+    |   LISTA_ACCESO:a                          {:RESULT = a;:}
+    |   LLAMADA_MAXMIN:e                        {:RESULT = e;:}
+    |   LLAMADA_TODOS:e                         {:RESULT = e;:}
+    |   LLAMADA_REDUCE:e                        {:RESULT = e;:}
+    |   LLAMADA_CONTENEDOR:e                    {:RESULT = e;:}
+    |   LLAMADA_CREARTEXTO:e                    {:RESULT = e;:}
+    |   LLAMADA_BUSCARETQ:e                     {:RESULT = e;:}
+    |   LLAMADA_BOTON:e                         {:RESULT = e;:}
+    |   INCDEC:e                                {:RESULT = e;:}
+    |   PRIMITIVO:p                             {:RESULT = p;:}
+    |   RNULO:b                                 {:RESULT = new ExpAritmetica(TipoExp.NULO,null,bleft,bright);:}
+;
+
+PRIMITIVO   ::=
+        NUMERO:n                                {:RESULT = n;:}
+    |   CADENA:c                                {:RESULT = new ExpAritmetica(TipoExp.CADENA,c,cleft,cright);:}
+    |   BOOLEANO:b                              {:RESULT = b;:}
+;
+
+LISTA_ACCESO    ::=
+        LISTA_ACCESO:lista PUNTO ACCESO:a   {:
+        if(a instanceof AccesoArreglo){
+            RESULT = new AccesoArreglo(new AccesoObj(lista,a, a.getId(), null, true, listaleft, listaright),a.getId(),((AccesoArreglo)a).getLista_indices(),null,true,listaleft,listaright);
+        }else{
+            RESULT = new AccesoObj(lista,a, a.getId(), null, true, listaleft, listaright);
+        }
+        :}
+    |   LLAMADA_INVERTIR:a                  {:RESULT = a;:}
+    |   LLAMADA_INVERTIR:a LISTA_POS:lista  {:RESULT = new AccesoArreglo(a,null, lista,null,true,aleft,aright);:}
+    |   LLAMADA_FILTRAR:a                   {:RESULT = a;:}
+    |   LLAMADA_FILTRAR:a LISTA_POS:lista   {:RESULT = new AccesoArreglo(a,null, lista,null,true,aleft,aright);:}
+    |   LLAMADA_BUSCAR:a                    {:RESULT = a;:}
+    |   LLAMADA_MAP:a                       {:RESULT = a;:}
+    |   LLAMADA_ALGUNO:a                    {:RESULT = a;:}
+    |   LLAMADA_DESCASC:a                   {:RESULT = a;:}
+    |   LLAMADA_LEERGDATO:a                 {:RESULT = a;:}
+    |   LLAMADA_BUSCAR:a LISTA_POS:lista    {:RESULT = new AccesoArreglo(a,null, lista,null,true,aleft,aright);:}
+    |   LLAMADA_FUNCION:a LISTA_POS:lista   {:RESULT = new AccesoArreglo(new AccesoObj(a,aleft,aright),null, lista,null,true,aleft,aright);:}
+    |   LLAMADA_CREARVENTANA:a              {:RESULT = new AccesoObj(a,aleft,aright);:}
+    |   LLAMADA_LEERGXML:a                  {:RESULT = new AccesoObj(a,aleft,aright);:}
+    |   LLAMADA_BUSCARID:a                  {:RESULT = new AccesoObj(a,aleft,aright);:}
+    |   LLAMADA_BUSCARNOMBRE:a              {:RESULT = new AccesoObj(a,aleft,aright);:}
+    |   LLAMADA_FUNCION:a                   {:RESULT = new AccesoObj(a,aleft,aright);:}
+    |   ACCESO:a                            {:RESULT = a;:}
+;
+
+ACCESO  ::= 
+        IDENTIFICADOR:id                    {:RESULT = new AccesoObj(id,null,true,idleft,idright);:}
+    |   IDENTIFICADOR:id LISTA_POS:a        {:RESULT = new AccesoArreglo(new AccesoObj(id,null,true,idleft,idright),id, a,null,true,idleft,idright);:}
+;
+
+INCDEC  ::=
+        LISTA_ACCESO:l AUMENTO        {:RESULT = new ExpIncDec(TipoID.INC,l,lleft,lright);:}
+    |   LISTA_ACCESO:l DECREMENTO     {:RESULT = new ExpIncDec(TipoID.DEC,l,lleft,lright);:}    
+;
+
+LISTA_POS   ::=
+        LISTA_POS:a POS:e                   {:RESULT = a; RESULT.add(e);:}   
+    |   POS:e                               {:RESULT = new LinkedList<Expresion>(); RESULT.add(e);:}
+;
+
+POS ::=
+        CORIZQ EXP:e CORDER {:RESULT = e;:}
+;
+
+LLAMADA_INVERTIR ::= 
+        LISTA_ACCESO:a PUNTO RINVERTIR PARIZQ PARDER    {:RESULT = new Invertir(a,aleft,aright);:}
+;
+
+LLAMADA_FILTRAR ::=
+        LISTA_ACCESO:a PUNTO RFILTRAR PARIZQ IDENTIFICADOR:id PARDER    {:RESULT = new ExpFiltrar(id,a,aleft,aright);:}
+;
+
+LLAMADA_MAP ::=
+        LISTA_ACCESO:a PUNTO RMAP PARIZQ IDENTIFICADOR:id PARDER    {:RESULT = new ExpMap(id,a,aleft,aright);:}
+;
+
+LLAMADA_BUSCAR  ::=
+        LISTA_ACCESO:a PUNTO RBUSCAR PARIZQ IDENTIFICADOR:id PARDER     {:RESULT = new ExpBuscar(id,a,aleft,aright);:}
+;
+
+LLAMADA_REDUCE  ::=
+        LISTA_ACCESO:a PUNTO RREDUCE PARIZQ IDENTIFICADOR:id PARDER     {:RESULT = new ExpReduce(id,a,aleft,aright);:}
+;
+
+LLAMADA_ALGUNO  ::=
+        LISTA_ACCESO:a PUNTO RALGUNO PARIZQ IDENTIFICADOR:id PARDER     {:RESULT = new ExpAlguno(id,a,aleft,aright);:}
+;
+
+LLAMADA_TODOS   ::=
+        LISTA_ACCESO:a PUNTO RTODOS PARIZQ IDENTIFICADOR:id PARDER      {:RESULT = new ExpTodos(id,a,aleft,aright);:}
+;
+
+LLAMADA_MAXMIN  ::=
+        LISTA_ACCESO:a PUNTO RMAXIMO PARIZQ PARDER      {:RESULT = new ExpMaxMin(TipoMM.MAX,a,aleft,aright);:}
+    |   LISTA_ACCESO:a PUNTO RMINIMO PARIZQ PARDER      {:RESULT = new ExpMaxMin(TipoMM.MIN,a,aleft,aright);:}
+;
+
+LLAMADA_BUSCARETQ   ::=
+        LISTA_ACCESO:a PUNTO ROBTENERPORETIQUETA PARIZQ EXP:e PARDER    {:RESULT = new ExpBuscarEtq(e,a,aleft,aright);:}
+;
+
+LLAMADA_BUSCARID    ::=
+        LISTA_ACCESO:a PUNTO ROBTENERPORID PARIZQ EXP:e PARDER    {:RESULT = new ExpBuscarId(e,a,aleft,aright);:}
+;
+
+LLAMADA_BUSCARNOMBRE    ::=
+        LISTA_ACCESO:a PUNTO ROBTENERPORNOMBRE PARIZQ LISTA_EXPRESIONES:e PARDER    {:RESULT = new ExpBuscarNombre(a,e,aleft,aright);:}
+;
+
+LLAMADA_LEERGDATO   ::=
+        RCREARDESDEARCHIVO PARIZQ EXP:e PARDER                  {:RESULT = new ExpCrearArray(e,eleft,eright);:}
+    |   LISTA_ACCESO:a PUNTO RCREARDESDEARCHIVO PARIZQ PARDER   {:RESULT = new ExpCrearArray(a,null,aleft,aright);:}
+;
+
+LLAMADA_ALCARGAR    ::=
+        LISTA_ACCESO:a PUNTO RALCARGAR PARIZQ PARDER                    {:RESULT = new InsAlCargar(a,aleft,aright);:}
+    |   LISTA_ACCESO:a PUNTO RALCARGAR PARIZQ LLAMADA_FUNCION:e PARDER  {:RESULT = new InsAlCargar(a,e,aleft,aright);:}
+;
+
+LLAMADA_ALCERRAR    ::=
+        LISTA_ACCESO:a PUNTO RALCERRAR PARIZQ PARDER                    {:RESULT = new InsAlCerrar(a,aleft,aright);:}
+    |   LISTA_ACCESO:a PUNTO RALCERRAR PARIZQ LLAMADA_FUNCION:e PARDER  {:RESULT = new InsAlCerrar(a,e,aleft,aright);:}
+;
+
+LLAMADA_DESCASC ::=
+        LISTA_ACCESO:a PUNTO RDESCENDENTE PARIZQ PARDER     {:RESULT = new ExpOrdenamiento(T.DEC,a,aleft,aright);:}
+    |   LISTA_ACCESO:a PUNTO RASCENDENTE PARIZQ PARDER      {:RESULT = new ExpOrdenamiento(T.ASC,a,aleft,aright);:}    
+;
+
+LLAMADA_CREARVENTANA    ::=
+        RCREARVENTANA PARIZQ LISTA_EXPRESIONES:e PARDER  {:RESULT = new ExpVentana(e,eleft,eright);:}
+;
+
+LLAMADA_LEERGXML    ::=
+        RLEERGXML PARIZQ EXP:e PARDER   {:RESULT = new ExpLeerGxml(e,eleft,eright);:}
+;
+
+LLAMADA_CREARTEXTO  ::=
+        LISTA_ACCESO:a PUNTO RCREARTEXTO PARIZQ LISTA_EXPRESIONES:e PARDER  {:RESULT = new ExpTexto(e,a,aleft,aright);:}
+;
+
+LLAMADA_CREARCAJATEXTO  ::=
+        LISTA_ACCESO:a PUNTO RCREARCAJATEXTO PARIZQ LISTA_EXPRESIONES:e PARDER  {:RESULT = new ExpTextField(a,e,aleft,aright);:}
+;
+
+LLAMADA_DESPLEGABLE ::=
+        LISTA_ACCESO:a PUNTO RCREARDESPLEGABLE PARIZQ LISTA_EXPRESIONES:e PARDER  {:RESULT = new ExpDesplegable(a,e,aleft,aright);:}
+;
+
+LLAMADA_AREATEXTO   ::=
+        LISTA_ACCESO:a PUNTO RCREARAREATEXTO PARIZQ LISTA_EXPRESIONES:e PARDER  {:RESULT = new ExpTextArea(a,e,aleft,aright);:}
+;
+
+LLAMADA_NUMERICO    ::=
+        LISTA_ACCESO:a PUNTO RCREARCONTROLNUMERICO PARIZQ LISTA_EXPRESIONES:e PARDER    {:RESULT = new ExpNumerico(a,e,aleft,aright);:}
+;
+
+LLAMADA_IMG ::=
+        LISTA_ACCESO:a PUNTO RCREARIMAGEN PARIZQ LISTA_EXPRESIONES:e PARDER     {:RESULT = new ExpImg(a,e,aleft,aright);:}
+;
+
+LLAMADA_VIDEO   ::=
+        LISTA_ACCESO:a PUNTO RCREARVIDEO PARIZQ LISTA_EXPRESIONES:e PARDER          {:RESULT = new ExpVideo(a,e,aleft,aright,true);:}
+    |   LISTA_ACCESO:a PUNTO RCREARREPRODUCTOR PARIZQ LISTA_EXPRESIONES:e PARDER    {:RESULT = new ExpVideo(a,e,aleft,aright,false);:}
+;
+
+LLAMADA_CONTENEDOR   ::=
+        LISTA_ACCESO:a PUNTO  RCREARCONTENEDOR PARIZQ LISTA_EXPRESIONES:e PARDER  {:RESULT = new ExpCrearCont(e,a,aleft,aright);:}
+;
+
+LLAMADA_ALCLIC  ::=
+        LISTA_ACCESO:a PUNTO RALCLIC PARIZQ LLAMADA_FUNCION:e PARDER    {:RESULT = new InsAlClic(e,a,aleft,aright);:}
+;
+
+LLAMADA_BOTON   ::=
+        LISTA_ACCESO:a PUNTO RCREARBOTON PARIZQ LISTA_EXPRESIONES:e PARDER  {:RESULT = new ExpBoton(a,e,aleft,aright);:}
+;
+
+EXP_TERNARIA    ::=
+        EXP:e TERNARIO EXP:e1 DOSPUNTOS EXP:e2  {:RESULT = new ExpTernaria(null,e,e1,e2,eleft,eright);:}
+;

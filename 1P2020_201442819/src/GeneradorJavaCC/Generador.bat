@@ -1,0 +1,2 @@
+javacc GramaticaJCC.jj
+pause

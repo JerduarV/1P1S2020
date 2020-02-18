@@ -1,0 +1,107 @@
+options {
+  IGNORE_CASE = true;
+  OUTPUT_DIRECTORY = "../GramaticaJavaCC";
+  STATIC = false;
+}
+
+PARSER_BEGIN(Gramatica)
+/** Analizador de expresiones aritmeticas sencillas. */
+package Analizador; 
+public class Gramatica {
+}
+PARSER_END(Gramatica)
+
+/** Lexico */
+SKIP : {
+      " "
+    | "\t"
+    | "\r"
+    | "\n"
+}
+
+TOKEN : {
+      <NUMERO: (["0"-"9"])+>
+    | <DECIMAL: (["0"-"9"])+"."(["0"-"9"])+>
+    | <EVALUAR: "Evaluar">
+    | <PCOMA: ";">
+    | <PARENI: "(">
+    | <PAREND: ")">
+    | <CORI: "[">
+    | <CORD: "]">
+    | <MAS: "+">
+    | <MENOS: "-">
+    | <POR: "*">
+    | <DIV: "/">
+}
+/** Fin Lexico */
+
+/** Producción inicial 
+    Analizar -> (Instruccion)+ EOF
+*/
+void Analizar() :
+{}
+{
+  (Instruccion())+ <EOF>
+}
+
+/** Instruccion -> evaluar [ Expresion ]; */
+void Instruccion() :
+{double e;}
+{
+  <EVALUAR> <CORI> e=Expresion() <CORD> <PCOMA> {System.out.println("El valor de la expresion es: "+e);}
+}
+
+/** Expresion -> ExpresionMultiplicativa ('+' ExpresionMultiplicativa)*
+              |  ExpresionMultiplicativa ('-' ExpresionMultiplicativa)*
+*/
+double Expresion() :
+{double e, e1;}
+{
+    e=ExpresionMultiplicativa()
+    (
+        <MAS> e1=ExpresionMultiplicativa() {e += e1;}
+        |
+        <MENOS> e1=ExpresionMultiplicativa() {e -= e1;}
+    )*
+    {return e;}
+}
+
+/** ExpresionMultiplicativa -> ExpresionUnaria ('*' ExpresionUnaria)*
+                            |  ExpresionUnaria ('/' ExpresionUnaria)*
+*/
+double ExpresionMultiplicativa() :
+{double e, e1;}
+{
+    e=ExpresionUnaria()
+    (
+        <POR> e1=ExpresionUnaria() {e *= e1;}
+        |
+        <DIV> e1=ExpresionUnaria() {e /= e1;}
+    )*
+    {return e;}
+}
+
+/** ExpresionUnaria -> '-' ExpresionUnaria
+                    |  Primitivo
+ */
+double ExpresionUnaria() :
+{double e;}
+{
+    <MENOS> e=ExpresionUnaria() {return -e;}
+    |
+    e=Primitivo() {return e;}
+}
+
+/** Primitivo -> Numero
+              |  Decimal
+              |  '(' Expresion ')' 
+*/
+double Primitivo() :
+{double e;}
+{
+    <NUMERO> {return Double.parseDouble(token.image);}
+    |
+    <DECIMAL> {return Double.parseDouble(token.image);}
+    |
+    <PARENI> e=Expresion() <PAREND> {return e;}
+}

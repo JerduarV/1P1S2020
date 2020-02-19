@@ -6,6 +6,7 @@
 package Editor;
 
 //import InterpreteGXML.IntepreteGXML;
+import Interprete.Interprete;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileWriter;
@@ -44,11 +45,11 @@ public class VentanaEditor extends javax.swing.JFrame {
 //            }
 
         } else if (this.dbOpciones.getSelectedIndex() == 0) {
-//            InterpreteFS.InterpreteFS fs = new InterpreteFS.InterpreteFS();
-//            fs.Interpretar(this.getContenido());
+            Interprete i = new Interprete();
+            i.Interpretar(this.getContenido());
         }
-        
-        if(VentanaErrores.getVenErrores().getErrores() > 0){
+
+        if (VentanaErrores.getVenErrores().getErrores() > 0) {
             VentanaErrores.getVenErrores().setVisible(true);
         }
     }
@@ -101,7 +102,8 @@ public class VentanaEditor extends javax.swing.JFrame {
 
     /**
      * Metodo para imprimir en la consola del IDE
-     * @param cadena 
+     *
+     * @param cadena
      */
     public static void ImprimirEnConsoloa(String cadena) {
         taConsola.append(">>>" + cadena + "\n");
@@ -434,7 +436,7 @@ public class VentanaEditor extends javax.swing.JFrame {
         FileWriter escribir;
 
         try {
-            if(archivo == null){
+            if (archivo == null) {
                 return;
             }
             escribir = new FileWriter(archivo, true);

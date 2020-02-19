@@ -17,7 +17,7 @@ public class Generador {
             String rutaInt = "src/GramaticaFlexCup";
             String opcFlex[] = {ruta + "/Lexico.flex", "-d", rutaInt};
             jflex.Main.generate(opcFlex);
-            String opcCUP[] = {"-destdir", rutaInt, "-parser", "Sintactico","-symbols", "sym", ruta + "/Sintactico.cup"};
+            String opcCUP[] = {"-destdir", rutaInt, "-parser", "Sintactico","-symbols", "sym","-expect","1", ruta + "/Sintactico.cup"};
             java_cup.Main.main(opcCUP);
         } catch (Exception e) {
             e.printStackTrace();

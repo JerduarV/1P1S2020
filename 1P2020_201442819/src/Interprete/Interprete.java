@@ -31,11 +31,10 @@ public class Interprete {
             pars = new Sintactico(new Lexico(new FileReader("temp_file.txt")));
             pars.parse();
 
-            NodoAST a = pars.getAST();
+            Arbol a = pars.getAST();
             if (a != null) {
-                
-                TablaSimbolos t = new TablaSimbolos(null);
-                //a.Ejecutar(t);
+                TablaSimbolos global = new TablaSimbolos(null);
+                a.Ejecutar(global);
             } else {
                 //System.err.println("HUBIERON PROBLEMAS :(");
             }

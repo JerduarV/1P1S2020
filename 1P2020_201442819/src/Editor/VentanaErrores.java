@@ -5,6 +5,7 @@
  */
 package Editor;
 
+import Interprete.ErrorCompi;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -45,10 +46,11 @@ public class VentanaErrores extends javax.swing.JFrame {
      * @param fila 
      * @param columna 
      */
-    public void AgregarError(String tipo,String descripcion,Integer fila,Integer columna){
+    public ErrorCompi AgregarError(String tipo,String descripcion,Integer fila,Integer columna){
         DefaultTableModel model = (DefaultTableModel)this.Tabla.getModel();
         String a[] = {tipo,descripcion,fila.toString(),columna.toString()};
         model.addRow(a);
+        return new ErrorCompi();
     }
     
     /**

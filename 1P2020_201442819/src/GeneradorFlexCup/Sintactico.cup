@@ -4,6 +4,12 @@
 package GramaticaFlexCup; 
 
 import Editor.VentanaErrores;
+import Interprete.Arbol;
+import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.Primitivo;
+import Interprete.Expresiones.Operaciones.Aritmeticas.*;
+import Interprete.Instrucciones.Instruccion;
+import Interprete.Instrucciones.Asignacion;
 import java.util.LinkedList;
 import Interprete.NodoAST;
 import java_cup.runtime.*;
@@ -14,7 +20,7 @@ parser code
      * Variable en la que se almacena el arbol de sintaxis abstracta que se 
      * genera luego del analisis sintáctico.
      */
-    NodoAST AST = null;
+    Arbol AST = null;
 
     /**
      * Método al que se llama automáticamente ante algún error sintactico.
@@ -38,7 +44,7 @@ parser code
      * Método que devuelve el AST que se generó después de realizar el análisis sintáctico. 
      * @return árbol de sintaxis abstacta que será utilizado posteriormente en la ejecución.
      */
-    public NodoAST getAST(){
+    public Arbol getAST(){
         return AST;
     }
     
@@ -65,13 +71,13 @@ terminal String AND,OR,NOT,TERNARIO;
 
 //INSTRUCCIONES
 non terminal INI;
-non terminal L_INSTR,INSTR;
-non terminal ASIGNACION,BLOQUE,IF,ELSE,SWITCH,L_CASE,WHILE,DOWHILE,FOR,BREAK,CONTINUE;
+non terminal LinkedList<NodoAST> L_INSTR, BLOQUE;
+non terminal Instruccion INSTR,ASIGNACION,IF,ELSE,SWITCH,L_CASE,WHILE,DOWHILE,FOR,BREAK,CONTINUE;
 non terminal RETURN,DEC_FUN;
 non terminal L_PARAM_FORM,PARAM_FORM,CALL_FUN,L_PARAM_ACT,PARAM_ACT;
 
 //EXPRESIONES
-non terminal EXP,EXP2,EXP3,EXP_TERNARIA,PRIMITIVO,ACCESO,INDEX,L_INDEX;
+non terminal Expresion EXP,EXP2,EXP3,EXP_TERNARIA,PRIMITIVO,ACCESO,INDEX,L_INDEX;
 
 
 //Operaciones logicas
@@ -93,20 +99,20 @@ precedence nonassoc POT;
 start with INI; 
 
 INI ::= 
-        L_INSTR {:System.out.println("EL ANÁLISIS TERMINÓ BIEN :)");:}
+        L_INSTR:l   {:System.out.println("EL ANÁLISIS TERMINÓ BIEN :)"); AST = new Arbol(l);:}
 ;
 
 L_INSTR ::=
-        L_INSTR INSTR
-    |   INSTR
+        L_INSTR:l INSTR:i   {:RESULT = l; RESULT.add(i);:}
+    |   INSTR:i             {:RESULT = new LinkedList<NodoAST>(); RESULT.add(i);:}
 ;
 
 BLOQUE ::=
-        LLAVEIZQ L_INSTR LLAVEDER
+        LLAVEIZQ L_INSTR:l LLAVEDER     {:RESULT = l;:}
 ;
 
 INSTR ::=
-        ASIGNACION
+        ASIGNACION:i    {:RESULT = i;:}
     |   IF
     |   WHILE
     |   DOWHILE
@@ -140,8 +146,10 @@ BREAK ::=
 ;
 
 RETURN ::=
-        RRETURN EXP PTCOMA
-    |   RRETURN EXP
+        RRETURN PARIZQ EXP PARDER
+    |   RRETURN
+    |   RRETURN PARIZQ EXP PARDER PTCOMA
+    |   RRETURN PTCOMA
 ;
 
 WHILE ::=
@@ -190,8 +198,10 @@ FOR ::=
 ;
 
 ASIGNACION ::=
-        IDENTIFICADOR IGUAL EXP PTCOMA
-    |   IDENTIFICADOR IGUAL EXP
+        IDENTIFICADOR:i IGUAL EXP:e PTCOMA      {:RESULT = new Asignacion(ileft,iright,i,e);:}
+    |   IDENTIFICADOR:i IGUAL EXP:e             {:RESULT = new Asignacion(ileft,iright,i,e);:}             
+    |   ACCESO IGUAL EXP
+    |   ACCESO IGUAL EXP PTCOMA
 ;
 
 IF ::=
@@ -209,7 +219,7 @@ EXP ::=
     |   EXP AND EXP
     |   EXP_TERNARIA
     |   NOT EXP
-    |   EXP2
+    |   EXP2:e                      {:RESULT = e;:}
 ;
 
 EXP2 ::=
@@ -219,31 +229,31 @@ EXP2 ::=
     |   EXP3 MAYORIGUAL EXP3
     |   EXP3 IGUALQUE EXP3
     |   EXP3 DIFERENTE EXP3
-    |   EXP3
+    |   EXP3:e                      {:RESULT = e;:}
 ;
 
 EXP3 ::=
-        MENOS EXP3 %prec UMENOS
-    |   MAS EXP3 %prec UMAS
-    |   EXP3 MAS EXP3
-    |   EXP3 MENOS EXP3
-    |   EXP3 POR EXP3
-    |   EXP3 DIV EXP3
-    |   EXP3 POT EXP3
-    |   EXP3 MOD EXP3
+        MENOS EXP3:e1               {:RESULT = new Negativo(e1,e1left,e1right);:} %prec UMENOS
+    |   EXP3:e1 MAS EXP3:e2         {:RESULT = new Suma(e1left,e1right,e1,e2);:}
+    |   EXP3:e1 MENOS EXP3:e2       {:RESULT = new Resta(e1left,e1right,e1,e2);:}
+    |   EXP3:e1 POR EXP3:e2         {:RESULT = new Multiplicacion(e1left,e1right,e1,e2);:}
+    |   EXP3:e1 DIV EXP3:e2         {:RESULT = new Division(e1left,e1right,e1,e2);:}
+    |   EXP3:e1 POT EXP3:e2         {:RESULT = new Potencia(e1left,e1right,e1,e2);:}
+    |   EXP3:e1 MOD EXP3:e2         {:RESULT = new Modulo(e1left,e1right,e1,e2);:}
     |   CALL_FUN
     |   PARIZQ EXP PARDER
-    |   PRIMITIVO
+    |   PRIMITIVO:e                 {:RESULT = e;:}
     |   ACCESO
+    |   IDENTIFICADOR
     |   RNULL
 ;
 
 PRIMITIVO ::=
-        ENTERO
-    |   CADENA
-    |   DECIMAL
-    |   RFALSE
-    |   RTRUE
+        ENTERO:e    {:RESULT = new Primitivo(eleft,eright,Integer.parseInt(e));:}
+    |   CADENA:e    {:RESULT = new Primitivo(eleft,eright,e);:}
+    |   DECIMAL:e   {:RESULT = new Primitivo(eleft,eright,Double.parseDouble(e));:}
+    |   RFALSE:e    {:RESULT = new Primitivo(eleft,eright,false);:}
+    |   RTRUE:e     {:RESULT = new Primitivo(eleft,eright,true);:}
 ;
 
 EXP_TERNARIA ::=
@@ -252,7 +262,6 @@ EXP_TERNARIA ::=
 
 ACCESO ::=
         IDENTIFICADOR L_INDEX
-    |   IDENTIFICADOR
 ;
 
 L_INDEX ::=

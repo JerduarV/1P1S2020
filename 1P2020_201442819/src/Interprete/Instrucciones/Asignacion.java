@@ -5,6 +5,7 @@
  */
 package Interprete.Instrucciones;
 
+import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Expresion;
 import TablaSimbolos.TablaSimbolos;
@@ -43,7 +44,7 @@ public class Asignacion extends Instruccion{
     public Object Ejecutar(TablaSimbolos t) {
         Object valor = this.exp.Resolver(t);
         if(valor instanceof ErrorCompi){
-            return valor;
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se pudo realizar la asignación por error en la expresión", this.getFila(), this.getColumna());
         }else{
             t.GuardarVariable(identificador, valor);
             return null;

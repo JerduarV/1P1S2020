@@ -9,7 +9,7 @@ import Editor.VentanaErrores;
 import Interprete.Arbol;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Primitivo;
-import Interprete.Expresiones.Operaciones.Aritmeticas.*;
+import Interprete.Expresiones.Operaciones.*;
 import Interprete.Instrucciones.Instruccion;
 import Interprete.Instrucciones.Asignacion;
 import java.util.LinkedList;
@@ -1274,7 +1274,13 @@ class CUP$Sintactico$actions {
           case 59: // EXP2 ::= EXP3 MAYOR EXP3 
             {
               Expresion RESULT =null;
-
+		int e1left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.MAYOR);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP2",22, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1283,7 +1289,13 @@ class CUP$Sintactico$actions {
           case 60: // EXP2 ::= EXP3 MENOR EXP3 
             {
               Expresion RESULT =null;
-
+		int e1left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.MENOR);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP2",22, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1292,7 +1304,13 @@ class CUP$Sintactico$actions {
           case 61: // EXP2 ::= EXP3 MENORIGUAL EXP3 
             {
               Expresion RESULT =null;
-
+		int e1left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.MENORIGUAL);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP2",22, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1301,7 +1319,13 @@ class CUP$Sintactico$actions {
           case 62: // EXP2 ::= EXP3 MAYORIGUAL EXP3 
             {
               Expresion RESULT =null;
-
+		int e1left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.MAYORIGUAL);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP2",22, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1310,7 +1334,13 @@ class CUP$Sintactico$actions {
           case 63: // EXP2 ::= EXP3 IGUALQUE EXP3 
             {
               Expresion RESULT =null;
-
+		int e1left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.IGUALQUE);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP2",22, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1319,7 +1349,13 @@ class CUP$Sintactico$actions {
           case 64: // EXP2 ::= EXP3 DIFERENTE EXP3 
             {
               Expresion RESULT =null;
-
+		int e1left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.DIFERENTE);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP2",22, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1343,7 +1379,7 @@ class CUP$Sintactico$actions {
 		int e1left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Expresion e1 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		RESULT = new Negativo(e1,e1left,e1right);
+		RESULT = new ExpAritmetica(e1,e1left,e1right);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP3",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1358,7 +1394,7 @@ class CUP$Sintactico$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		RESULT = new Suma(e1left,e1right,e1,e2);
+		RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.SUMA);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP3",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1373,7 +1409,7 @@ class CUP$Sintactico$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		RESULT = new Resta(e1left,e1right,e1,e2);
+		RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.RESTA);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP3",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1388,7 +1424,7 @@ class CUP$Sintactico$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		RESULT = new Multiplicacion(e1left,e1right,e1,e2);
+		RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.MULT);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP3",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1403,7 +1439,7 @@ class CUP$Sintactico$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		RESULT = new Division(e1left,e1right,e1,e2);
+		RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.DIV);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP3",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1418,7 +1454,7 @@ class CUP$Sintactico$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		RESULT = new Potencia(e1left,e1right,e1,e2);
+		RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.POT);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP3",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1433,7 +1469,7 @@ class CUP$Sintactico$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Expresion e2 = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		RESULT = new Modulo(e1left,e1right,e1,e2);
+		RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.MOD);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP3",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1451,7 +1487,10 @@ class CUP$Sintactico$actions {
           case 74: // EXP3 ::= PARIZQ EXP PARDER 
             {
               Expresion RESULT =null;
-
+		int eleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		Expresion e = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		RESULT = e;
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP3",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;

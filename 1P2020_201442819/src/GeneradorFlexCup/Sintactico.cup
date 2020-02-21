@@ -7,7 +7,7 @@ import Editor.VentanaErrores;
 import Interprete.Arbol;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Primitivo;
-import Interprete.Expresiones.Operaciones.Aritmeticas.*;
+import Interprete.Expresiones.Operaciones.*;
 import Interprete.Instrucciones.Instruccion;
 import Interprete.Instrucciones.Asignacion;
 import java.util.LinkedList;
@@ -223,25 +223,25 @@ EXP ::=
 ;
 
 EXP2 ::=
-        EXP3 MAYOR EXP3
-    |   EXP3 MENOR EXP3
-    |   EXP3 MENORIGUAL EXP3
-    |   EXP3 MAYORIGUAL EXP3
-    |   EXP3 IGUALQUE EXP3
-    |   EXP3 DIFERENTE EXP3
+        EXP3:e1 MAYOR EXP3:e2       {:RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.MAYOR);:}
+    |   EXP3:e1 MENOR EXP3:e2       {:RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.MENOR);:}
+    |   EXP3:e1 MENORIGUAL EXP3:e2  {:RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.MENORIGUAL);:}
+    |   EXP3:e1 MAYORIGUAL EXP3:e2  {:RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.MAYORIGUAL);:}
+    |   EXP3:e1 IGUALQUE EXP3:e2    {:RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.IGUALQUE);:}
+    |   EXP3:e1 DIFERENTE EXP3:e2   {:RESULT = new ExpRelacional(e1left,e1right,e1,e2,TipoOpe.DIFERENTE);:}
     |   EXP3:e                      {:RESULT = e;:}
 ;
 
 EXP3 ::=
-        MENOS EXP3:e1               {:RESULT = new Negativo(e1,e1left,e1right);:} %prec UMENOS
-    |   EXP3:e1 MAS EXP3:e2         {:RESULT = new Suma(e1left,e1right,e1,e2);:}
-    |   EXP3:e1 MENOS EXP3:e2       {:RESULT = new Resta(e1left,e1right,e1,e2);:}
-    |   EXP3:e1 POR EXP3:e2         {:RESULT = new Multiplicacion(e1left,e1right,e1,e2);:}
-    |   EXP3:e1 DIV EXP3:e2         {:RESULT = new Division(e1left,e1right,e1,e2);:}
-    |   EXP3:e1 POT EXP3:e2         {:RESULT = new Potencia(e1left,e1right,e1,e2);:}
-    |   EXP3:e1 MOD EXP3:e2         {:RESULT = new Modulo(e1left,e1right,e1,e2);:}
+        MENOS EXP3:e1               {:RESULT = new ExpAritmetica(e1,e1left,e1right);:} %prec UMENOS
+    |   EXP3:e1 MAS EXP3:e2         {:RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.SUMA);:}
+    |   EXP3:e1 MENOS EXP3:e2       {:RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.RESTA);:}
+    |   EXP3:e1 POR EXP3:e2         {:RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.MULT);:}
+    |   EXP3:e1 DIV EXP3:e2         {:RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.DIV);:}
+    |   EXP3:e1 POT EXP3:e2         {:RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.POT);:}
+    |   EXP3:e1 MOD EXP3:e2         {:RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.MOD);:}
     |   CALL_FUN
-    |   PARIZQ EXP PARDER
+    |   PARIZQ EXP:e PARDER         {:RESULT = e;:}
     |   PRIMITIVO:e                 {:RESULT = e;:}
     |   ACCESO
     |   IDENTIFICADOR

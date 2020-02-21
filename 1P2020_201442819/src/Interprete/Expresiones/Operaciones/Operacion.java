@@ -28,6 +28,11 @@ public abstract class Operacion extends Expresion {
      * Operador unario
      */
     private final Expresion op_unario;
+    
+    /**
+     * Tipo de la operación a resolver
+     */
+    private final TipoOpe tipo;
 
     /**
      * Constructor de una operacion binaria
@@ -36,11 +41,13 @@ public abstract class Operacion extends Expresion {
      * @param col integer columan en la que se encuentra
      * @param izq operador izquierdo
      * @param der operador derecho
+     * @param o tipo de operación
      */
-    public Operacion(Integer fila, Integer col, Expresion izq, Expresion der) {
+    public Operacion(Integer fila, Integer col, Expresion izq, Expresion der, TipoOpe o) {
         super(fila, col);
         this.op_izq = izq;
         this.op_der = der;
+        this.tipo = o;
         this.op_unario = null;
     }
 
@@ -48,14 +55,16 @@ public abstract class Operacion extends Expresion {
      * Constructor de una operacion unaria (negativo y negacion)
      *
      * @param op_unario unico operando de la operación
+     * @param o tipo de la operación
      * @param fila fila en la que se encuentra
      * @param col columna en la que se encuentra
      */
-    public Operacion(Expresion op_unario, Integer fila, Integer col) {
+    public Operacion(Expresion op_unario,TipoOpe o, Integer fila, Integer col) {
         super(fila, col);
         this.op_unario = op_unario;
         this.op_der = null;
         this.op_izq = null;
+        this.tipo = o;
     }
 
     /**
@@ -83,6 +92,14 @@ public abstract class Operacion extends Expresion {
      */
     public Expresion getOp_unario() {
         return op_unario;
+    }
+
+    /**
+     * Retorna el tipo de operación que se realiza
+     * @return 
+     */
+    public TipoOpe getTipo() {
+        return tipo;
     }
 
 }

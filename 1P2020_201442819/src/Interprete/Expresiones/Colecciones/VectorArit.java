@@ -67,5 +67,21 @@ public class VectorArit {
         return this.valores.get(index);
     }
     
+    public boolean isInteger(){
+        return this.getTipo_dato() == TipoPrimitivo.ENTERO;
+    }
+    
+    public boolean isDouble(){
+        return this.getTipo_dato() == TipoPrimitivo.DECIMAL;
+    }
+    
+    public boolean isString(){
+        return this.getTipo_dato() == TipoPrimitivo.CADENA;
+    }
+    
+    public boolean isNumerico(){
+        return this.isInteger() || this.isDouble();
+    }
+    
     
 }

@@ -5,6 +5,9 @@
  */
 package Interprete;
 
+import Interprete.Expresiones.Nativas.Print;
+import Interprete.Instrucciones.DecFuncion;
+import Interprete.Instrucciones.Declaracion;
 import Interprete.Instrucciones.Instruccion;
 import TablaSimbolos.TablaSimbolos;
 import java.util.LinkedList;
@@ -26,6 +29,7 @@ public class Arbol extends Instruccion {
 
     @Override
     public Object Ejecutar(TablaSimbolos t) {
+        this.GuardarFunciones(t);
         return this.Recorrer(t);
     }
     
@@ -34,7 +38,20 @@ public class Arbol extends Instruccion {
      * @param t Tabla de Símbolos
      */
     private void GuardarFunciones(TablaSimbolos t){
-        throw new UnsupportedOperationException("Todavía no puedo guardar funciones");
+        this.GuardarFuncionesNativas(t);
+        this.getCuerpo().stream().filter((n) -> (n instanceof DecFuncion)).forEachOrdered((n) -> {
+            ((DecFuncion) n).GuardarFuncion(t);
+        });
+    }
+    
+    private void GuardarFuncionesNativas(TablaSimbolos global){
+        
+        //CREACIÓN DE FUNCIÓN PRINT
+        LinkedList<Declaracion> l_print = new LinkedList<>();
+        l_print.add(new Declaracion("print%%param1", -1, -1));
+        Print print = new Print(l_print);
+        global.GuardarFuncion("print", print);
+        
     }
 
     @Override

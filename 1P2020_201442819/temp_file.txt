@@ -1,1 +1,3 @@
-i = "a" > "b"
+vector = 8
+vector[7] = c("casa")
+print(vector)

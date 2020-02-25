@@ -132,55 +132,61 @@ public class ExpAritmetica extends Operacion {
         } else //ENTERO
         {
             switch (vector_izq.getTipo_dato()) {
-                case ENTERO:
+                case INTEGER:
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO + ENTERO
-                        case ENTERO: {
+                        case INTEGER: {
                             l.add((Integer) vector_izq.Acceder(0) + (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.ENTERO, l);
+                            return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO + DOUBLE
-                        case DECIMAL: {
+                        case DOUBLE: {
                             l.add((Integer) vector_izq.Acceder(0) + (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         //ENTERO + CADENA
-                        case CADENA:
+                        case STRING:
                             l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
-                            return new VectorArit(TipoPrimitivo.CADENA, l);
+                            return new VectorArit(TipoPrimitivo.STRING, l);
+
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar integer con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
-                case DECIMAL:
+
+                case DOUBLE:
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE + DOUBLE
-                        case DECIMAL:
+                        case DOUBLE:
                             l.add((Double) vector_izq.Acceder(0) + (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE + ENTERO
-                        case ENTERO:
+                        case INTEGER:
                             l.add((Double) vector_izq.Acceder(0) + (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE + CADENA
-                        case CADENA:
+                        case STRING:
                             l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
-                            return new VectorArit(TipoPrimitivo.CADENA, l);
+                            return new VectorArit(TipoPrimitivo.STRING, l);
+
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
+
                 case BOOL:
                     switch (vector_der.getTipo_dato()) {
                         //BOOL + STRING
-                        case CADENA:
+                        case STRING:
                             l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
-                            return new VectorArit(TipoPrimitivo.CADENA, l);
+                            return new VectorArit(TipoPrimitivo.STRING, l);
+
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar bool con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
-                case CADENA:
+                case STRING:
                     //CADENA + CUALQUIER OTRO
                     l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
-                    return new VectorArit(TipoPrimitivo.CADENA, l);
+                    return new VectorArit(TipoPrimitivo.STRING, l);
+
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar" + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
             }
@@ -201,34 +207,36 @@ public class ExpAritmetica extends Operacion {
         } else //ENTERO
         {
             switch (vector_izq.getTipo_dato()) {
-                case ENTERO:
+                case INTEGER:
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO - ENTERO
-                        case ENTERO: {
+                        case INTEGER: {
                             l.add((Integer) vector_izq.Acceder(0) - (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.ENTERO, l);
+                            return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO - DOUBLE
-                        case DECIMAL: {
+                        case DOUBLE: {
                             l.add((Integer) vector_izq.Acceder(0) - (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede restar integer con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
-                case DECIMAL:
+
+                case DOUBLE:
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE - DOUBLE
-                        case DECIMAL:
+                        case DOUBLE:
                             l.add((Double) vector_izq.Acceder(0) - (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE - ENTERO
-                        case ENTERO:
+                        case INTEGER:
                             l.add((Double) vector_izq.Acceder(0) - (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede restar double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
+
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede restar " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
             }
@@ -249,34 +257,36 @@ public class ExpAritmetica extends Operacion {
         } else //ENTERO
         {
             switch (vector_izq.getTipo_dato()) {
-                case ENTERO:
+                case INTEGER:
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO * ENTERO
-                        case ENTERO: {
+                        case INTEGER: {
                             l.add((Integer) vector_izq.Acceder(0) * (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.ENTERO, l);
+                            return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO * DOUBLE
-                        case DECIMAL: {
+                        case DOUBLE: {
                             l.add((Integer) vector_izq.Acceder(0) * (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede multiplicar integer con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
-                case DECIMAL:
+
+                case DOUBLE:
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE * DOUBLE
-                        case DECIMAL:
+                        case DOUBLE:
                             l.add((Double) vector_izq.Acceder(0) * (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE * ENTERO
-                        case ENTERO:
+                        case INTEGER:
                             l.add((Double) vector_izq.Acceder(0) * (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede multiplicar double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
+
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede multiplicar " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
             }
@@ -297,34 +307,36 @@ public class ExpAritmetica extends Operacion {
         } else //ENTERO
         {
             switch (vector_izq.getTipo_dato()) {
-                case ENTERO:
+                case INTEGER:
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO %% ENTERO
-                        case ENTERO: {
+                        case INTEGER: {
                             l.add((Integer) vector_izq.Acceder(0) % (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.ENTERO, l);
+                            return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO %% DOUBLE
-                        case DECIMAL: {
+                        case DOUBLE: {
                             l.add((Integer) vector_izq.Acceder(0) % (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular modulo integer con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
-                case DECIMAL:
+
+                case DOUBLE:
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE %% DOUBLE
-                        case DECIMAL:
+                        case DOUBLE:
                             l.add((Double) vector_izq.Acceder(0) % (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE %% ENTERO
-                        case ENTERO:
+                        case INTEGER:
                             l.add((Double) vector_izq.Acceder(0) % (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular modulo double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
+
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular modulo " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
             }
@@ -345,34 +357,36 @@ public class ExpAritmetica extends Operacion {
         } else //ENTERO
         {
             switch (vector_izq.getTipo_dato()) {
-                case ENTERO:
+                case INTEGER:
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO / ENTERO
-                        case ENTERO: {
+                        case INTEGER: {
                             l.add((Integer) vector_izq.Acceder(0) / (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.ENTERO, l);
+                            return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO / DOUBLE
-                        case DECIMAL: {
+                        case DOUBLE: {
                             l.add((Integer) vector_izq.Acceder(0) / (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede dividir integer con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
-                case DECIMAL:
+
+                case DOUBLE:
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE / DOUBLE
-                        case DECIMAL:
+                        case DOUBLE:
                             l.add((Double) vector_izq.Acceder(0) / (Double) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE / ENTERO
-                        case ENTERO:
+                        case INTEGER:
                             l.add((Double) vector_izq.Acceder(0) / (Integer) vector_der.Acceder(0));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede dividir double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
+
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede dividir " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
             }
@@ -393,34 +407,36 @@ public class ExpAritmetica extends Operacion {
         } else //ENTERO
         {
             switch (vector_izq.getTipo_dato()) {
-                case ENTERO:
+                case INTEGER:
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO ^ ENTERO
-                        case ENTERO: {
+                        case INTEGER: {
                             l.add(Math.pow((Integer) vector_izq.Acceder(0), (Integer) vector_der.Acceder(0)));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         //ENTERO ^ DOUBLE
-                        case DECIMAL: {
+                        case DOUBLE: {
                             l.add(Math.pow((Integer) vector_izq.Acceder(0), (Double) vector_der.Acceder(0)));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular mla potencia integer con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
-                case DECIMAL:
+
+                case DOUBLE:
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE ^ DOUBLE
-                        case DECIMAL:
+                        case DOUBLE:
                             l.add(Math.pow((Double) vector_izq.Acceder(0), (Double) vector_der.Acceder(0)));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE ^ ENTERO
-                        case ENTERO:
+                        case INTEGER:
                             l.add(Math.pow((Double) vector_izq.Acceder(0), (Integer) vector_der.Acceder(0)));
-                            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular mla potencia double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
+
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular mla potencia " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
             }
@@ -436,12 +452,14 @@ public class ExpAritmetica extends Operacion {
     private Object NegativoVectoresBase(VectorArit vector) {
         LinkedList<Object> l = new LinkedList<>();
         switch (vector.getTipo_dato()) {
-            case DECIMAL:
+            case DOUBLE:
                 l.add(-1 * (Integer) vector.Acceder(0));
-                return new VectorArit(TipoPrimitivo.DECIMAL, l);
-            case ENTERO:
+                return new VectorArit(TipoPrimitivo.DOUBLE, l);
+
+            case INTEGER:
                 l.add(-1 * (Integer) vector.Acceder(0));
-                return new VectorArit(TipoPrimitivo.ENTERO, l);
+                return new VectorArit(TipoPrimitivo.INTEGER, l);
+
             default:
                 return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede volver negativo " + vector.getTipo_dato(), this.getFila(), this.getColumna());
         }

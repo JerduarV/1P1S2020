@@ -5,11 +5,10 @@ package GramaticaFlexCup;
 
 import Editor.VentanaErrores;
 import Interprete.Arbol;
-import Interprete.Expresiones.Expresion;
-import Interprete.Expresiones.Primitivo;
+import Interprete.Expresiones.*;
 import Interprete.Expresiones.Operaciones.*;
-import Interprete.Instrucciones.Instruccion;
-import Interprete.Instrucciones.Asignacion;
+import Interprete.Expresiones.Nativas.*;
+import Interprete.Instrucciones.*;
 import java.util.LinkedList;
 import Interprete.NodoAST;
 import java_cup.runtime.*;
@@ -47,6 +46,15 @@ parser code
     public Arbol getAST(){
         return AST;
     }
+
+    private Expresion ReturnCallFun(String id, LinkedList<Expresion> l, int fila, int col){
+        switch(id.toLowerCase()){
+            case "c":
+                return new FuncionC(l,fila,col);
+            default:
+                return new CallFun(id,l,fila,col);
+        }
+    }
     
 :} 
 
@@ -71,13 +79,18 @@ terminal String AND,OR,NOT,TERNARIO;
 
 //INSTRUCCIONES
 non terminal INI;
+non terminal NodoAST INSTR;
 non terminal LinkedList<NodoAST> L_INSTR, BLOQUE;
-non terminal Instruccion INSTR,ASIGNACION,IF,ELSE,SWITCH,L_CASE,WHILE,DOWHILE,FOR,BREAK,CONTINUE;
-non terminal RETURN,DEC_FUN;
-non terminal L_PARAM_FORM,PARAM_FORM,CALL_FUN,L_PARAM_ACT,PARAM_ACT;
+non terminal Instruccion ASIGNACION,IF,ELSE,SWITCH,L_CASE,WHILE,DOWHILE,FOR,BREAK,CONTINUE;
+non terminal RETURN;
+non terminal Instruccion PARAM_FORM,DEC_FUN;
+non terminal LinkedList<Declaracion> L_PARAM_FORM;
 
 //EXPRESIONES
-non terminal Expresion EXP,EXP2,EXP3,EXP_TERNARIA,PRIMITIVO,ACCESO,INDEX,L_INDEX;
+non terminal Expresion EXP,EXP2,EXP3,EXP_TERNARIA,PRIMITIVO,ACCESO,CALL_FUN,PARAM_ACT;
+non terminal Indice INDEX;
+non terminal LinkedList<Indice> L_INDEX;
+non terminal LinkedList<Expresion> L_PARAM_ACT;
 
 
 //Operaciones logicas
@@ -99,7 +112,7 @@ precedence nonassoc POT;
 start with INI; 
 
 INI ::= 
-        L_INSTR:l   {:System.out.println("EL ANÁLISIS TERMINÓ BIEN :)"); AST = new Arbol(l);:}
+        L_INSTR:l   {:AST = new Arbol(l);:}
 ;
 
 L_INSTR ::=
@@ -112,8 +125,8 @@ BLOQUE ::=
 ;
 
 INSTR ::=
-        ASIGNACION:i    {:RESULT = i;:}
-    |   IF
+        ASIGNACION:i        {:RESULT = i;:}
+    |   IF:i                {:RESULT = i;:}
     |   WHILE
     |   DOWHILE
     |   SWITCH
@@ -121,8 +134,9 @@ INSTR ::=
     |   BREAK
     |   CONTINUE
     |   RETURN
-    |   DEC_FUN
-    |   CALL_FUN
+    |   DEC_FUN:d           {:RESULT = d;:}
+    |   CALL_FUN:c          {:RESULT = c;:}
+    |   CALL_FUN:c PTCOMA   {:RESULT = c;:}
 ;
 
 SWITCH ::=
@@ -157,35 +171,35 @@ WHILE ::=
 ;
 
 DEC_FUN ::=
-        IDENTIFICADOR IGUAL RFUNCTION PARIZQ L_PARAM_FORM PARDER BLOQUE
-    |   IDENTIFICADOR IGUAL PARIZQ L_PARAM_FORM PARDER FLECHA BLOQUE
-    |   IDENTIFICADOR IGUAL RFUNCTION PARIZQ PARDER BLOQUE
-    |   IDENTIFICADOR IGUAL PARIZQ PARDER FLECHA BLOQUE
+        IDENTIFICADOR:id IGUAL RFUNCTION PARIZQ L_PARAM_FORM:l PARDER BLOQUE:b      {:RESULT = new DecFuncion(id,l,b,idleft,idright);:}
+    |   IDENTIFICADOR:id IGUAL PARIZQ L_PARAM_FORM:l PARDER FLECHA BLOQUE:b         {:RESULT = new DecFuncion(id,l,b,idleft,idright);:}
+    |   IDENTIFICADOR:id IGUAL RFUNCTION PARIZQ PARDER BLOQUE:b                     {:RESULT = new DecFuncion(id,new LinkedList<Declaracion>(),b,idleft,idright);:}
+    |   IDENTIFICADOR:id IGUAL PARIZQ PARDER FLECHA BLOQUE:b                        {:RESULT = new DecFuncion(id,new LinkedList<Declaracion>(),b,idleft,idright);:}
 ;
 
 CALL_FUN ::=
-        IDENTIFICADOR PARIZQ L_PARAM_ACT PARDER
-    |   IDENTIFICADOR PARIZQ PARDER
+        IDENTIFICADOR:id PARIZQ L_PARAM_ACT:e PARDER    {:RESULT = ReturnCallFun(id,e,idleft,idright);:}
+    |   IDENTIFICADOR:id PARIZQ PARDER                  {:RESULT = ReturnCallFun(id,new LinkedList<Expresion>(),idleft,idright);:}
 ;
 
 L_PARAM_ACT ::=
-        L_PARAM_ACT COMA PARAM_ACT
-    |   PARAM_ACT
+        L_PARAM_ACT:l COMA PARAM_ACT:p  {:RESULT = l; RESULT.add(p);:}
+    |   PARAM_ACT:e                     {:RESULT = new LinkedList<>(); RESULT.add(e);:}
 ;
 
 PARAM_ACT ::=
         RDEFAULT
-    |   EXP
+    |   EXP:e       {:RESULT = e;:}
 ;
 
 L_PARAM_FORM ::=
-        L_PARAM_FORM COMA PARAM_FORM
-    |   PARAM_FORM
+        L_PARAM_FORM:l COMA PARAM_FORM:p    {:RESULT = l; RESULT.add((Declaracion)p);:}
+    |   PARAM_FORM:p                        {:RESULT = new LinkedList<>(); RESULT.add((Declaracion)p);:}
 ;
 
 PARAM_FORM ::=
-        ACCESO
-    |   IDENTIFICADOR IGUAL EXP
+        IDENTIFICADOR:id                {:RESULT = new Declaracion(id,idleft,idright);:}
+    |   IDENTIFICADOR:id IGUAL EXP:e    {:RESULT = new Declaracion(id,e,idleft,idright);:}
 ;
 
 DOWHILE ::=
@@ -200,25 +214,25 @@ FOR ::=
 ASIGNACION ::=
         IDENTIFICADOR:i IGUAL EXP:e PTCOMA      {:RESULT = new Asignacion(ileft,iright,i,e);:}
     |   IDENTIFICADOR:i IGUAL EXP:e             {:RESULT = new Asignacion(ileft,iright,i,e);:}             
-    |   ACCESO IGUAL EXP
-    |   ACCESO IGUAL EXP PTCOMA
+    |   ACCESO:a IGUAL EXP:e                    {:RESULT = new AccesoAsig((AccesoGet)a,e);:}
+    |   ACCESO:a IGUAL EXP:e PTCOMA             {:RESULT = new AccesoAsig((AccesoGet)a,e);:}
 ;
 
 IF ::=
-        RIF PARIZQ EXP PARDER BLOQUE
-    |   RIF PARIZQ EXP PARDER BLOQUE ELSE
+        RIF PARIZQ EXP:e PARDER BLOQUE:b            {:RESULT = new Si(e,b,eleft,eright);:}
+    |   RIF PARIZQ EXP:e PARDER BLOQUE:b ELSE:el    {:RESULT = new Si(e,b,(Else)el,eleft,eright);:}
 ;
 
 ELSE ::=
-        RELSE IF
-    |   RELSE BLOQUE
+        RELSE:r IF:i                {:RESULT = new Else((Si)i,rleft,rright);:}
+    |   RELSE:r BLOQUE:b            {:RESULT = new Else(b,rleft,rright);:}
 ;
 
 EXP ::=
-        EXP OR EXP
-    |   EXP AND EXP
+        EXP:e1 OR EXP:e2            {:RESULT = new ExpLogica(e1left,e1right,e1,e2,TipoOpe.OR);:}
+    |   EXP:e1 AND EXP:e2           {:RESULT = new ExpLogica(e1left,e1right,e1,e2,TipoOpe.AND);:}
     |   EXP_TERNARIA
-    |   NOT EXP
+    |   NOT EXP:e                   {:RESULT = new ExpLogica(e,eleft,eright);:}
     |   EXP2:e                      {:RESULT = e;:}
 ;
 
@@ -240,11 +254,11 @@ EXP3 ::=
     |   EXP3:e1 DIV EXP3:e2         {:RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.DIV);:}
     |   EXP3:e1 POT EXP3:e2         {:RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.POT);:}
     |   EXP3:e1 MOD EXP3:e2         {:RESULT = new ExpAritmetica(e1left,e1right,e1,e2,TipoOpe.MOD);:}
-    |   CALL_FUN
+    |   CALL_FUN:c                  {:RESULT = c;:}
     |   PARIZQ EXP:e PARDER         {:RESULT = e;:}
     |   PRIMITIVO:e                 {:RESULT = e;:}
-    |   ACCESO
-    |   IDENTIFICADOR
+    |   ACCESO:a                    {:RESULT = a;:}
+    |   IDENTIFICADOR:id            {:RESULT = new Identificador(id,idleft,idright);:}
     |   RNULL
 ;
 
@@ -261,15 +275,15 @@ EXP_TERNARIA ::=
 ;
 
 ACCESO ::=
-        IDENTIFICADOR L_INDEX
+        IDENTIFICADOR:id L_INDEX:l      {:RESULT = new AccesoGet(new Identificador(id,idleft,idright),l);:}
 ;
 
 L_INDEX ::=
-        L_INDEX INDEX
-    |   INDEX
+        L_INDEX:l INDEX:i   {:l.add(i); RESULT = l;:}
+    |   INDEX:i             {:RESULT = new LinkedList<>(); RESULT.add(i);:}
 ;
 
 INDEX ::=
-        CORIZQ EXP CORDER
-    |   DCORIZQ EXP DCORDER
+        CORIZQ EXP:e CORDER         {:RESULT = new Indice(e);:}
+    |   DCORIZQ EXP:e DCORDER       {:RESULT = new Indice(e,false);:}
 ;

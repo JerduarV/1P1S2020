@@ -38,19 +38,19 @@ public class Primitivo extends Expresion{
         LinkedList<Object> l = new LinkedList<>();
         if(valor instanceof Integer){
             l.add(valor);
-            return new VectorArit(TipoPrimitivo.ENTERO,l);
+            return new VectorArit(TipoPrimitivo.INTEGER,l);
         }else if(valor instanceof String){
             l.add(valor);
-            return new VectorArit(TipoPrimitivo.CADENA, l);
+            return new VectorArit(TipoPrimitivo.STRING, l);
         }else if(valor instanceof Boolean){
             l.add(valor);
             return new VectorArit(TipoPrimitivo.BOOL, l);
         }else if(valor instanceof Double){
             l.add(valor);
-            return new VectorArit(TipoPrimitivo.DECIMAL, l);
+            return new VectorArit(TipoPrimitivo.DOUBLE, l);
         }else if(valor == null){
-            l.add(new NULO());
-            return new VectorArit(TipoPrimitivo.NULL, l);
+            l.add("NULL");
+            return new VectorArit(TipoPrimitivo.STRING, l);
         }
         return null;
     }

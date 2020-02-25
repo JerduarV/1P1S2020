@@ -10,9 +10,9 @@ package Interprete.Expresiones;
  * @author Jerduar
  */
 public enum TipoPrimitivo {
-    DECIMAL,
-    ENTERO,
-    CADENA,
-    BOOL,
-    NULL
+    LIST,
+    STRING,
+    DOUBLE,
+    INTEGER,
+    BOOL
 }

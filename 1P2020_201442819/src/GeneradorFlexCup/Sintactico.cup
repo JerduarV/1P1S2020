@@ -127,11 +127,11 @@ BLOQUE ::=
 INSTR ::=
         ASIGNACION:i        {:RESULT = i;:}
     |   IF:i                {:RESULT = i;:}
-    |   WHILE
+    |   WHILE:w             {:RESULT = w;:}
     |   DOWHILE
     |   SWITCH
     |   FOR
-    |   BREAK
+    |   BREAK:i             {:RESULT = i;:}
     |   CONTINUE
     |   RETURN
     |   DEC_FUN:d           {:RESULT = d;:}
@@ -155,8 +155,8 @@ CONTINUE ::=
 ;
 
 BREAK ::=
-        RBREAK PTCOMA
-    |   RBREAK
+        RBREAK:b PTCOMA     {:RESULT = new Break(bleft,bright);:}
+    |   RBREAK:b            {:RESULT = new Break(bleft,bright);:}
 ;
 
 RETURN ::=
@@ -167,7 +167,7 @@ RETURN ::=
 ;
 
 WHILE ::=
-    RWHILE PARIZQ EXP PARDER BLOQUE
+    RWHILE PARIZQ EXP:e PARDER BLOQUE:b         {:RESULT = new While(e,b,eleft,eright);:}
 ;
 
 DEC_FUN ::=

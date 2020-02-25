@@ -23,6 +23,12 @@ public class TablaSimbolos extends Hashtable {
     private final TablaSimbolos padre;
 
     /**
+     * Variable que indica el valor del display para controlar las instrucciones
+     * break y continue
+     */
+    private int display;
+
+    /**
      * Constructor de la tabla de simbolos que recibe como parámetro a su tabla
      * padre
      *
@@ -30,6 +36,7 @@ public class TablaSimbolos extends Hashtable {
      */
     public TablaSimbolos(TablaSimbolos padre) {
         this.padre = padre;
+        this.display = padre == null ? 0 : this.padre.display;
     }
 
     /**
@@ -105,22 +112,45 @@ public class TablaSimbolos extends Hashtable {
             this.put(key, funcion);
         }
     }
-    
+
     /**
      * Función que retorna la función o null si no la encuentra
+     *
      * @param nombre Nombre de la función que se busca
      * @return DecFunción o null si no existe
      */
-    public Object BuscarFuncion(String nombre){
+    public Object BuscarFuncion(String nombre) {
         return this.getGlobal().get(this.getHashCode(nombre, ROL.FUNCION));
     }
-    
-    public TablaSimbolos getGlobal(){
-        if(this.padre == null){
+
+    /**
+     * Retorna la tabla de simbolos global, usada para el llamado de funciones
+     *
+     * @return Tabla de símbolos global
+     */
+    public TablaSimbolos getGlobal() {
+        if (this.padre == null) {
             return this;
-        }else{
+        } else {
             return this.padre.getGlobal();
         }
+    }
+
+    /**
+     * Incrementa el display en 1, este método es usado el entrar en
+     * instrucciones ciclicas como while, dowhile y for
+     */
+    public void IncrementarDisplay() {
+        this.display++;
+    }
+
+    /**
+     * Retorna el valor entero del display
+     *
+     * @return número entero
+     */
+    public int getDisplay() {
+        return display;
     }
 
 }

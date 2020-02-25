@@ -69,6 +69,9 @@ public abstract class Instruccion extends NodoAST {
                     continue;
                 }
                 Object result = i instanceof Instruccion ? ((Instruccion) i).Ejecutar(t) : ((Expresion) i).Resolver(t);
+                if (result instanceof Break) {
+                    return result;
+                }
             }
         }
         return null;

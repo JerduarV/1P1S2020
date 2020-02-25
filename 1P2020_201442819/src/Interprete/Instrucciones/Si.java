@@ -67,20 +67,21 @@ public class Si extends Instruccion {
             return VentanaErrores.getVenErrores().AgregarError("Semántico", "Error en la condición del If", this.getFila(), this.getColumna());
         }
 
+        boolean b;
+
         if (c instanceof VectorArit) {
             VectorArit vc = (VectorArit) c;
             if (!vc.isBool()) {
                 return VentanaErrores.getVenErrores().AgregarError("Semántico", "Se esperaba un booleano en la condición del if", this.getFila(), this.getColumna());
             }
-
-            boolean b = (Boolean) vc.getValores().getFirst();
-
-            TablaSimbolos nuevo = new TablaSimbolos(t);
-
-            return b ? this.Recorrer(nuevo) : (this.Sino != null ? this.Sino.Ejecutar(t) : null);
+            b = (Boolean) vc.getValores().getFirst();
+        } else {
+            throw new UnsupportedOperationException("No puedo manejar otras estructuras en el if");
         }
 
-        throw new UnsupportedOperationException("No puedo manejar otras estructuras en el if");
+        TablaSimbolos nuevo = new TablaSimbolos(t);
+        return b ? this.Recorrer(nuevo) : (this.Sino != null ? this.Sino.Ejecutar(t) : null);
+
     }
 
     @Override

@@ -72,7 +72,7 @@ terminal String ENTERO, DECIMAL, CADENA;
 
 //OPERADORES
 terminal String MAS,MENOS,POR,DIV,POT,MOD;
-terminal String MENOR,MAYOR,MENORIGUAL,MAYORIGUAL,IGUALQUE,DIFERENTE,UMENOS,UMAS;
+terminal String MENOR,MAYOR,MENORIGUAL,MAYORIGUAL,IGUALQUE,DIFERENTE,UMENOS;
 terminal String AND,OR,NOT,TERNARIO;
 
 //NO TERMINALES
@@ -106,8 +106,9 @@ precedence left  MENOR,MAYOR,MENORIGUAL,MAYORIGUAL;
 //Operaciones numericas
 precedence left  MAS,MENOS;
 precedence left  POR,DIV,MOD;
-precedence right UMENOS,UMAS;
+precedence right UMENOS;
 precedence nonassoc POT;
+precedence right CORIZQ,CORDER,DCORIZQ,DCORDER;
 
 start with INI; 
 
@@ -122,6 +123,7 @@ L_INSTR ::=
 
 BLOQUE ::=
         LLAVEIZQ L_INSTR:l LLAVEDER     {:RESULT = l;:}
+    |   LLAVEIZQ LLAVEDER               {:RESULT = new LinkedList<>();:}
 ;
 
 INSTR ::=
@@ -132,7 +134,7 @@ INSTR ::=
     |   SWITCH
     |   FOR
     |   BREAK:i             {:RESULT = i;:}
-    |   CONTINUE
+    |   CONTINUE:c          {:RESULT = c;:}
     |   RETURN
     |   DEC_FUN:d           {:RESULT = d;:}
     |   CALL_FUN:c          {:RESULT = c;:}
@@ -150,8 +152,8 @@ L_CASE ::=
 ;
 
 CONTINUE ::=
-        RCONTINUE PTCOMA
-    |   RCONTINUE
+        RCONTINUE:c PTCOMA  {:RESULT = new Continue(cleft,cright);:}
+    |   RCONTINUE:c         {:RESULT = new Continue(cleft,cright);:}
 ;
 
 BREAK ::=
@@ -228,10 +230,12 @@ ELSE ::=
     |   RELSE:r BLOQUE:b            {:RESULT = new Else(b,rleft,rright);:}
 ;
 
+
+
 EXP ::=
         EXP:e1 OR EXP:e2            {:RESULT = new ExpLogica(e1left,e1right,e1,e2,TipoOpe.OR);:}
     |   EXP:e1 AND EXP:e2           {:RESULT = new ExpLogica(e1left,e1right,e1,e2,TipoOpe.AND);:}
-    |   EXP_TERNARIA
+    |   EXP_TERNARIA              
     |   NOT EXP:e                   {:RESULT = new ExpLogica(e,eleft,eright);:}
     |   EXP2:e                      {:RESULT = e;:}
 ;
@@ -257,8 +261,8 @@ EXP3 ::=
     |   CALL_FUN:c                  {:RESULT = c;:}
     |   PARIZQ EXP:e PARDER         {:RESULT = e;:}
     |   PRIMITIVO:e                 {:RESULT = e;:}
-    |   ACCESO:a                    {:RESULT = a;:}
-    |   IDENTIFICADOR:id            {:RESULT = new Identificador(id,idleft,idright);:}
+    |   EXP3:e L_INDEX:l            {:RESULT = new AccesoGet(e,l);:}
+    |   IDENTIFICADOR:id            {:RESULT = new Identificador(id,idleft,idright);:}  
     |   RNULL
 ;
 

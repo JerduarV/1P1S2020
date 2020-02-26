@@ -7,8 +7,10 @@ package Interprete.Instrucciones;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
+import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import TablaSimbolos.TablaSimbolos;
+import java.util.LinkedList;
 
 /**
  *
@@ -46,9 +48,20 @@ public class Asignacion extends Instruccion{
         if(valor instanceof ErrorCompi){
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se pudo realizar la asignación por error en la expresión", this.getFila(), this.getColumna());
         }else{
+            if(valor instanceof VectorArit){
+                valor = this.copiarVector((VectorArit)valor);
+            }
             t.GuardarVariable(identificador, valor);
             return null;
         }
+    }
+    
+    private VectorArit copiarVector(VectorArit v){
+        LinkedList<Object> l = new LinkedList<>();
+        for(Object o : v.getValores()){
+            l.add(o);
+        }
+        return new VectorArit(v.getTipo_dato(), l);
     }
 
     @Override

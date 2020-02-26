@@ -20,17 +20,17 @@ public class sym {
   public static final int DIFERENTE = 46;
   public static final int RDEFAULT = 31;
   public static final int LLAVEDER = 6;
-  public static final int TERNARIO = 52;
+  public static final int TERNARIO = 51;
   public static final int RFALSE = 18;
   public static final int RELSE = 20;
-  public static final int NOT = 51;
-  public static final int AND = 49;
+  public static final int NOT = 50;
+  public static final int AND = 48;
   public static final int MENORIGUAL = 43;
   public static final int IDENTIFICADOR = 12;
   public static final int IGUALQUE = 45;
   public static final int IGUAL = 2;
   public static final int CORDER = 10;
-  public static final int OR = 50;
+  public static final int OR = 49;
   public static final int DIV = 38;
   public static final int UMENOS = 47;
   public static final int MAYORIGUAL = 44;
@@ -53,7 +53,6 @@ public class sym {
   public static final int PTCOMA = 8;
   public static final int RIN = 28;
   public static final int RSWITCH = 21;
-  public static final int UMAS = 48;
   public static final int PARDER = 4;
   public static final int RFOR = 27;
   public static final int CORIZQ = 9;
@@ -110,7 +109,6 @@ public class sym {
   "IGUALQUE",
   "DIFERENTE",
   "UMENOS",
-  "UMAS",
   "AND",
   "OR",
   "NOT",

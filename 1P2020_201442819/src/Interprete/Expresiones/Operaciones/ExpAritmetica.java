@@ -56,11 +56,7 @@ public class ExpAritmetica extends Operacion {
             //NEGATIVO DE UN VECTOR
             if (val_unico instanceof VectorArit) {
                 VectorArit vector_unico = (VectorArit) val_unico;
-
-                //NEGATIVO DE UN VECTOR DE TAMANIO 1
-                if (vector_unico.getTamanio() == 1) {
-                    return NegativoVectoresBase(vector_unico);
-                }
+                return NegativoVectores(vector_unico);
             }
         } else { //SI ES UNA OPERACIÓN BINARIA
             Object val_izq = this.getOp_izq().Resolver(t);
@@ -76,10 +72,8 @@ public class ExpAritmetica extends Operacion {
                 VectorArit vector_izq = (VectorArit) val_izq;
                 VectorArit vector_der = (VectorArit) val_der;
 
-                //SUMA DE DOS VECTORES DE TAMANIO 1
-                if (vector_izq.getTamanio() == 1 && vector_der.getTamanio() == 1) {
-                    return this.OperacionesBasicas(vector_izq, vector_der);
-                }
+                return OperacionesBasicas(vector_izq, vector_der);
+
             }
         }
 
@@ -89,24 +83,24 @@ public class ExpAritmetica extends Operacion {
     /**
      * Realiza las opearciones artiméticas con los vectores de tamanio 1
      *
-     * @param izq operador izquierdo
-     * @param der operador derecho
+     * @param vector_izq operador izquierdo
+     * @param vector_der operador derecho
      * @return Vector con resultado
      */
-    private Object OperacionesBasicas(VectorArit izq, VectorArit der) {
+    private Object OperacionesBasicas(VectorArit vector_izq, VectorArit vector_der) {
         switch (this.getTipo()) {
             case SUMA:
-                return this.SumarVectoresBase(izq, der);
+                return this.SumarVectores(vector_izq, vector_der);
             case RESTA:
-                return this.RestaVectoresBase(izq, der);
+                return this.RestaVectores(vector_izq, vector_der);
             case MULT:
-                return this.MultiplicacionVectoresBase(izq, der);
+                return this.MultiplicacionVectores(vector_izq, vector_der);
             case DIV:
-                return this.DivisionVectoresBase(izq, der);
+                return this.DivisionVectores(vector_izq, vector_der);
             case MOD:
-                return this.ModuloVectoresBase(izq, der);
+                return this.ModuloVectoresBase(vector_izq, vector_der);
             case POT:
-                return this.PotenciaVectoresBase(izq, der);
+                return this.PotenciaVectores(vector_izq, vector_der);
             default:
                 System.out.println("NO SE QUE MIERDA HACES EN LA CLASE EXPARITMETICA");
                 return null;
@@ -125,7 +119,7 @@ public class ExpAritmetica extends Operacion {
      * @param vector_der operador derecho
      * @return Vector de tamanio uno
      */
-    private Object SumarVectoresBase(VectorArit vector_izq, VectorArit vector_der) {
+    private Object SumarVectores(VectorArit vector_izq, VectorArit vector_der) {
         LinkedList<Object> l = new LinkedList<>();
         if (null == vector_izq.getTipo_dato()) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar" + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -136,17 +130,68 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO + ENTERO
                         case INTEGER: {
-                            l.add((Integer) vector_izq.Acceder(0) + (Integer) vector_der.Acceder(0));
+                            //l.add((Integer) vector_izq.Acceder(0) + (Integer) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) + (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e + (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) + (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO + DOUBLE
                         case DOUBLE: {
-                            l.add((Integer) vector_izq.Acceder(0) + (Double) vector_der.Acceder(0));
+                            //l.add((Integer) vector_izq.Acceder(0) + (Double) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) + (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e + (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) + (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         //ENTERO + CADENA
                         case STRING:
-                            l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
+                            //l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add(vector_izq.Acceder(0).toString() + e.toString());
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add(e.toString() + vector_der.Acceder(0).toString());
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add(vector_izq.Acceder(i).toString() + vector_der.Acceder(i).toString());
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.STRING, l);
 
                         default:
@@ -157,15 +202,66 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE + DOUBLE
                         case DOUBLE:
-                            l.add((Double) vector_izq.Acceder(0) + (Double) vector_der.Acceder(0));
+                            //l.add((Double) vector_izq.Acceder(0) + (Double) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) + (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e + (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) + (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE + ENTERO
                         case INTEGER:
-                            l.add((Double) vector_izq.Acceder(0) + (Integer) vector_der.Acceder(0));
+                            //l.add((Double) vector_izq.Acceder(0) + (Integer) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) + (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e + (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) + (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE + CADENA
                         case STRING:
-                            l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
+                            //l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add(vector_izq.Acceder(0).toString() + e.toString());
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add(e.toString() + vector_der.Acceder(0).toString());
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add(vector_izq.Acceder(i).toString() + vector_der.Acceder(i).toString());
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.STRING, l);
 
                         default:
@@ -176,7 +272,24 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //BOOL + STRING
                         case STRING:
-                            l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
+                            //l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add(vector_izq.Acceder(0).toString() + e.toString());
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add(e.toString() + vector_der.Acceder(0).toString());
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add(vector_izq.Acceder(i).toString() + vector_der.Acceder(i).toString());
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.STRING, l);
 
                         default:
@@ -184,7 +297,23 @@ public class ExpAritmetica extends Operacion {
                     }
                 case STRING:
                     //CADENA + CUALQUIER OTRO
-                    l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
+                    if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                        if (vector_izq.getTamanio() == 1) {
+                            for (Object e : vector_der.getValores()) {
+                                l.add(vector_izq.Acceder(0).toString() + e.toString());
+                            }
+                        } else {
+                            for (Object e : vector_izq.getValores()) {
+                                l.add(e.toString() + vector_der.Acceder(0).toString());
+                            }
+                        }
+                    } else if (this.NvsN(vector_izq, vector_der)) {
+                        for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                            l.add(vector_izq.Acceder(i).toString() + vector_der.Acceder(i).toString());
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.STRING, l);
 
                 default:
@@ -200,7 +329,7 @@ public class ExpAritmetica extends Operacion {
      * @param vector_der operador derecho
      * @return Vector de tamanio uno
      */
-    private Object RestaVectoresBase(VectorArit vector_izq, VectorArit vector_der) {
+    private Object RestaVectores(VectorArit vector_izq, VectorArit vector_der) {
         LinkedList<Object> l = new LinkedList<>();
         if (null == vector_izq.getTipo_dato()) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede restar " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -211,12 +340,47 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO - ENTERO
                         case INTEGER: {
-                            l.add((Integer) vector_izq.Acceder(0) - (Integer) vector_der.Acceder(0));
+                            //l.add((Integer) vector_izq.Acceder(0) - (Integer) vector_der.Acceder(0));
+                            //VECTOR[1] * VECTOR[1]
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) - (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e - (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) - (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Resta: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO - DOUBLE
                         case DOUBLE: {
-                            l.add((Integer) vector_izq.Acceder(0) - (Double) vector_der.Acceder(0));
+                            //l.add((Integer) vector_izq.Acceder(0) - (Double) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) - (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e - (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) - (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Resta: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
@@ -227,11 +391,44 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE - DOUBLE
                         case DOUBLE:
-                            l.add((Double) vector_izq.Acceder(0) - (Double) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) - (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e - (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) - (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Resta: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE - ENTERO
                         case INTEGER:
-                            l.add((Double) vector_izq.Acceder(0) - (Integer) vector_der.Acceder(0));
+                            //l.add((Double) vector_izq.Acceder(0) - (Integer) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) - (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e - (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) - (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Resta: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede restar double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -244,13 +441,13 @@ public class ExpAritmetica extends Operacion {
     }
 
     /**
-     * Función para multiplicar vector de tamanio uno
+     * Función para multiplicar vectores
      *
      * @param vector_izq operador izquierdo
      * @param vector_der operador derecho
-     * @return Vector de tamanio uno
+     * @return VectorArit o Error
      */
-    private Object MultiplicacionVectoresBase(VectorArit vector_izq, VectorArit vector_der) {
+    private Object MultiplicacionVectores(VectorArit vector_izq, VectorArit vector_der) {
         LinkedList<Object> l = new LinkedList<>();
         if (null == vector_izq.getTipo_dato()) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede multiplicar " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -261,12 +458,46 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO * ENTERO
                         case INTEGER: {
-                            l.add((Integer) vector_izq.Acceder(0) * (Integer) vector_der.Acceder(0));
+                            //VECTOR[1] * VECTOR[1]
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) * (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e * (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) * (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO * DOUBLE
                         case DOUBLE: {
-                            l.add((Integer) vector_izq.Acceder(0) * (Double) vector_der.Acceder(0));
+                            //VECTOR[1] * VECTOR[1]
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) * (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e * (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) * (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
@@ -277,11 +508,47 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE * DOUBLE
                         case DOUBLE:
-                            l.add((Double) vector_izq.Acceder(0) * (Double) vector_der.Acceder(0));
+                            //l.add((Double) vector_izq.Acceder(0) * (Double) vector_der.Acceder(0));
+                            //VECTOR[1] * VECTOR[1]
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) * (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e * (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) * (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE * ENTERO
                         case INTEGER:
-                            l.add((Double) vector_izq.Acceder(0) * (Integer) vector_der.Acceder(0));
+                            //l.add((Double) vector_izq.Acceder(0) * (Integer) vector_der.Acceder(0));
+                            //VECTOR[1] * VECTOR[1]
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) * (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e * (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) * (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede multiplicar double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -311,12 +578,46 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO %% ENTERO
                         case INTEGER: {
-                            l.add((Integer) vector_izq.Acceder(0) % (Integer) vector_der.Acceder(0));
+                            //l.add((Integer) vector_izq.Acceder(0) % (Integer) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) % (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e % (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) % (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Modulo: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO %% DOUBLE
                         case DOUBLE: {
-                            l.add((Integer) vector_izq.Acceder(0) % (Double) vector_der.Acceder(0));
+                            //l.add((Integer) vector_izq.Acceder(0) % (Double) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) % (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e % (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) % (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Modulo: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
@@ -327,11 +628,45 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE %% DOUBLE
                         case DOUBLE:
-                            l.add((Double) vector_izq.Acceder(0) % (Double) vector_der.Acceder(0));
+                            //l.add((Double) vector_izq.Acceder(0) % (Double) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) % (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e % (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) % (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Modulo: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE %% ENTERO
                         case INTEGER:
-                            l.add((Double) vector_izq.Acceder(0) % (Integer) vector_der.Acceder(0));
+                            //l.add((Double) vector_izq.Acceder(0) % (Integer) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) % (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e % (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) % (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Modulo: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular modulo double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -344,13 +679,13 @@ public class ExpAritmetica extends Operacion {
     }
 
     /**
-     * Función para multiplicar vector de tamanio uno
+     * Función para dividir vectores
      *
      * @param vector_izq operador izquierdo
      * @param vector_der operador derecho
-     * @return Vector de tamanio uno
+     * @return VectorArit
      */
-    private Object DivisionVectoresBase(VectorArit vector_izq, VectorArit vector_der) {
+    private Object DivisionVectores(VectorArit vector_izq, VectorArit vector_der) {
         LinkedList<Object> l = new LinkedList<>();
         if (null == vector_izq.getTipo_dato()) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede dividir " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -361,12 +696,46 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO / ENTERO
                         case INTEGER: {
-                            l.add((Integer) vector_izq.Acceder(0) / (Integer) vector_der.Acceder(0));
+                            //l.add((Integer) vector_izq.Acceder(0) / (Integer) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) / (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e / (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) / (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "División: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO / DOUBLE
                         case DOUBLE: {
-                            l.add((Integer) vector_izq.Acceder(0) / (Double) vector_der.Acceder(0));
+                            //l.add((Integer) vector_izq.Acceder(0) / (Double) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Integer) vector_izq.Acceder(0) / (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Integer) e / (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Integer) vector_izq.Acceder(i) / (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "División: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
@@ -377,11 +746,45 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE / DOUBLE
                         case DOUBLE:
-                            l.add((Double) vector_izq.Acceder(0) / (Double) vector_der.Acceder(0));
+                            //l.add((Double) vector_izq.Acceder(0) / (Double) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) / (Double) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e / (Double) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) / (Double) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "División: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE / ENTERO
                         case INTEGER:
-                            l.add((Double) vector_izq.Acceder(0) / (Integer) vector_der.Acceder(0));
+                            //l.add((Double) vector_izq.Acceder(0) / (Integer) vector_der.Acceder(0));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add((Double) vector_izq.Acceder(0) / (Integer) e);
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add((Double) e / (Integer) vector_der.Acceder(0));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add((Double) vector_izq.Acceder(i) / (Integer) vector_der.Acceder(i));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "División: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede dividir double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -394,13 +797,13 @@ public class ExpAritmetica extends Operacion {
     }
 
     /**
-     * Función para calcular la potencia vector de tamanio uno
+     * Función para calcular la potencia vectores
      *
      * @param vector_izq operador izquierdo
      * @param vector_der operador derecho
-     * @return Vector de tamanio uno
+     * @return VectorArit
      */
-    private Object PotenciaVectoresBase(VectorArit vector_izq, VectorArit vector_der) {
+    private Object PotenciaVectores(VectorArit vector_izq, VectorArit vector_der) {
         LinkedList<Object> l = new LinkedList<>();
         if (null == vector_izq.getTipo_dato()) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular la potencia " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -411,12 +814,46 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO ^ ENTERO
                         case INTEGER: {
-                            l.add(Math.pow((Integer) vector_izq.Acceder(0), (Integer) vector_der.Acceder(0)));
+                            //l.add(Math.pow((Integer) vector_izq.Acceder(0), (Integer) vector_der.Acceder(0)));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add(Math.pow((Integer) vector_izq.Acceder(0), (Integer) e));
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add(Math.pow((Integer) e, (Integer) vector_der.Acceder(0)));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add(Math.pow((Integer) vector_izq.Acceder(i), (Integer) vector_der.Acceder(i)));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Potencia: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         //ENTERO ^ DOUBLE
                         case DOUBLE: {
-                            l.add(Math.pow((Integer) vector_izq.Acceder(0), (Double) vector_der.Acceder(0)));
+                            //l.add(Math.pow((Integer) vector_izq.Acceder(0), (Double) vector_der.Acceder(0)));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add(Math.pow((Integer) vector_izq.Acceder(0), (Double) e));
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add(Math.pow((Integer) e, (Double) vector_der.Acceder(0)));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add(Math.pow((Integer) vector_izq.Acceder(i), (Double) vector_der.Acceder(i)));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Potencia: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         default:
@@ -427,11 +864,45 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //DOUBLE ^ DOUBLE
                         case DOUBLE:
-                            l.add(Math.pow((Double) vector_izq.Acceder(0), (Double) vector_der.Acceder(0)));
+                            //l.add(Math.pow((Double) vector_izq.Acceder(0), (Double) vector_der.Acceder(0)));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add(Math.pow((Double) vector_izq.Acceder(0), (Double) e));
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add(Math.pow((Double) e, (Double) vector_der.Acceder(0)));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add(Math.pow((Double) vector_izq.Acceder(i), (Double) vector_der.Acceder(i)));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Potencia: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE ^ ENTERO
                         case INTEGER:
-                            l.add(Math.pow((Double) vector_izq.Acceder(0), (Integer) vector_der.Acceder(0)));
+                            //l.add(Math.pow((Double) vector_izq.Acceder(0), (Integer) vector_der.Acceder(0)));
+                            if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
+                                if (vector_izq.getTamanio() == 1) {
+                                    for (Object e : vector_der.getValores()) {
+                                        l.add(Math.pow((Double) vector_izq.Acceder(0), (Integer) e));
+                                    }
+                                } else {
+                                    for (Object e : vector_izq.getValores()) {
+                                        l.add(Math.pow((Double) e, (Integer) vector_der.Acceder(0)));
+                                    }
+                                }
+                            } else if (this.NvsN(vector_izq, vector_der)) {
+                                for (int i = 0; i < vector_izq.getTamanio(); i++) {
+                                    l.add(Math.pow((Double) vector_izq.Acceder(i), (Integer) vector_der.Acceder(i)));
+                                }
+                            } else {
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Potencia: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                            }
                             return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular mla potencia double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -446,18 +917,30 @@ public class ExpAritmetica extends Operacion {
     /**
      * Hace negativo el vector
      *
-     * @param vector
-     * @return
+     * @param vector Vector a volver negativo
+     * @return VectorArit o Error
      */
-    private Object NegativoVectoresBase(VectorArit vector) {
+    private Object NegativoVectores(VectorArit vector) {
         LinkedList<Object> l = new LinkedList<>();
         switch (vector.getTipo_dato()) {
             case DOUBLE:
-                l.add(-1 * (Integer) vector.Acceder(0));
+                if (vector.getTamanio() == 1) {
+                    l.add(-1 * (Double) vector.Acceder(0));
+                } else {
+                    for (Object e : vector.getValores()) {
+                        l.add(-1 * (Double) e);
+                    }
+                }
                 return new VectorArit(TipoPrimitivo.DOUBLE, l);
 
             case INTEGER:
-                l.add(-1 * (Integer) vector.Acceder(0));
+                if (vector.getTamanio() == 1) {
+                    l.add(-1 * (Integer) vector.Acceder(0));
+                } else {
+                    for (Object e : vector.getValores()) {
+                        l.add(-1 * (Integer) e);
+                    }
+                }
                 return new VectorArit(TipoPrimitivo.INTEGER, l);
 
             default:

@@ -24,7 +24,7 @@ import Editor.VentanaErrores;
 %init} 
  
 BLANCOS =               [ \r\t]+
-ID  =                   ([A-Za-z]+[".""_"0-9A-Za-z]*)|("."[A-Za-z][".""_"0-9A-Za-z]*)
+ID  =                   ([A-Za-z]+[".""_"0-9A-Za-z]*)|("."+([A-Za-z][".""_"0-9A-Za-z]*)?)
 D   =                   [0-9]+
 DD  =                   [0-9]+("."[0-9]+)
 COMENTUNILINEA =        ("#".*\r\n)|("#".*\n)|("#".*\r)

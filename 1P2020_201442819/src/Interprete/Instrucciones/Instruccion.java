@@ -5,6 +5,8 @@
  */
 package Interprete.Instrucciones;
 
+import Editor.VentanaErrores;
+import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
@@ -69,7 +71,7 @@ public abstract class Instruccion extends NodoAST {
                     continue;
                 }
                 Object result = i instanceof Instruccion ? ((Instruccion) i).Ejecutar(t) : ((Expresion) i).Resolver(t);
-                if (result instanceof Break) {
+                if (result instanceof Break || result instanceof Continue) {
                     return result;
                 }
             }
@@ -85,6 +87,25 @@ public abstract class Instruccion extends NodoAST {
      */
     public LinkedList<NodoAST> getCuerpo() {
         return cuerpo;
+    }
+
+    /**
+     * Devuelve el valor booleano de acuerdo a la estructura que resulte de
+     * resolver la condición asociada
+     *
+     * @param estructura Estructra vector, lista, array o matriz
+     * @return Object booleano o error
+     */
+    protected Object getValorBool(Object estructura) {
+        if (estructura instanceof VectorArit) {
+            VectorArit vc = (VectorArit) estructura;
+            if (!vc.isBool()) {
+                return VentanaErrores.getVenErrores().AgregarError("Semántico", "Se esperaba un booleano en la condición del if", this.getFila(), this.getColumna());
+            }
+            return (Boolean) vc.getValores().getFirst();
+        } else {
+            throw new UnsupportedOperationException("Solo puedo manejar vectores en el while");
+        }
     }
 
 }

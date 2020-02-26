@@ -44,7 +44,7 @@ public class AccesoAsig extends Instruccion {
      */
     public AccesoAsig(AccesoGet a, Expresion e) {
         super(a.getFila(), a.getColumna());
-        this.id = a.getId();
+        this.id = (Identificador)a.getId();
         this.lista_index = a.getLista_index();
         this.valor = e;
     }

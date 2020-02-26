@@ -12,6 +12,7 @@ import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.TipoPrimitivo;
 import TablaSimbolos.TablaSimbolos;
 import java.util.LinkedList;
+import java.util.Objects;
 
 /**
  * Clase que maneja las opearciones relacionales en el lenguaje
@@ -49,64 +50,308 @@ public class ExpRelacional extends Operacion {
         if (val_izq instanceof VectorArit && val_der instanceof VectorArit) {
             VectorArit vector_izq = (VectorArit) val_izq;
             VectorArit vector_der = (VectorArit) val_der;
-
-            //COMPARACION DE DOS VECTORES DE TAMANIO 1
-            if (vector_izq.getTamanio() == 1 && vector_der.getTamanio() == 1) {
-                return this.ComparacionBaseVectores(vector_izq, vector_der);
-            }
+            return this.ComparacionVectores(vector_izq, vector_der);
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Solo aguanto comparación de vectores"); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
      * Función que opera los vectores de tamaño uno
+     *
      * @param izq Operador Izquierdo
      * @param der Operador Derecho
      * @return Vector con resultado o ErrorCompi
      */
-    private Object ComparacionBaseVectores(VectorArit izq, VectorArit der) {
+    private Object ComparacionVectores(VectorArit izq, VectorArit der) {
         LinkedList<Object> l = new LinkedList<>();
         if (izq.isNumerico() && der.isNumerico()) {
             switch (this.getTipo()) {
                 case MAYOR:
-                    l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) > (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) > (der.isInteger() ? (Integer) e : (Double) e));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) e : (Double) e) > (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add((izq.isInteger() ? (Integer) izq.Acceder(i) : (Double) izq.Acceder(i)) > (der.isInteger() ? (Integer) der.Acceder(i) : (Double) der.Acceder(i)));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "MayorQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MENOR:
-                    l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) < (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) < (der.isInteger() ? (Integer) e : (Double) e));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) e : (Double) e) < (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add((izq.isInteger() ? (Integer) izq.Acceder(i) : (Double) izq.Acceder(i)) < (der.isInteger() ? (Integer) der.Acceder(i) : (Double) der.Acceder(i)));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "MenorQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MENORIGUAL:
-                    l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) <= (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) <= (der.isInteger() ? (Integer) e : (Double) e));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) e : (Double) e) <= (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add((izq.isInteger() ? (Integer) izq.Acceder(i) : (Double) izq.Acceder(i)) <= (der.isInteger() ? (Integer) der.Acceder(i) : (Double) der.Acceder(i)));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "MenorIgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MAYORIGUAL:
-                    l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) >= (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) >= (der.isInteger() ? (Integer) e : (Double) e));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) e : (Double) e) >= (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add((izq.isInteger() ? (Integer) izq.Acceder(i) : (Double) izq.Acceder(i)) >= (der.isInteger() ? (Integer) der.Acceder(i) : (Double) der.Acceder(i)));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "MayorIgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 case IGUALQUE:
-                    l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) == (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) == (der.isInteger() ? (Integer) e : (Double) e));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) e : (Double) e) == (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add((izq.isInteger() ? (Integer) izq.Acceder(i) : (Double) izq.Acceder(i)) == (der.isInteger() ? (Integer) der.Acceder(i) : (Double) der.Acceder(i)));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "IgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 default:
-                    l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) != (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) != (der.isInteger() ? (Integer) e : (Double) e));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add((izq.isInteger() ? (Integer) e : (Double) e) != (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add((izq.isInteger() ? (Integer) izq.Acceder(i) : (Double) izq.Acceder(i)) != (der.isInteger() ? (Integer) der.Acceder(i) : (Double) der.Acceder(i)));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "DiferenteQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
             }
         } else if (izq.isString() && der.isString()) {
             switch (this.getTipo()) {
                 case IGUALQUE:
-                    l.add(izq.Acceder(0).toString().equals(der.Acceder(0).toString()));
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add(izq.Acceder(0).toString().equals(e.toString()));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add(e.toString().equals(der.Acceder(0).toString()));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add(izq.Acceder(i).toString().equals(der.Acceder(i).toString()));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "IgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 case DIFERENTE:
-                    l.add(!izq.Acceder(0).toString().equals(der.Acceder(0).toString()));
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add(!izq.Acceder(0).toString().equals(e.toString()));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add(!e.toString().equals(der.Acceder(0).toString()));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add(!izq.Acceder(i).toString().equals(der.Acceder(i).toString()));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "DiferenteQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MAYOR:
-                    l.add(izq.Acceder(0).toString().hashCode() > der.Acceder(0).toString().hashCode());
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                int r = izq.Acceder(0).toString().compareTo(e.toString());
+                                l.add(r > 0);
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                int r = e.toString().compareTo(der.Acceder(0).toString());
+                                l.add(r > 0);
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            int r = izq.Acceder(i).toString().compareTo(der.Acceder(i).toString());
+                            l.add(r > 0);
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "MayorQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MENOR:
-                    l.add(izq.Acceder(0).toString().hashCode() < der.Acceder(0).toString().hashCode());
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                int r = izq.Acceder(0).toString().compareTo(e.toString());
+                                l.add(r < 0);
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                int r = e.toString().compareTo(der.Acceder(0).toString());
+                                l.add(r < 0);
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            int r = izq.Acceder(i).toString().compareTo(der.Acceder(i).toString());
+                            l.add(r < 0);
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "MenorQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MAYORIGUAL:
-                    l.add(izq.Acceder(0).toString().hashCode() >= der.Acceder(0).toString().hashCode());
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                int r = izq.Acceder(0).toString().compareTo(e.toString());
+                                l.add(r >= 0);
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                int r = e.toString().compareTo(der.Acceder(0).toString());
+                                l.add(r >= 0);
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            int r = izq.Acceder(i).toString().compareTo(der.Acceder(i).toString());
+                            l.add(r >= 0);
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "MayorIgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
                 default:
-                    l.add(izq.Acceder(0).toString().hashCode() <= der.Acceder(0).toString().hashCode());
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                int r = izq.Acceder(0).toString().compareTo(e.toString());
+                                l.add(r <= 0);
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                int r = e.toString().compareTo(der.Acceder(0).toString());
+                                l.add(r <= 0);
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            int r = izq.Acceder(i).toString().compareTo(der.Acceder(i).toString());
+                            l.add(r <= 0);
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "MenorIgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
                     return new VectorArit(TipoPrimitivo.BOOL, l);
+            }
+        } else if (izq.isBool() && der.isBool()) {
+            switch (this.getTipo()) {
+                case IGUALQUE:
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add(Objects.equals((Boolean) izq.Acceder(0), e));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add(Objects.equals((Boolean) e, (Boolean) der.Acceder(0)));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add(Objects.equals((Boolean) izq.Acceder(i), (Boolean) der.Acceder(i)));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "IgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
+                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                case DIFERENTE:
+                    if (this.UnoVsN(izq, der)) {
+                        if (izq.getTamanio() == 1) {
+                            for (Object e : der.getValores()) {
+                                l.add(!Objects.equals((Boolean) izq.Acceder(0), e));
+                            }
+                        } else {
+                            for (Object e : izq.getValores()) {
+                                l.add(!Objects.equals((Boolean) e, (Boolean) der.Acceder(0)));
+                            }
+                        }
+                    } else if (this.NvsN(izq, der)) {
+                        for (int i = 0; i < izq.getTamanio(); i++) {
+                            l.add(!Objects.equals((Boolean) izq.Acceder(i), (Boolean) der.Acceder(i)));
+                        }
+                    } else {
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "IgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                    }
+                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                default:
+                    return VentanaErrores.getVenErrores().AgregarError("Semantico", "Comparación no valida entre booleanos", this.getFila(), this.getColumna());
             }
         } else {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede comparar " + izq.getTipo_dato() + " con " + der.getTipo_dato(), this.getFila(), this.getColumna());

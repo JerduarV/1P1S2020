@@ -5,11 +5,13 @@
  */
 package Interprete.Expresiones.Operaciones;
 
+import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 
 /**
- * Claes abstracta operación de la que heredan todas las operaciones aritmeticas,
- * lógicas y relacionales
+ * Claes abstracta operación de la que heredan todas las operaciones
+ * aritmeticas, lógicas y relacionales
+ *
  * @author Jerduar
  */
 public abstract class Operacion extends Expresion {
@@ -28,7 +30,7 @@ public abstract class Operacion extends Expresion {
      * Operador unario
      */
     private final Expresion op_unario;
-    
+
     /**
      * Tipo de la operación a resolver
      */
@@ -59,7 +61,7 @@ public abstract class Operacion extends Expresion {
      * @param fila fila en la que se encuentra
      * @param col columna en la que se encuentra
      */
-    public Operacion(Expresion op_unario,TipoOpe o, Integer fila, Integer col) {
+    public Operacion(Expresion op_unario, TipoOpe o, Integer fila, Integer col) {
         super(fila, col);
         this.op_unario = op_unario;
         this.op_der = null;
@@ -96,10 +98,33 @@ public abstract class Operacion extends Expresion {
 
     /**
      * Retorna el tipo de operación que se realiza
-     * @return 
+     *
+     * @return
      */
     public TipoOpe getTipo() {
         return tipo;
+    }
+
+    /**
+     * Determina si la operación es entre un vector de tamaño 1 y otro de tamaño
+     * n donde n es mayor a 1
+     *
+     * @param vector_izq operador izquierdo
+     * @param vector_der operador derecho
+     * @return valor booleano
+     */
+    protected boolean UnoVsN(VectorArit vector_izq, VectorArit vector_der) {
+        return vector_izq.getTamanio() == 1 && vector_der.getTamanio() > vector_izq.getTamanio() || vector_der.getTamanio() == 1 && vector_izq.getTamanio() > vector_der.getTamanio();
+    }
+
+    /**
+     * Determina si la operación es entre dos vectores de tamaño n
+     * @param izq operador izquierdo
+     * @param der operador derecho
+     * @return valor booleano
+     */
+    protected boolean NvsN(VectorArit izq, VectorArit der) {
+        return izq.getTamanio() == der.getTamanio();
     }
 
 }

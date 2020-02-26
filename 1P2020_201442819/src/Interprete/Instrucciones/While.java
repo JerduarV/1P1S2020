@@ -7,7 +7,6 @@ package Interprete.Instrucciones;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
-import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
@@ -58,9 +57,11 @@ public class While extends Instruccion {
             TablaSimbolos nueva = new TablaSimbolos(t);
             nueva.IncrementarDisplay();
             Object result = this.Recorrer(nueva);
-            
-            if(result instanceof Break){
+
+            if (result instanceof Break) {
                 break;
+            } else if (result instanceof Continue) {
+                continue;
             }
 
             c = this.condicion.Resolver(t);
@@ -74,31 +75,12 @@ public class While extends Instruccion {
             if (c2 instanceof ErrorCompi) {
                 return c2;
             }
-            
+
             //ACTUALIZACIÓN DE LA CONDICIÓN
             b = (Boolean) c2;
         }
 
         return null;
-    }
-
-    /**
-     * Devuelve el valor booleano de acuerdo a la estructura que resulte de
-     * resolver la condición asociada
-     *
-     * @param estructura Estructra vector, lista, array o matriz
-     * @return Object booleano o error
-     */
-    private Object getValorBool(Object estructura) {
-        if (estructura instanceof VectorArit) {
-            VectorArit vc = (VectorArit) estructura;
-            if (!vc.isBool()) {
-                return VentanaErrores.getVenErrores().AgregarError("Semántico", "Se esperaba un booleano en la condición del if", this.getFila(), this.getColumna());
-            }
-            return (Boolean) vc.getValores().getFirst();
-        } else {
-            throw new UnsupportedOperationException("Solo puedo manejar vectores en el while");
-        }
     }
 
     @Override

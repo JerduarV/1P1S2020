@@ -9,25 +9,25 @@ import Editor.VentanaErrores;
 import TablaSimbolos.TablaSimbolos;
 
 /**
- * Clase que simula el comportamiento de un break
+ * Clase que simula el comportamiento de un continue
  *
  * @author Jerduar
  */
-public class Break extends Instruccion {
+public class Continue extends Instruccion {
 
     /**
-     * Constructor de una instrucción break
+     * Constructor de un instruccion continue
      *
      * @param fila Fila en la que se encuentra
-     * @param col Columan en la que se encunetra
+     * @param col Columan en la que se encuentra
      */
-    public Break(Integer fila, Integer col) {
+    public Continue(Integer fila, Integer col) {
         super(fila, col);
     }
 
     @Override
     public Object Ejecutar(TablaSimbolos t) {
-        return t.getDisplay() > 0 ? this : VentanaErrores.getVenErrores().AgregarError("Semantico", "Break no puede venir fuera de un ciclo", this.getFila(), this.getColumna());
+        return t.getDisplay() > 0 ? this : VentanaErrores.getVenErrores().AgregarError("Semantico", "Continue no puede venir fuera de un ciclo", this.getFila(), this.getColumna());
     }
 
     @Override

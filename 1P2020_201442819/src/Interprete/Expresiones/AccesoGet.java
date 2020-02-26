@@ -20,7 +20,7 @@ public class AccesoGet extends Expresion {
     /**
      * Identificador de la variable a accesar
      */
-    private final Identificador id;
+    private final Expresion id;
 
     /**
      * Lista de indices para acceder a la estructura
@@ -33,7 +33,7 @@ public class AccesoGet extends Expresion {
      * @param id Identificador de la variable
      * @param l Lista de índices
      */
-    public AccesoGet(Identificador id, LinkedList<Indice> l) {
+    public AccesoGet(Expresion id, LinkedList<Indice> l) {
         super(id.getFila(), id.getColumna());
         this.id = id;
         this.lista_index = l;
@@ -52,10 +52,10 @@ public class AccesoGet extends Expresion {
             return AccesoGetVector((VectorArit) o, t);
         }
 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Solo puedo acceder a vectores"); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Identificador getId() {
+    public Expresion getId() {
         return id;
     }
 

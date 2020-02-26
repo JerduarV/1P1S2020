@@ -42,12 +42,35 @@ public class TablaSimbolos extends Hashtable {
     /**
      * Guarda la variable o le cambia el valor en la tabla de simbolos
      *
-     * @param nombre
-     * @param valor
+     * @param nombre Nombre de la variable a guardar o crear
+     * @param valor Valor a asignar
      */
     public void GuardarVariable(String nombre, Object valor) {
         int key = this.getHashCode(nombre, ROL.VARIABLE);
-        this.put(key, valor);
+//        this.put(key, valor);
+        if (this.BusarVariable(nombre) == null) {
+            this.put(key, valor);
+        } else {
+            this.SetVar(key, valor);
+        }
+    }
+
+    /**
+     * Setea el valor de una variable
+     *
+     * @param key Llave de la variable
+     * @param val Nuevo valor
+     */
+    private void SetVar(int key, Object val) {
+        if (this.containsKey(key)) {
+            this.put(key, val);
+        } else {
+            if (this.padre != null) {
+                this.padre.SetVar(key, val);
+            }else{
+                System.out.println("Que cagada :(");
+            }
+        }
     }
 
     /**

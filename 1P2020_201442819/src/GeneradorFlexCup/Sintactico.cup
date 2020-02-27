@@ -82,12 +82,11 @@ non terminal INI;
 non terminal NodoAST INSTR;
 non terminal LinkedList<NodoAST> L_INSTR, BLOQUE;
 non terminal Instruccion ASIGNACION,IF,ELSE,SWITCH,L_CASE,WHILE,DOWHILE,FOR,BREAK,CONTINUE;
-non terminal RETURN;
 non terminal Instruccion PARAM_FORM,DEC_FUN;
 non terminal LinkedList<Declaracion> L_PARAM_FORM;
 
 //EXPRESIONES
-non terminal Expresion EXP,EXP2,EXP3,EXP_TERNARIA,PRIMITIVO,ACCESO,CALL_FUN,PARAM_ACT;
+non terminal Expresion EXP,EXP2,EXP3,EXP_TERNARIA,PRIMITIVO,ACCESO,CALL_FUN,PARAM_ACT,RETURN;
 non terminal Indice INDEX;
 non terminal LinkedList<Indice> L_INDEX;
 non terminal LinkedList<Expresion> L_PARAM_ACT;
@@ -130,12 +129,12 @@ INSTR ::=
         ASIGNACION:i        {:RESULT = i;:}
     |   IF:i                {:RESULT = i;:}
     |   WHILE:w             {:RESULT = w;:}
-    |   DOWHILE
+    |   DOWHILE:d           {:RESULT = d;:}
     |   SWITCH
     |   FOR
     |   BREAK:i             {:RESULT = i;:}
     |   CONTINUE:c          {:RESULT = c;:}
-    |   RETURN
+    |   RETURN:r            {:RESULT = r;:}
     |   DEC_FUN:d           {:RESULT = d;:}
     |   CALL_FUN:c          {:RESULT = c;:}
     |   CALL_FUN:c PTCOMA   {:RESULT = c;:}
@@ -162,10 +161,10 @@ BREAK ::=
 ;
 
 RETURN ::=
-        RRETURN PARIZQ EXP PARDER
-    |   RRETURN
-    |   RRETURN PARIZQ EXP PARDER PTCOMA
-    |   RRETURN PTCOMA
+        RRETURN PARIZQ EXP:e PARDER         {:RESULT = new Return(e,eleft,eright);:}
+    |   RRETURN:r                           {:RESULT = new Return(rleft,rright);:}
+    |   RRETURN PARIZQ EXP:e PARDER PTCOMA  {:RESULT = new Return(e,eleft,eright);:}
+    |   RRETURN:r PTCOMA                    {:RESULT = new Return(rleft,rright);:}
 ;
 
 WHILE ::=
@@ -190,7 +189,7 @@ L_PARAM_ACT ::=
 ;
 
 PARAM_ACT ::=
-        RDEFAULT
+        RDEFAULT:r  {:RESULT = new ValorDefault(rleft,rright);:}
     |   EXP:e       {:RESULT = e;:}
 ;
 
@@ -205,8 +204,8 @@ PARAM_FORM ::=
 ;
 
 DOWHILE ::=
-        RDO BLOQUE RWHILE PARIZQ EXP PARDER PTCOMA
-    |   RDO BLOQUE RWHILE PARIZQ EXP PARDER
+        RDO BLOQUE:b RWHILE PARIZQ EXP:e PARDER PTCOMA          {:RESULT = new DoWhile(b,e,bleft,bright);:}
+    |   RDO BLOQUE:b RWHILE PARIZQ EXP:e PARDER                 {:RESULT = new DoWhile(b,e,bleft,bright);:}
 ;
 
 FOR ::=

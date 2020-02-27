@@ -61,11 +61,8 @@ public class ExpLogica extends Operacion {
                 if (!vector_unico.isBool()) {
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "Solo se puede negar valores booleanos", this.getFila(), this.getColumna());
                 }
+                return OperacionLogica(vector_unico, null);
 
-                //NEGACIÓN DE UN VECTOR DE TAMANIO 1
-                if (vector_unico.getTamanio() == 1) {
-                    return OperacionLogicaBase(vector_unico, null);
-                }
             }
         } else { //SI ES UNA OPERACIÓN BINARIA
             Object val_izq = this.getOp_izq().Resolver(t);
@@ -85,14 +82,12 @@ public class ExpLogica extends Operacion {
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "Solo se pueden operar valores booleanos", this.getFila(), this.getColumna());
                 }
 
-                //SUMA DE DOS VECTORES DE TAMANIO 1
-                if (vector_izq.getTamanio() == 1 && vector_der.getTamanio() == 1) {
-                    return this.OperacionLogicaBase(vector_izq, vector_der);
-                }
+                return this.OperacionLogica(vector_izq, vector_der);
+
             }
         }
 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("No soporto operaciones lógicas que no sean vectores"); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -107,17 +102,51 @@ public class ExpLogica extends Operacion {
      * @param der operador derecho
      * @return VectorArit con el resultado
      */
-    private Object OperacionLogicaBase(VectorArit izq, VectorArit der) {
+    private Object OperacionLogica(VectorArit izq, VectorArit der) {
         LinkedList<Object> l = new LinkedList<>();
         switch (this.getTipo()) {
             case AND:
-                l.add((Boolean) izq.Acceder(0) && (Boolean) der.Acceder(0));
+                if (this.NvsN(izq, der)) {
+                    for (int i = 0; i < izq.getTamanio(); i++) {
+                        l.add((Boolean) izq.Acceder(i) && (Boolean) der.Acceder(i));
+                    }
+                } else if (this.UnoVsN(izq, der)) {
+                    if (izq.getTamanio() == 1) {
+                        for (Object e : der.getValores()) {
+                            l.add((Boolean) izq.Acceder(0) && (Boolean) e);
+                        }
+                    } else {
+                        for (Object e : izq.getValores()) {
+                            l.add((Boolean) e && (Boolean) der.Acceder(0));
+                        }
+                    }
+                } else {
+                    return VentanaErrores.getVenErrores().AgregarError("Semantico", "AND: problema con el tamanio de los vectores", this.getFila(), this.getColumna());
+                }
                 break;
             case OR:
-                l.add((Boolean) izq.Acceder(0) || (Boolean) der.Acceder(0));
+                if (this.NvsN(izq, der)) {
+                    for (int i = 0; i < izq.getTamanio(); i++) {
+                        l.add((Boolean) izq.Acceder(i) || (Boolean) der.Acceder(i));
+                    }
+                } else if (this.UnoVsN(izq, der)) {
+                    if (izq.getTamanio() == 1) {
+                        for (Object e : der.getValores()) {
+                            l.add((Boolean) izq.Acceder(0) || (Boolean) e);
+                        }
+                    } else {
+                        for (Object e : izq.getValores()) {
+                            l.add((Boolean) e || (Boolean) der.Acceder(0));
+                        }
+                    }
+                } else {
+                    return VentanaErrores.getVenErrores().AgregarError("Semantico", "AND: problema con el tamanio de los vectores", this.getFila(), this.getColumna());
+                }
                 break;
             case NOT:
-                l.add(!(Boolean) izq.Acceder(0));
+                for (Object e : izq.getValores()) {
+                    l.add(!(Boolean) e);
+                }
                 break;
         }
         return new VectorArit(TipoPrimitivo.BOOL, l);

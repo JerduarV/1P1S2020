@@ -27,9 +27,10 @@ public class Declaracion extends Instruccion {
      * Valor por defecto
      */
     private final Expresion exp;
-    
+
     /**
      * Declaracion de parametro sin valor por defecto
+     *
      * @param id Identificador del parámetro
      * @param fila Fila en la que se encuentra
      * @param col Columan en la que se encuentra
@@ -42,6 +43,7 @@ public class Declaracion extends Instruccion {
 
     /**
      * Declaración de parámetro con valor por defecto
+     *
      * @param id Identificador del parámetro
      * @param exp Expresión que le da el valor defecto
      * @param fila Fila en la que se encuentra
@@ -56,13 +58,13 @@ public class Declaracion extends Instruccion {
     @Override
     public Object Ejecutar(TablaSimbolos t) {
         Object valor_defecto = "null";
-        if(exp != null){
+        if (exp != null) {
             valor_defecto = this.exp.Resolver(t);
-            if(valor_defecto instanceof ErrorCompi){
+            if (valor_defecto instanceof ErrorCompi) {
                 return VentanaErrores.getVenErrores().AgregarError("Sementico", "Error en la expresión por defecto", this.getFila(), this.getColumna());
             }
         }
-        
+
         return t.GuardarParametro(this.id, valor_defecto) ? null : VentanaErrores.getVenErrores().AgregarError("Semantico", "Ya existe el parametro " + this.id, this.getFila(), this.getColumna());
     }
 
@@ -73,10 +75,20 @@ public class Declaracion extends Instruccion {
 
     /**
      * Retorna el identificador del parámetro
+     *
      * @return Identificador del parámetro
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     * Devualeve si este parámetro tiene un valor por defecto
+     *
+     * @return
+     */
+    public boolean TieneValorDefault() {
+        return this.exp != null;
     }
 
 }

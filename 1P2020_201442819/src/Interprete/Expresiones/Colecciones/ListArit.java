@@ -5,10 +5,26 @@
  */
 package Interprete.Expresiones.Colecciones;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Jerduar
  */
-public class ListArit {
+public class ListArit extends Coleccion{
+
+    public ListArit(LinkedList<Object> v) {
+        super(v);
+    }
+
+    @Override
+    public String Typeof() {
+        return "LIST";
+    }
+
+    @Override
+    public Coleccion copiar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

@@ -29,6 +29,11 @@ public class TablaSimbolos extends Hashtable {
     private int display;
 
     /**
+     * Valor que determina si estoy en una función
+     */
+    private boolean EnFuncion;
+
+    /**
      * Constructor de la tabla de simbolos que recibe como parámetro a su tabla
      * padre
      *
@@ -37,6 +42,23 @@ public class TablaSimbolos extends Hashtable {
     public TablaSimbolos(TablaSimbolos padre) {
         this.padre = padre;
         this.display = padre == null ? 0 : this.padre.display;
+        this.EnFuncion = padre == null ? false : this.padre.EnFuncion;
+    }
+
+    /**
+     * Sete el valor para indicar que ahora se encuentra en una función
+     */
+    public void EntreEnFuncion() {
+        this.EnFuncion = true;
+    }
+
+    /**
+     * Indica si se encuentra en una función
+     *
+     * @return valor booleano
+     */
+    public boolean isEnFuncion() {
+        return EnFuncion;
     }
 
     /**
@@ -67,7 +89,7 @@ public class TablaSimbolos extends Hashtable {
         } else {
             if (this.padre != null) {
                 this.padre.SetVar(key, val);
-            }else{
+            } else {
                 System.out.println("Que cagada :(");
             }
         }

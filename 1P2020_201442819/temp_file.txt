@@ -1,2 +1,1 @@
-v = 6.0*c(4.5,8.9);
-print(v);
+print("hola");

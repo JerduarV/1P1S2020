@@ -34,15 +34,12 @@ public class VentanaEditor extends javax.swing.JFrame {
      * Método que da inicio al inteprete
      */
     private void Interpretar() {
+        this.LimpiarConsola();
         if ("".equals(this.getContenido())) {
             return;
         }
         if (this.dbOpciones.getSelectedIndex() == 1) {
-//            InterpreteGXML.IntepreteGXML gmxl = new IntepreteGXML();
-//            String path = gmxl.Traducir(this.getContenido());
-//            if (path != null) {
-//                AbrirTraduccion(path);
-//            }
+
 
         } else if (this.dbOpciones.getSelectedIndex() == 0) {
             Interprete i = new Interprete();
@@ -88,16 +85,6 @@ public class VentanaEditor extends javax.swing.JFrame {
             Pestania p = new Pestania(f.getPath());
             tabpane.addTab(p.getNombre_pestania(), p);
         }
-    }
-
-    private void AbrirTraduccion(String path) {
-        JFileChooser fc = new JFileChooser();
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Texto (*.fs, *.gxml, *.gdato)", "fs", "gxml", "gdato");
-        fc.setFileFilter(filtro);
-
-        Pestania p = new Pestania(path);
-        tabpane.addTab(p.getNombre_pestania(), p);
-
     }
 
     /**

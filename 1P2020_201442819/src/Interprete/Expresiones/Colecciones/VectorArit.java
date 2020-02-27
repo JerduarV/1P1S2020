@@ -13,17 +13,12 @@ import java.util.LinkedList;
  *
  * @author Jerduar
  */
-public class VectorArit {
+public class VectorArit extends Coleccion {
 
     /**
      * Tipo de dato que contiene el vector
      */
     private TipoPrimitivo tipo_dato;
-
-    /**
-     * Lista de valores que contiene el vector
-     */
-    private final LinkedList<Object> valores;
 
     /**
      * Constructor de la clase vector
@@ -32,8 +27,8 @@ public class VectorArit {
      * @param valores LinkedList de valores
      */
     public VectorArit(TipoPrimitivo tipo_dato, LinkedList<Object> valores) {
+        super(valores);
         this.tipo_dato = tipo_dato;
-        this.valores = valores;
     }
 
     /**
@@ -43,34 +38,6 @@ public class VectorArit {
      */
     public TipoPrimitivo getTipo_dato() {
         return tipo_dato;
-    }
-
-    /**
-     * Retorna la lista de valores del vector
-     *
-     * @return LinkedList de valores
-     */
-    public LinkedList<Object> getValores() {
-        return valores;
-    }
-
-    /**
-     * Retorna el tamanio de la coleccion
-     *
-     * @return
-     */
-    public int getTamanio() {
-        return this.valores.size();
-    }
-
-    /**
-     * Función para acceder a un valor del vector
-     *
-     * @param index índice entero
-     * @return Object valor
-     */
-    public Object Acceder(Integer index) {
-        return this.valores.get(index);
     }
 
     /**
@@ -133,14 +100,14 @@ public class VectorArit {
         }
 
         //SE RELLENA LAS CASILLAS INTERMEDIAS CON EL VALOR POR DEFECTO
-        if (index > this.valores.size() - 1) {
-            this.RellenarConDefault(index - this.valores.size());
-            this.valores.add(nuevo_valor.Acceder(0));
+        if (index > this.getValores().size() - 1) {
+            this.RellenarConDefault(index - this.getValores().size());
+            this.getValores().add(nuevo_valor.Acceder(0));
             return;
         }
 
         //SE ASIGNA EL NUEVO VALOR
-        this.valores.set(index, nuevo_valor.Acceder(0));
+        this.getValores().set(index, nuevo_valor.Acceder(0));
     }
 
     /**
@@ -174,10 +141,10 @@ public class VectorArit {
      */
     public void CasteoIntADouble() {
         this.tipo_dato = TipoPrimitivo.DOUBLE;
-        for (int i = 0; i < this.valores.size(); i++) {
-            Integer e = (Integer) this.valores.get(i);
+        for (int i = 0; i < this.getValores().size(); i++) {
+            Integer e = (Integer) this.getValores().get(i);
             Double nuevo = e.doubleValue();
-            this.valores.set(i, nuevo);
+            this.getValores().set(i, nuevo);
         }
     }
 
@@ -188,9 +155,9 @@ public class VectorArit {
      */
     public void casteoBoolACualquierNumerico(TipoPrimitivo t) {
         this.tipo_dato = t;
-        for (int i = 0; i < this.valores.size(); i++) {
-            Boolean e = (Boolean) this.valores.get(i);
-            this.valores.set(i, e ? (t == TipoPrimitivo.INTEGER ? 1 : 1.0) : (t == TipoPrimitivo.INTEGER ? 0 : 0.0));
+        for (int i = 0; i < this.getValores().size(); i++) {
+            Boolean e = (Boolean) this.getValores().get(i);
+            this.getValores().set(i, e ? (t == TipoPrimitivo.INTEGER ? 1 : 1.0) : (t == TipoPrimitivo.INTEGER ? 0 : 0.0));
         }
     }
 
@@ -217,25 +184,51 @@ public class VectorArit {
         }
 
         for (int i = 0; i < cantidad; i++) {
-            this.valores.add(defecto);
+            this.getValores().add(defecto);
         }
     }
 
     @Override
     public String toString() {
-        if(this.valores.size() == 1){
-            return this.valores.getFirst().toString();
-        }else{
+        if (this.getValores().size() == 1) {
+            return this.getValores().getFirst().toString();
+        } else {
             String l = "", aux = "";
             //System.out.println(this.valores.size());
-            for(Object e : this.valores){
+            for (Object e : this.getValores()) {
                 l += aux + e.toString();
                 aux = ",";
             }
             return "VECTOR[" + l + "]";
         }
     }
-    
-    
+
+    /**
+     * Función que retorna una nueva instancia del vector con los mismos
+     * elementos
+     *
+     * @return Nuevo vector con los mismos valores
+     */
+    public Coleccion copiarVector() {
+        LinkedList<Object> l = new LinkedList<>();
+        for (Object o : this.getValores()) {
+            l.add(o);
+        }
+        return new VectorArit(this.getTipo_dato(), l);
+    }
+
+    @Override
+    public String Typeof() {
+        return this.tipo_dato.toString();
+    }
+
+    @Override
+    public Coleccion copiar() {
+        LinkedList<Object> l = new LinkedList<>();
+        for (Object o : this.getValores()) {
+            l.add(o);
+        }
+        return new VectorArit(this.getTipo_dato(), l);
+    }
 
 }

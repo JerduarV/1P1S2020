@@ -49,19 +49,11 @@ public class Asignacion extends Instruccion{
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se pudo realizar la asignación por error en la expresión", this.getFila(), this.getColumna());
         }else{
             if(valor instanceof VectorArit){
-                valor = this.copiarVector((VectorArit)valor);
+                valor = ((VectorArit)valor).copiarVector();
             }
             t.GuardarVariable(identificador, valor);
             return null;
         }
-    }
-    
-    private VectorArit copiarVector(VectorArit v){
-        LinkedList<Object> l = new LinkedList<>();
-        for(Object o : v.getValores()){
-            l.add(o);
-        }
-        return new VectorArit(v.getTipo_dato(), l);
     }
 
     @Override

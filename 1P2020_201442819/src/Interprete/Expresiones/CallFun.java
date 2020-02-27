@@ -7,8 +7,10 @@ package Interprete.Expresiones;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
+import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Instrucciones.DecFuncion;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.Retorno;
 import java.util.LinkedList;
 
 /**
@@ -45,7 +47,7 @@ public class CallFun extends Expresion {
     @Override
     public Object Resolver(TablaSimbolos t) {
         Object f = t.BuscarFuncion(id);
-        
+
         //REVISO QUE LA FUNCIÓN EXISTA
         if (f == null) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No existe la funcion " + this.id, this.getFila(), this.getColumna());
@@ -65,20 +67,36 @@ public class CallFun extends Expresion {
         for (int i = 0; i < this.param_act.size(); i++) {
             funcion.getLista_param().get(i).Ejecutar(nueva);
 
+            if (funcion.getLista_param().get(i).TieneValorDefault() && this.param_act.get(i) instanceof ValorDefault) {
+                continue;
+            } else if (!funcion.getLista_param().get(i).TieneValorDefault() && this.param_act.get(i) instanceof ValorDefault) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "La función " + this.id + " no tienen un valor por defecto para el parametro " + funcion.getLista_param().get(i).getId(), this.getFila(), this.getColumna());
+            }
+
             //OBTENGO EL VALOR DEL PARÁMETRO QUE CORRESPONDE
             Object r = this.param_act.get(i).Resolver(t);
-            
+
             //VERIFICÓ QUE NO SEA UN ERROR
             if (r instanceof ErrorCompi) {
                 return VentanaErrores.getVenErrores().AgregarError("Semantico", "Hubo un error en la evaluación de los parametros", this.getFila(), this.getColumna());
             }
-            
+
+            if (r instanceof VectorArit) {
+                r = ((VectorArit) r).copiarVector();
+            }
+
             //SETEO SU VALOR CON EL PARÁMETRO ACTUAL
             nueva.GuardarVariable(funcion.getLista_param().get(i).getId(), r);
         }
-        
+
         //EJECUTO LA FUNCION
-        return funcion.Ejecutar(nueva);
+        nueva.EntreEnFuncion();
+
+        Object result = funcion.Ejecutar(nueva);
+        if (result instanceof Retorno) {
+            return ((Retorno) result).getValor();
+        }
+        return null;
     }
 
     @Override

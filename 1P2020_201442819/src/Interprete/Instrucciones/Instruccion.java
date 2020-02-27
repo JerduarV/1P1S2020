@@ -8,8 +8,10 @@ package Interprete.Instrucciones;
 import Editor.VentanaErrores;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.Return;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.Retorno;
 import java.util.LinkedList;
 
 /**
@@ -70,8 +72,9 @@ public abstract class Instruccion extends NodoAST {
                 if (i instanceof DecFuncion) {
                     continue;
                 }
+
                 Object result = i instanceof Instruccion ? ((Instruccion) i).Ejecutar(t) : ((Expresion) i).Resolver(t);
-                if (result instanceof Break || result instanceof Continue) {
+                if (result instanceof Break || result instanceof Continue || result instanceof Retorno) {
                     return result;
                 }
             }
@@ -100,7 +103,7 @@ public abstract class Instruccion extends NodoAST {
         if (estructura instanceof VectorArit) {
             VectorArit vc = (VectorArit) estructura;
             if (!vc.isBool()) {
-                return VentanaErrores.getVenErrores().AgregarError("Semántico", "Se esperaba un booleano en la condición del if", this.getFila(), this.getColumna());
+                return VentanaErrores.getVenErrores().AgregarError("Semántico", "Se esperaba un booleano en la condición", this.getFila(), this.getColumna());
             }
             return (Boolean) vc.getValores().getFirst();
         } else {

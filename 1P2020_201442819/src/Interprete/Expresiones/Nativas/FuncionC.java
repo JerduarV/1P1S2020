@@ -72,6 +72,9 @@ public class FuncionC extends Expresion {
 
     @Override
     public void dibujar() {
+        //node46["CallC" exp]
+        //for(hijos){hijo.dibujar(nodo46)}
+        //nodo45->nodo46
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -52,6 +52,10 @@ public class Arbol extends Instruccion {
         Print print = new Print(l_print);
         global.GuardarFuncion("print", print);
         
+        //RESERVANDO NOMBRE PARA LA FUNCIÓN C
+        DecFuncion c = new DecFuncion("c", null, null, -1, -1);
+        global.GuardarFuncion("c", c);
+        
     }
 
     @Override

@@ -1,1 +1,9 @@
-print("hola");
+x = 10;
+
+fun = (x)=>{
+	x = x * 8;
+	print(x);
+}
+
+fun(7);
+print(x);

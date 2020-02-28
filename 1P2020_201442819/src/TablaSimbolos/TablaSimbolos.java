@@ -151,9 +151,10 @@ public class TablaSimbolos extends Hashtable {
      */
     public void GuardarFuncion(String nombre, DecFuncion funcion) {
         int key = this.getHashCode(nombre, ROL.FUNCION);
-        if (this.containsKey(funcion)) {
+        if (this.containsKey(key)) {
             VentanaErrores.getVenErrores().AgregarError("Semantico", "Ya existe la función " + nombre, funcion.getFila(), funcion.getColumna());
         } else {
+            System.out.println("Se guardó con éxito la función: " + nombre);
             this.put(key, funcion);
         }
     }

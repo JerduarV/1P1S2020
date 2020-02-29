@@ -7,6 +7,7 @@ package Interprete.Expresiones;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
+import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Instrucciones.DecFuncion;
 import TablaSimbolos.TablaSimbolos;
@@ -81,8 +82,8 @@ public class CallFun extends Expresion {
                 return VentanaErrores.getVenErrores().AgregarError("Semantico", "Hubo un error en la evaluación de los parametros", this.getFila(), this.getColumna());
             }
 
-            if (r instanceof VectorArit) {
-                r = ((VectorArit) r).copiarVector();
+            if (r instanceof Coleccion) {
+                r = ((Coleccion) r).copiar();
             }
 
             //SETEO SU VALOR CON EL PARÁMETRO ACTUAL
@@ -102,6 +103,15 @@ public class CallFun extends Expresion {
     @Override
     public void dibujar() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Retorna la lista de parámetro actuales
+     *
+     * @return LinkedList de Expresión
+     */
+    public LinkedList<Expresion> getParam_act() {
+        return param_act;
     }
 
 }

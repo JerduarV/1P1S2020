@@ -118,6 +118,7 @@ INICIACADENA =          "\""
     "\\t"               {string.append("\t");}
     "\\r"               {string.append("\r");}
     "\\\\"              {string.append("\\");}
-    "\\"                {string.append("\"");}
+    "\\"                {string.append("\\\\");}
+    "\\\""              {string.append("\"");}
     [^\"]               {string.append(yytext());}
 }

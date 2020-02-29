@@ -1,0 +1,26 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Interprete.Expresiones.Colecciones;
+
+import Interprete.Expresiones.TipoPrimitivo;
+import java.util.LinkedList;
+
+/**
+ *
+ * @author Jerduar
+ */
+public class ArrayArit extends Coleccion{
+
+    public ArrayArit(TipoPrimitivo t, LinkedList<Object> v) {
+        super(t, v);
+    }
+
+    @Override
+    public Coleccion copiar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+}

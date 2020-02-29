@@ -7,11 +7,13 @@ package Interprete.Expresiones;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
+import Interprete.Expresiones.Colecciones.ListArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import TablaSimbolos.TablaSimbolos;
 import java.util.LinkedList;
 
 /**
+ * Clase que maneja los accesos a las estructuras para recuperar un valor
  *
  * @author Jerduar
  */
@@ -50,15 +52,27 @@ public class AccesoGet extends Expresion {
 
         if (o instanceof VectorArit) {
             return AccesoGetVector((VectorArit) o, t);
+        } else if (o instanceof ListArit) {
+            return this.AccesoLista((ListArit) o, t);
         }
 
         throw new UnsupportedOperationException("Solo puedo acceder a vectores"); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Retorna el Id
+     *
+     * @return String id
+     */
     public Expresion getId() {
         return id;
     }
 
+    /**
+     * Retorna la lista de indices
+     *
+     * @return LinkedList de indices
+     */
     public LinkedList<Indice> getLista_index() {
         return lista_index;
     }
@@ -105,6 +119,45 @@ public class AccesoGet extends Expresion {
 
         l.add(vector.Acceder(y - 1));
         return new VectorArit(vector.getTipo_dato(), l);
+    }
+
+    private Object AccesoLista(ListArit lista, TablaSimbolos t) {
+
+        Indice i = this.lista_index.getFirst();
+
+        Object in = i.getExp().Resolver(t);
+
+        if (in instanceof ErrorCompi) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Hubo un error en los indices", this.getFila(), this.getColumna());
+        }
+
+        VectorArit index = (VectorArit) in;
+
+        if (in instanceof VectorArit) {
+            index = (VectorArit) index;
+        } else {
+            throw new UnsupportedOperationException("No he validado que pasa cuando vienen otras cosas diferentes a vectores en el indice -> ACCESO GET");
+        }
+
+        if (!index.isInteger()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Se esperaba un entero en el índice", this.getFila(), this.getColumna());
+        }
+
+        Integer y = (Integer) index.Acceder(0);
+
+        if (y < 1 || y > lista.getTamanio()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indice fuera de rango", this.getFila(), this.getColumna());
+        }
+        
+        //SI ES UN ACCESO SIMPLE RETORNA LO QUE CONTIENE EL POSICIÓN Y DENTRO DE UNA NUEVA LISTA
+        if (i.isSimple()) {
+            LinkedList<Object> l = new LinkedList<>();
+            l.add(lista.Acceder(y-1));
+            return new ListArit(l);
+        } else {
+            //SI ES UN ACCESO DOBLE DEVUELVE LO QUE SEA QUE HAYA EN LA POSICIÓN Y
+            return lista.Acceder(y-1);
+        }
     }
 
     @Override

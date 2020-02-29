@@ -16,28 +16,13 @@ import java.util.LinkedList;
 public class VectorArit extends Coleccion {
 
     /**
-     * Tipo de dato que contiene el vector
-     */
-    private TipoPrimitivo tipo_dato;
-
-    /**
      * Constructor de la clase vector
      *
      * @param tipo_dato Tipo de dato primitivo que contiene
      * @param valores LinkedList de valores
      */
     public VectorArit(TipoPrimitivo tipo_dato, LinkedList<Object> valores) {
-        super(valores);
-        this.tipo_dato = tipo_dato;
-    }
-
-    /**
-     * Retorna el tipo de dato que contiene en su lista
-     *
-     * @return Tipo de valores que contiene el vector
-     */
-    public TipoPrimitivo getTipo_dato() {
-        return tipo_dato;
+        super(tipo_dato, valores);
     }
 
     /**
@@ -95,7 +80,7 @@ public class VectorArit extends Coleccion {
     public void SetPosicion(int index, VectorArit nuevo_valor) {
 
         //SI NO TIENEN EL MISMO TIPO DE DATO HACE FALTA CASTEAR PRIMERO
-        if (this.tipo_dato != nuevo_valor.getTipo_dato()) {
+        if (this.getTipo_dato() != nuevo_valor.getTipo_dato()) {
             this.casteoImplicito(nuevo_valor);
         }
 
@@ -118,7 +103,7 @@ public class VectorArit extends Coleccion {
      */
     private void casteoImplicito(VectorArit nuevo_valor) {
         if (this.isString() || nuevo_valor.isString()) {
-            this.tipo_dato = TipoPrimitivo.STRING;
+            this.setTipo_dato(TipoPrimitivo.STRING);
         } else if (this.isDouble()) {
             if (nuevo_valor.isInteger()) {
                 nuevo_valor.CasteoIntADouble();
@@ -140,7 +125,7 @@ public class VectorArit extends Coleccion {
      * Método que castea todos los elementos del arreglo de entero a double
      */
     public void CasteoIntADouble() {
-        this.tipo_dato = TipoPrimitivo.DOUBLE;
+        this.setTipo_dato(TipoPrimitivo.DOUBLE);
         for (int i = 0; i < this.getValores().size(); i++) {
             Integer e = (Integer) this.getValores().get(i);
             Double nuevo = e.doubleValue();
@@ -154,7 +139,7 @@ public class VectorArit extends Coleccion {
      * @param t
      */
     public void casteoBoolACualquierNumerico(TipoPrimitivo t) {
-        this.tipo_dato = t;
+        this.setTipo_dato(t);
         for (int i = 0; i < this.getValores().size(); i++) {
             Boolean e = (Boolean) this.getValores().get(i);
             this.getValores().set(i, e ? (t == TipoPrimitivo.INTEGER ? 1 : 1.0) : (t == TipoPrimitivo.INTEGER ? 0 : 0.0));
@@ -169,7 +154,7 @@ public class VectorArit extends Coleccion {
      */
     private void RellenarConDefault(int cantidad) {
         Object defecto;
-        switch (this.tipo_dato) {
+        switch (this.getTipo_dato()) {
             case BOOL:
                 defecto = false;
                 break;
@@ -194,7 +179,6 @@ public class VectorArit extends Coleccion {
             return this.getValores().getFirst().toString();
         } else {
             String l = "", aux = "";
-            //System.out.println(this.valores.size());
             for (Object e : this.getValores()) {
                 l += aux + e.toString();
                 aux = ",";
@@ -204,24 +188,11 @@ public class VectorArit extends Coleccion {
     }
 
     /**
-     * Función que retorna una nueva instancia del vector con los mismos
-     * elementos
+     * Función que crea una copia de los elementos que hay en la lista del
+     * vector
      *
-     * @return Nuevo vector con los mismos valores
+     * @return Nuevo VectorArit
      */
-    public Coleccion copiarVector() {
-        LinkedList<Object> l = new LinkedList<>();
-        for (Object o : this.getValores()) {
-            l.add(o);
-        }
-        return new VectorArit(this.getTipo_dato(), l);
-    }
-
-    @Override
-    public String Typeof() {
-        return this.tipo_dato.toString();
-    }
-
     @Override
     public Coleccion copiar() {
         LinkedList<Object> l = new LinkedList<>();

@@ -56,6 +56,10 @@ public class Arbol extends Instruccion {
         DecFuncion c = new DecFuncion("c", null, null, -1, -1);
         global.GuardarFuncion("c", c);
         
+        //RESERVANDO EL CONSTRUCTOR PARA LIST
+        DecFuncion list = new DecFuncion("list", null, null, -1, -1);
+        global.GuardarFuncion("list", c);
+        
     }
 
     @Override

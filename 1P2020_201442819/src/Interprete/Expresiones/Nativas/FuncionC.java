@@ -7,7 +7,10 @@ package Interprete.Expresiones.Nativas;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
+import Interprete.Expresiones.Colecciones.ArrayArit;
+import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.ListArit;
+import Interprete.Expresiones.Colecciones.MatrixArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.TipoPrimitivo;
@@ -54,6 +57,10 @@ public class FuncionC extends Expresion {
             if (o instanceof ErrorCompi) {
                 return VentanaErrores.getVenErrores().AgregarError("Semantico", "C: Hubo un erro resolviendo las expresiones", this.getFila(), this.getColumna());
             }
+
+            if (o instanceof MatrixArit || o instanceof ArrayArit) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "C: Solo acepta list y vectores primitivos", this.getFila(), this.getColumna());
+            }
             lo.add(o);
         }
 
@@ -61,13 +68,13 @@ public class FuncionC extends Expresion {
 
         if (tipo_result != TipoPrimitivo.LIST) {
             LinkedList<Object> lista = new LinkedList<>();
-            for(Object a : lo){
-                LlenarNuevoVector(lista, (VectorArit)a, tipo_result);
+            for (Object a : lo) {
+                LlenarNuevoVector(lista, (VectorArit) a, tipo_result);
             }
             return new VectorArit(tipo_result, lista);
+        } else {
+            return crearList(lo);
         }
-
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -79,6 +86,28 @@ public class FuncionC extends Expresion {
     }
 
     /**
+     * Retorna una nueva lista, se usa cuando en los parámetros de la función C
+     * viene una lista
+     *
+     * @param lista
+     * @return
+     */
+    private ListArit crearList(LinkedList<Object> lista) {
+        LinkedList<Object> valores = new LinkedList<>();
+        for (Object o : lista) {
+            if (o instanceof ListArit) {
+                ListArit la = (ListArit) o;
+                for (Object ob : la.getValores()) {
+                    valores.add(ob);
+                }
+            } else {
+                valores.add(o);
+            }
+        }
+        return new ListArit(valores);
+    }
+
+    /**
      * Función que retorna el tipo de dato que predomina en la estructura
      *
      * @param l Lista de objetos
@@ -86,23 +115,24 @@ public class FuncionC extends Expresion {
      */
     private TipoPrimitivo getTipoPredominante(LinkedList<Object> l) {
 
-        for (Object o : l) {
-            if (o instanceof ListArit) {
-                return TipoPrimitivo.LIST;
-            }
-        }
-
         if (l.size() == 1) {
-            return ((VectorArit) l.get(0)).getTipo_dato();
+            return ((Coleccion) l.get(0)).getTipo_dato();
         } else {
-            TipoPrimitivo t = ((VectorArit) l.get(0)).getTipo_dato();
+            TipoPrimitivo t = ((Coleccion) l.get(0)).getTipo_dato();
             for (int i = 1; i < l.size(); i++) {
-                t = (((VectorArit) l.get(i)).getTipo_dato().ordinal() < t.ordinal()) ? ((VectorArit) l.get(i)).getTipo_dato() : t;
+                t = (((Coleccion) l.get(i)).getTipo_dato().ordinal() < t.ordinal()) ? ((Coleccion) l.get(i)).getTipo_dato() : t;
             }
             return t;
         }
     }
 
+    /**
+     * Casta el vector de acuerdo al tipo predominante
+     *
+     * @param v Vector
+     * @param t Tipo predominante
+     * @return VectorArit
+     */
     private VectorArit CasteoVectores(VectorArit v, TipoPrimitivo t) {
         switch (t) {
             case STRING:
@@ -116,6 +146,12 @@ public class FuncionC extends Expresion {
         }
     }
 
+    /**
+     * Devuelte un nuevo vector pero con valores de cadena
+     *
+     * @param v Vector
+     * @return VectorArit
+     */
     private VectorArit VectorToString(VectorArit v) {
         LinkedList<Object> l = new LinkedList<>();
         for (Object o : v.getValores()) {
@@ -124,6 +160,12 @@ public class FuncionC extends Expresion {
         return new VectorArit(TipoPrimitivo.STRING, l);
     }
 
+    /**
+     * Devuelve un nuevo vector pero con valore doble
+     *
+     * @param v Vector
+     * @return VectorArit
+     */
     private VectorArit VectorToDouble(VectorArit v) {
         LinkedList<Object> l = new LinkedList<>();
         for (Object o : v.getValores()) {
@@ -136,21 +178,35 @@ public class FuncionC extends Expresion {
         return new VectorArit(TipoPrimitivo.DOUBLE, l);
     }
 
+    /**
+     * Devuelve un nuevo vector pero con valores enteros, este casteo solo se
+     * usa cuando hay valores booleanos con integer
+     *
+     * @param v Vector
+     * @return
+     */
     private VectorArit VectorToInt(VectorArit v) {
         LinkedList<Object> l = new LinkedList<>();
         for (Object o : v.getValores()) {
-            if(o instanceof Integer){
+            if (o instanceof Integer) {
                 l.add(o);
-            }else{
-                l.add((Boolean)o ? 1 : 0);
+            } else {
+                l.add((Boolean) o ? 1 : 0);
             }
         }
         return new VectorArit(TipoPrimitivo.INTEGER, l);
     }
-    
-    private void LlenarNuevoVector(LinkedList<Object> l, VectorArit v, TipoPrimitivo t){
+
+    /**
+     * Llena la lista que tendra el vector
+     *
+     * @param l Lista de valores que tendrá
+     * @param v Vector
+     * @param t Tipo predominante
+     */
+    private void LlenarNuevoVector(LinkedList<Object> l, VectorArit v, TipoPrimitivo t) {
         v = CasteoVectores(v, t);
-        for(Object o : v.getValores()){
+        for (Object o : v.getValores()) {
             l.add(o);
         }
     }

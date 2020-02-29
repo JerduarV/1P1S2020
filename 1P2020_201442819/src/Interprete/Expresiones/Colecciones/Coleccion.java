@@ -5,9 +5,12 @@
  */
 package Interprete.Expresiones.Colecciones;
 
+import Interprete.Expresiones.TipoPrimitivo;
 import java.util.LinkedList;
 
 /**
+ * Clase abstracta de la que heredan todas las estructuras que existen el
+ * lenguaje
  *
  * @author Jerduar
  */
@@ -18,8 +21,14 @@ public abstract class Coleccion {
      */
     private final LinkedList<Object> valores;
 
-    public Coleccion(LinkedList<Object> v) {
+    /**
+     * Tipo de dato que contiene o es la estructura
+     */
+    private TipoPrimitivo tipo_dato;
+
+    public Coleccion(TipoPrimitivo t, LinkedList<Object> v) {
         this.valores = v;
+        this.tipo_dato = t;
     }
 
     /**
@@ -27,7 +36,9 @@ public abstract class Coleccion {
      *
      * @return Cadena con el tipo de dato
      */
-    public abstract String Typeof();
+    public final String Typeof() {
+        return this.getTipo_dato().toString();
+    }
 
     public int getTamanio() {
         return this.valores.size();
@@ -57,6 +68,37 @@ public abstract class Coleccion {
      */
     public LinkedList<Object> getValores() {
         return valores;
+    }
+
+    /**
+     * Retorna el tipo de dato que contiene en su lista
+     *
+     * @return Tipo de valores que contiene el vector
+     */
+    public final TipoPrimitivo getTipo_dato() {
+        return tipo_dato;
+    }
+
+    public final void setTipo_dato(TipoPrimitivo tipo_dato) {
+        this.tipo_dato = tipo_dato;
+    }
+
+    /**
+     * Determina si la instancia actual es una lista
+     *
+     * @return valor booleano
+     */
+    public final boolean isList() {
+        return this instanceof ListArit;
+    }
+
+    /**
+     * Determina si la instancia actual es un VectorArit
+     *
+     * @return valor booleano
+     */
+    public final boolean isVector() {
+        return this instanceof VectorArit;
     }
 
 }

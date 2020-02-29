@@ -43,4 +43,27 @@ public class ListArit extends Coleccion {
         return "LIST(" + l + ")";
     }
 
+    @Override
+    public void SetPosicion(int index, Coleccion valor) {
+        if (index > this.getValores().size() - 1) {
+            this.RellenarConDefault(index - this.getValores().size());
+            this.getValores().add(valor);
+            return;
+        }
+        //SE ASIGNA EL NUEVO VALOR
+        this.getValores().set(index, valor);
+    }
+
+    /**
+     * Rellena la lista con el valor por defecto que en este caso es null
+     * @param cantidad cantidad de veces que tendrá que hacerlo
+     */
+    private void RellenarConDefault(int cantidad) {
+        LinkedList<Object> l = new LinkedList<>();
+        l.add("null");
+        for (int i = 0; i < cantidad; i++) {
+            this.getValores().add(new VectorArit(TipoPrimitivo.STRING, l));
+        }
+    }
+
 }

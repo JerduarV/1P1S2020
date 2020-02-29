@@ -26,6 +26,18 @@ public class VectorArit extends Coleccion {
     }
 
     /**
+     * Constructor que se usa cuando se quiere crear un nuevo vector con un
+     * elemento
+     *
+     * @param tipo_dato Tipo de dato del vector
+     * @param valor valor
+     */
+    public VectorArit(TipoPrimitivo tipo_dato, Object valor) {
+        super(tipo_dato, new LinkedList<>());
+        this.getValores().add(valor);
+    }
+
+    /**
      * Retorna si el Vector es de tipo Entero
      *
      * @return valor booleano
@@ -75,9 +87,12 @@ public class VectorArit extends Coleccion {
      * se envía como parámetro
      *
      * @param index Indice que indica la posición a setear
-     * @param nuevo_valor Nuevo valor que se seteará
+     * @param valor Nuevo valor que se seteará
      */
-    public void SetPosicion(int index, VectorArit nuevo_valor) {
+    @Override
+    public void SetPosicion(int index, Coleccion valor) {
+
+        VectorArit nuevo_valor = (VectorArit) valor;
 
         //SI NO TIENEN EL MISMO TIPO DE DATO HACE FALTA CASTEAR PRIMERO
         if (this.getTipo_dato() != nuevo_valor.getTipo_dato()) {

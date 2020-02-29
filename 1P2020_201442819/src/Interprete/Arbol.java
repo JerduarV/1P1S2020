@@ -21,6 +21,7 @@ public class Arbol extends Instruccion {
 
     /**
      * Constructor del árbol AST
+     *
      * @param cuerpo Lista de Instrucciones del archivo de entrada
      */
     public Arbol(LinkedList<NodoAST> cuerpo) {
@@ -32,34 +33,43 @@ public class Arbol extends Instruccion {
         this.GuardarFunciones(t);
         return this.Recorrer(t);
     }
-    
+
     /**
      * Método que recorre el árbol buscando las funciones para ser guardadas
+     *
      * @param t Tabla de Símbolos
      */
-    private void GuardarFunciones(TablaSimbolos t){
+    private void GuardarFunciones(TablaSimbolos t) {
         this.GuardarFuncionesNativas(t);
         this.getCuerpo().stream().filter((n) -> (n instanceof DecFuncion)).forEachOrdered((n) -> {
             ((DecFuncion) n).GuardarFuncion(t);
         });
     }
-    
-    private void GuardarFuncionesNativas(TablaSimbolos global){
-        
+
+    /**
+     * Reserva los nombres de las funciones nativas
+     *
+     * @param global tabla de símbolos global
+     */
+    private void GuardarFuncionesNativas(TablaSimbolos global) {
+
         //CREACIÓN DE FUNCIÓN PRINT
         LinkedList<Declaracion> l_print = new LinkedList<>();
         l_print.add(new Declaracion("print%%param1", -1, -1));
         Print print = new Print(l_print);
         global.GuardarFuncion("print", print);
-        
+
         //RESERVANDO NOMBRE PARA LA FUNCIÓN C
         DecFuncion c = new DecFuncion("c", null, null, -1, -1);
         global.GuardarFuncion("c", c);
-        
+
         //RESERVANDO EL CONSTRUCTOR PARA LIST
         DecFuncion list = new DecFuncion("list", null, null, -1, -1);
-        global.GuardarFuncion("list", c);
-        
+        global.GuardarFuncion("list", list);
+
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN TYPEOF
+        DecFuncion typeof = new DecFuncion("typeof", null, null, -1, -1);
+        global.GuardarFuncion("typeof", typeof);
     }
 
     @Override

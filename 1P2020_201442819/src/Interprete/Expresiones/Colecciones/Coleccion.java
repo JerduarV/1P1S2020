@@ -53,6 +53,8 @@ public abstract class Coleccion {
     public Object Acceder(Integer index) {
         return this.valores.get(index);
     }
+    
+    public abstract void SetPosicion(int index, Coleccion valor);
 
     /**
      * Retorna una copia de la colección

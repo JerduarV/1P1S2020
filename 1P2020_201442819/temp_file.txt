@@ -1,2 +1,1 @@
-lista = list(5,6,list("casa",56));
-print(lista[[3]][[2]][1]);
+print(typeof(list(true)));

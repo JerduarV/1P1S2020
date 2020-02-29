@@ -22,5 +22,10 @@ public class MatrixArit extends Coleccion{
     public Coleccion copiar() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void SetPosicion(int index, Coleccion valor) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

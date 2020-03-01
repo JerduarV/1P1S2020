@@ -70,6 +70,10 @@ public class Arbol extends Instruccion {
         //RERVANDO EL NOMBRE DE LA FUNCIÓN TYPEOF
         DecFuncion typeof = new DecFuncion("typeof", null, null, -1, -1);
         global.GuardarFuncion("typeof", typeof);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN TYPEOF
+        DecFuncion length = new DecFuncion("length", null, null, -1, -1);
+        global.GuardarFuncion("length", length);
     }
 
     @Override

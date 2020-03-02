@@ -1,1 +1,3 @@
-print(touppercase("hoaL mundo"));
+c = "CADena";
+print(tolowercase(c));
+print(c);

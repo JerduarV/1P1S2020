@@ -42,6 +42,18 @@ public class DecFuncion extends Instruccion {
     }
 
     /**
+     * Constructor que se usa para la creación de las funciones nativas del
+     * lenguaje
+     *
+     * @param id Identificador de la función
+     */
+    public DecFuncion(String id) {
+        super(-1, -1, null);
+        this.id = id;
+        this.lista_param = null;
+    }
+
+    /**
      * Método que guarda la función en la tabla de simbolos
      *
      * @param global Tabla de símbolos global donde se deben guardar todas las

@@ -6,7 +6,6 @@
 package Interprete;
 
 import Interprete.Expresiones.Nativas.Print;
-import Interprete.Expresiones.Nativas.ToUpperCase;
 import Interprete.Instrucciones.DecFuncion;
 import Interprete.Instrucciones.Declaracion;
 import Interprete.Instrucciones.Instruccion;
@@ -61,27 +60,31 @@ public class Arbol extends Instruccion {
         global.GuardarFuncion("print", print);
 
         //CREACIÓN DE FUNCIÓN TOUPPERCASE
-        DecFuncion ToUpperCase = new DecFuncion("touppercase", null, null, -1, -1);
+        DecFuncion ToUpperCase = new DecFuncion("touppercase");
         global.GuardarFuncion("touppercase", ToUpperCase);
 
+        //CREACIÓN DE FUNCIÓN TOLOWERCASE
+        DecFuncion ToLowerCase = new DecFuncion("tolowercase");
+        global.GuardarFuncion("tolowercase", ToLowerCase);
+
         //RESERVANDO NOMBRE PARA LA FUNCIÓN C
-        DecFuncion c = new DecFuncion("c", null, null, -1, -1);
+        DecFuncion c = new DecFuncion("c");
         global.GuardarFuncion("c", c);
 
         //RESERVANDO EL CONSTRUCTOR PARA LIST
-        DecFuncion list = new DecFuncion("list", null, null, -1, -1);
+        DecFuncion list = new DecFuncion("list");
         global.GuardarFuncion("list", list);
 
         //RERVANDO EL NOMBRE DE LA FUNCIÓN TYPEOF
-        DecFuncion typeof = new DecFuncion("typeof", null, null, -1, -1);
+        DecFuncion typeof = new DecFuncion("typeof");
         global.GuardarFuncion("typeof", typeof);
 
         //RERVANDO EL NOMBRE DE LA FUNCIÓN LENGTH
-        DecFuncion length = new DecFuncion("length", null, null, -1, -1);
+        DecFuncion length = new DecFuncion("length");
         global.GuardarFuncion("length", length);
 
         //RERVANDO EL NOMBRE DE LA FUNCIÓN STRINGLENGTH
-        DecFuncion stringlength = new DecFuncion("stringlength", null, null, -1, -1);
+        DecFuncion stringlength = new DecFuncion("stringlength");
         global.GuardarFuncion("stringlength", stringlength);
     }
 

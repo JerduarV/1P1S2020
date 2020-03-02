@@ -19,40 +19,38 @@ import java.util.LinkedList;
  *
  * @author Jerduar
  */
-public class ToUpperCase extends CallFun{
+public class Trunk extends CallFun{
     
-    public ToUpperCase(LinkedList<Expresion> p, Integer fila, Integer col) {
-        super("ToUpperCase", p, fila, col);
+    public Trunk(LinkedList<Expresion> p, Integer fila, Integer col) {
+        super("Trunk", p, fila, col);
     }
 
     @Override
     public Object Resolver(TablaSimbolos t) {
         if (this.getParam_act().size() != 1) {
-            return VentanaErrores.getVenErrores().AgregarError("Semantico", "ToUpperCase: Se esperaba un parámetro string", this.getFila(), this.getColumna());
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Trunk: Se esperaba un parámetro numérico", this.getFila(), this.getColumna());
         }
 
         Object c = this.getParam_act().getFirst().Resolver(t);
 
         if (c instanceof ErrorCompi) {
-            return VentanaErrores.getVenErrores().AgregarError("Semantico", "ToUpperCase: Hubo un error al resolver la expresión", this.getFila(), this.getColumna());
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Trunk: Hubo un error al resolver la expresión", this.getFila(), this.getColumna());
         }
 
         Coleccion col = (Coleccion) c;
 
         if (!(col instanceof VectorArit)) {
-            return VentanaErrores.getVenErrores().AgregarError("Semántico", "ToUpperCase: Se esperaba un vector string", this.getFila(), this.getColumna());
+            return VentanaErrores.getVenErrores().AgregarError("Semántico", "Trunk: Se esperaba un vector numérico", this.getFila(), this.getColumna());
         }
 
         VectorArit v = (VectorArit) col;
 
-        if (v.getTamanio() != 1 || !v.isString()) {
-            return VentanaErrores.getVenErrores().AgregarError("Semántico", "ToUpperCase: Se esperaba un vector string de tamaño 1", this.getFila(), this.getColumna());
+        if (v.getTamanio() != 1 || !v.isDouble()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semántico", "Trunk: Se esperaba un vector numérico de tamanio 1", this.getFila(), this.getColumna());
         }
         
-        String cad = v.Acceder(0).toString();
-        
-        return new VectorArit(TipoPrimitivo.STRING, cad.toUpperCase());
+        Double d = (Double)v.Acceder(0);
+        return new VectorArit(TipoPrimitivo.INTEGER, d.intValue());
     }
-    
     
 }

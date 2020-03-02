@@ -28,25 +28,25 @@ public class ToLowerCase extends CallFun{
     @Override
     public Object Resolver(TablaSimbolos t) {
         if (this.getParam_act().size() != 1) {
-            return VentanaErrores.getVenErrores().AgregarError("Semantico", "StringLength: Se esperaba un parámetro string", this.getFila(), this.getColumna());
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "ToLowerCase: Se esperaba un parámetro string", this.getFila(), this.getColumna());
         }
 
         Object c = this.getParam_act().getFirst().Resolver(t);
 
         if (c instanceof ErrorCompi) {
-            return VentanaErrores.getVenErrores().AgregarError("Semantico", "StringLength: Hubo un error al resolver la expresión", this.getFila(), this.getColumna());
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "ToLowerCase: Hubo un error al resolver la expresión", this.getFila(), this.getColumna());
         }
 
         Coleccion col = (Coleccion) c;
 
         if (!(col instanceof VectorArit)) {
-            return VentanaErrores.getVenErrores().AgregarError("Semántico", "StringLength: Se esperaba un vector string", this.getFila(), this.getColumna());
+            return VentanaErrores.getVenErrores().AgregarError("Semántico", "ToLowerCase: Se esperaba un vector string", this.getFila(), this.getColumna());
         }
 
         VectorArit v = (VectorArit) col;
 
-        if (v.getTamanio() != 1) {
-            return VentanaErrores.getVenErrores().AgregarError("Semántico", "StringLength: Se esperaba un vector string de tamaño 1", this.getFila(), this.getColumna());
+        if (v.getTamanio() != 1 || !v.isString()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semántico", "ToLowerCase: Se esperaba un vector string de tamaño 1", this.getFila(), this.getColumna());
         }
         
         String cad = v.Acceder(0).toString();

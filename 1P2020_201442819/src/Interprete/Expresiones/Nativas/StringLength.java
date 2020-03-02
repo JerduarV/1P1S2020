@@ -46,7 +46,7 @@ public class StringLength extends CallFun {
 
         VectorArit v = (VectorArit) col;
 
-        if (v.getTamanio() != 1) {
+        if (v.getTamanio() != 1 || !v.isString()) {
             return VentanaErrores.getVenErrores().AgregarError("Semántico", "StringLength: Se esperaba un vector string de tamaño 1", this.getFila(), this.getColumna());
         }
         

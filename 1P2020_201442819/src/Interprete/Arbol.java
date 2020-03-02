@@ -86,6 +86,10 @@ public class Arbol extends Instruccion {
         //RERVANDO EL NOMBRE DE LA FUNCIÓN STRINGLENGTH
         DecFuncion stringlength = new DecFuncion("stringlength");
         global.GuardarFuncion("stringlength", stringlength);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN TRUNK
+        DecFuncion trunk = new DecFuncion("trunk");
+        global.GuardarFuncion("trunk", trunk);
     }
 
     @Override

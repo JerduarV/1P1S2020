@@ -1,3 +1,2 @@
-c = "CADena";
-print(tolowercase(c));
-print(c);
+y = trunk(7);
+print(y);

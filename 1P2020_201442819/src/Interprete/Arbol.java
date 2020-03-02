@@ -90,6 +90,10 @@ public class Arbol extends Instruccion {
         //RERVANDO EL NOMBRE DE LA FUNCIÓN TRUNK
         DecFuncion trunk = new DecFuncion("trunk");
         global.GuardarFuncion("trunk", trunk);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN ROUND
+        DecFuncion round = new DecFuncion("round");
+        global.GuardarFuncion("round", round);
     }
 
     @Override

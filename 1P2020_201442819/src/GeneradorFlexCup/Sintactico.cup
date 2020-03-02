@@ -65,6 +65,8 @@ parser code
                 return new ToLowerCase(l,fila,col);
             case "trunk":
                 return new Trunk(l,fila,col);
+            case "round":
+                return new Round(l,fila,col);
             default:
                 return new CallFun(id,l,fila,col);
         }
@@ -95,7 +97,7 @@ terminal String AND,OR,NOT,TERNARIO;
 non terminal INI;
 non terminal NodoAST INSTR;
 non terminal LinkedList<NodoAST> L_INSTR, BLOQUE;
-non terminal Instruccion ASIGNACION,IF,ELSE,SWITCH,L_CASE,WHILE,DOWHILE,FOR,BREAK,CONTINUE;
+non terminal Instruccion ASIGNACION,IF,ELSE,FOR,SWITCH,L_CASE,WHILE,DOWHILE,BREAK,CONTINUE;
 non terminal Instruccion PARAM_FORM,DEC_FUN;
 non terminal LinkedList<Declaracion> L_PARAM_FORM;
 
@@ -145,7 +147,7 @@ INSTR ::=
     |   WHILE:w             {:RESULT = w;:}
     |   DOWHILE:d           {:RESULT = d;:}
     |   SWITCH
-    |   FOR
+    |   FOR:f               {:RESULT = f;:}
     |   BREAK:i             {:RESULT = i;:}
     |   CONTINUE:c          {:RESULT = c;:}
     |   RETURN:r            {:RESULT = r;:}
@@ -223,7 +225,7 @@ DOWHILE ::=
 ;
 
 FOR ::=
-        RFOR PARIZQ IDENTIFICADOR RIN EXP PARDER BLOQUE
+        RFOR PARIZQ IDENTIFICADOR:id RIN EXP:e PARDER BLOQUE:b  {:RESULT = new For(id,e,b,idleft,idright);:}
 ;
 
 ASIGNACION ::=

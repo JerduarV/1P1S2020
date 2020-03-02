@@ -195,10 +195,10 @@ public class VectorArit extends Coleccion {
         } else {
             String l = "", aux = "";
             for (Object e : this.getValores()) {
-                l += aux + e.toString();
+                l += aux + (this.isString() ? "\"" +  e.toString() + "\"" : e.toString());
                 aux = ",";
             }
-            return "VECTOR[" + l + "]";
+            return l;
         }
     }
 

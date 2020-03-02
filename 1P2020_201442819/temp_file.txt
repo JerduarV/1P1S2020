@@ -1,3 +1,1 @@
-v = c(3,4,5);
-l = list(6,"tra");
-print(length(v)*length(l));
+print(touppercase("hoaL mundo"));

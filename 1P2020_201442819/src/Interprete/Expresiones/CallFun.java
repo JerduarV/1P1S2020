@@ -8,7 +8,6 @@ package Interprete.Expresiones;
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Colecciones.Coleccion;
-import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Instrucciones.DecFuncion;
 import TablaSimbolos.TablaSimbolos;
 import Utileria.Retorno;

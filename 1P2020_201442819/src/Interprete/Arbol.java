@@ -6,6 +6,7 @@
 package Interprete;
 
 import Interprete.Expresiones.Nativas.Print;
+import Interprete.Expresiones.Nativas.ToUpperCase;
 import Interprete.Instrucciones.DecFuncion;
 import Interprete.Instrucciones.Declaracion;
 import Interprete.Instrucciones.Instruccion;
@@ -59,6 +60,10 @@ public class Arbol extends Instruccion {
         Print print = new Print(l_print);
         global.GuardarFuncion("print", print);
 
+        //CREACIÓN DE FUNCIÓN TOUPPERCASE
+        DecFuncion ToUpperCase = new DecFuncion("touppercase", null, null, -1, -1);
+        global.GuardarFuncion("touppercase", ToUpperCase);
+
         //RESERVANDO NOMBRE PARA LA FUNCIÓN C
         DecFuncion c = new DecFuncion("c", null, null, -1, -1);
         global.GuardarFuncion("c", c);
@@ -70,10 +75,14 @@ public class Arbol extends Instruccion {
         //RERVANDO EL NOMBRE DE LA FUNCIÓN TYPEOF
         DecFuncion typeof = new DecFuncion("typeof", null, null, -1, -1);
         global.GuardarFuncion("typeof", typeof);
-        
-        //RERVANDO EL NOMBRE DE LA FUNCIÓN TYPEOF
+
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN LENGTH
         DecFuncion length = new DecFuncion("length", null, null, -1, -1);
         global.GuardarFuncion("length", length);
+
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN STRINGLENGTH
+        DecFuncion stringlength = new DecFuncion("stringlength", null, null, -1, -1);
+        global.GuardarFuncion("stringlength", stringlength);
     }
 
     @Override

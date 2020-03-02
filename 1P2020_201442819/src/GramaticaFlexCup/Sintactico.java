@@ -675,6 +675,10 @@ public class Sintactico extends java_cup.runtime.lr_parser {
                 return new Typeof(l,fila,col);
             case "length":
                 return new Length(l,fila,col);
+            case "stringlength":
+                return new StringLength(l,fila,col);
+            case "touppercase":
+                return new ToUpperCase(l,fila,col);
             default:
                 return new CallFun(id,l,fila,col);
         }

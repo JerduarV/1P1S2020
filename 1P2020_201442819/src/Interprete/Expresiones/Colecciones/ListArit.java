@@ -56,6 +56,7 @@ public class ListArit extends Coleccion {
 
     /**
      * Rellena la lista con el valor por defecto que en este caso es null
+     *
      * @param cantidad cantidad de veces que tendrá que hacerlo
      */
     private void RellenarConDefault(int cantidad) {

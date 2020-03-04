@@ -10,6 +10,7 @@ import Interprete.ErrorCompi;
 import Interprete.Expresiones.Expresion;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.Retorno;
 import java.util.LinkedList;
 
 /**
@@ -42,6 +43,8 @@ public class DoWhile extends Instruccion {
                 break;
             } else if (result instanceof Continue) {
                 continue;
+            } else if (result instanceof Retorno) {
+                return result;
             }
 
             Object c = this.cond.Resolver(t);

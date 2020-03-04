@@ -11,6 +11,7 @@ import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Expresion;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.Retorno;
 import java.util.LinkedList;
 
 /**
@@ -58,6 +59,10 @@ public class For extends Instruccion {
             
             if(result instanceof Continue){
                 continue;
+            }
+            
+            if(result instanceof Retorno){
+                return result;
             }
         }
         

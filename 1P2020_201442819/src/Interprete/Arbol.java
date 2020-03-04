@@ -94,6 +94,14 @@ public class Arbol extends Instruccion {
         //RERVANDO EL NOMBRE DE LA FUNCIÓN ROUND
         DecFuncion round = new DecFuncion("round");
         global.GuardarFuncion("round", round);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN REMOVE
+        DecFuncion remove = new DecFuncion("remove");
+        global.GuardarFuncion("remove", remove);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN MATRIX
+        DecFuncion matrix = new DecFuncion("matrix");
+        global.GuardarFuncion("matrix", matrix);
     }
 
     @Override

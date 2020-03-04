@@ -9,57 +9,55 @@ package GramaticaFlexCup;
 public class sym {
   /* terminals */
   public static final int DOSPUNTOS = 11;
-  public static final int POT = 39;
-  public static final int RTRUE = 17;
-  public static final int POR = 37;
-  public static final int RWHILE = 25;
-  public static final int DCORIZQ = 14;
-  public static final int RCONTINUE = 24;
-  public static final int RNULL = 16;
-  public static final int ENTERO = 32;
-  public static final int DIFERENTE = 46;
-  public static final int RDEFAULT = 31;
+  public static final int POT = 37;
+  public static final int RTRUE = 15;
+  public static final int POR = 35;
+  public static final int RWHILE = 23;
+  public static final int RCONTINUE = 22;
+  public static final int RNULL = 14;
+  public static final int ENTERO = 30;
+  public static final int DIFERENTE = 44;
+  public static final int RDEFAULT = 29;
   public static final int LLAVEDER = 6;
-  public static final int TERNARIO = 51;
-  public static final int RFALSE = 18;
-  public static final int RELSE = 20;
-  public static final int NOT = 50;
-  public static final int AND = 48;
-  public static final int MENORIGUAL = 43;
+  public static final int TERNARIO = 49;
+  public static final int RFALSE = 16;
+  public static final int RELSE = 18;
+  public static final int NOT = 48;
+  public static final int AND = 46;
+  public static final int MENORIGUAL = 41;
   public static final int IDENTIFICADOR = 12;
-  public static final int IGUALQUE = 45;
+  public static final int IGUALQUE = 43;
   public static final int IGUAL = 2;
   public static final int CORDER = 10;
-  public static final int OR = 49;
-  public static final int DIV = 38;
-  public static final int UMENOS = 47;
-  public static final int MAYORIGUAL = 44;
-  public static final int RDO = 26;
+  public static final int OR = 47;
+  public static final int DIV = 36;
+  public static final int UMENOS = 45;
+  public static final int MAYORIGUAL = 42;
+  public static final int RDO = 24;
   public static final int EOF = 0;
   public static final int PARIZQ = 3;
-  public static final int DECIMAL = 33;
+  public static final int DECIMAL = 31;
   public static final int error = 1;
-  public static final int DCORDER = 13;
   public static final int COMA = 7;
-  public static final int CADENA = 34;
-  public static final int MENOS = 36;
-  public static final int MENOR = 41;
-  public static final int MOD = 40;
-  public static final int MAYOR = 42;
-  public static final int FLECHA = 15;
-  public static final int RRETURN = 30;
-  public static final int RCASE = 22;
+  public static final int CADENA = 32;
+  public static final int MENOS = 34;
+  public static final int MENOR = 39;
+  public static final int MOD = 38;
+  public static final int MAYOR = 40;
+  public static final int FLECHA = 13;
+  public static final int RRETURN = 28;
+  public static final int RCASE = 20;
   public static final int LLAVEIZQ = 5;
   public static final int PTCOMA = 8;
-  public static final int RIN = 28;
-  public static final int RSWITCH = 21;
+  public static final int RIN = 26;
+  public static final int RSWITCH = 19;
   public static final int PARDER = 4;
-  public static final int RFOR = 27;
+  public static final int RFOR = 25;
   public static final int CORIZQ = 9;
-  public static final int RBREAK = 23;
-  public static final int RIF = 19;
-  public static final int RFUNCTION = 29;
-  public static final int MAS = 35;
+  public static final int RBREAK = 21;
+  public static final int RIF = 17;
+  public static final int RFUNCTION = 27;
+  public static final int MAS = 33;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -74,8 +72,6 @@ public class sym {
   "CORDER",
   "DOSPUNTOS",
   "IDENTIFICADOR",
-  "DCORDER",
-  "DCORIZQ",
   "FLECHA",
   "RNULL",
   "RTRUE",

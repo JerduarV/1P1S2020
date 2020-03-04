@@ -71,8 +71,6 @@ INICIACADENA =          "\""
 ":"                     {return new Symbol(sym.DOSPUNTOS,yyline,yycolumn,yytext());}
 "["                     {return new Symbol(sym.CORIZQ,yyline,yycolumn,yytext());}
 "]"                     {return new Symbol(sym.CORDER,yyline,yycolumn,yytext());}
-"[["                    {return new Symbol(sym.DCORIZQ,yyline,yycolumn,yytext());}
-"]]"                    {return new Symbol(sym.DCORDER,yyline,yycolumn,yytext());}
 "=>"                    {return new Symbol(sym.FLECHA,yyline,yycolumn,yytext());}
 
 //OPERADORES

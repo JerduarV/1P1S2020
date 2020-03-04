@@ -67,6 +67,10 @@ parser code
                 return new Trunk(l,fila,col);
             case "round":
                 return new Round(l,fila,col);
+            case "remove":
+                return new Remove(l,fila,col);
+            case "matrix":
+                return new Matrix(l,fila,col);
             default:
                 return new CallFun(id,l,fila,col);
         }
@@ -76,7 +80,7 @@ parser code
 
 //SIGNOS DE PUNTUACION
 terminal String IGUAL,PARIZQ,PARDER,LLAVEIZQ,LLAVEDER,COMA,PTCOMA,CORIZQ,CORDER,DOSPUNTOS;
-terminal String IDENTIFICADOR,DCORDER,DCORIZQ,FLECHA;
+terminal String IDENTIFICADOR,FLECHA;
 
 //PALABRAS RESERVADAS
 terminal String RNULL,RTRUE,RFALSE,RIF,RELSE,RSWITCH,RCASE,RBREAK,RCONTINUE,RWHILE;
@@ -97,9 +101,10 @@ terminal String AND,OR,NOT,TERNARIO;
 non terminal INI;
 non terminal NodoAST INSTR;
 non terminal LinkedList<NodoAST> L_INSTR, BLOQUE;
-non terminal Instruccion ASIGNACION,IF,ELSE,FOR,SWITCH,L_CASE,WHILE,DOWHILE,BREAK,CONTINUE;
+non terminal Instruccion ASIGNACION,IF,ELSE,FOR,SWITCH,WHILE,DOWHILE,BREAK,CONTINUE;
 non terminal Instruccion PARAM_FORM,DEC_FUN;
 non terminal LinkedList<Declaracion> L_PARAM_FORM;
+non terminal LinkedList<Case> L_CASE;
 
 //EXPRESIONES
 non terminal Expresion EXP,EXP2,EXP3,EXP_TERNARIA,PRIMITIVO,ACCESO,CALL_FUN,PARAM_ACT,RETURN;
@@ -123,7 +128,7 @@ precedence left  MAS,MENOS;
 precedence left  POR,DIV,MOD;
 precedence right UMENOS;
 precedence nonassoc POT;
-precedence right CORIZQ,CORDER,DCORIZQ,DCORDER;
+precedence right CORIZQ,CORDER;
 
 start with INI; 
 
@@ -146,7 +151,7 @@ INSTR ::=
     |   IF:i                {:RESULT = i;:}
     |   WHILE:w             {:RESULT = w;:}
     |   DOWHILE:d           {:RESULT = d;:}
-    |   SWITCH
+    |   SWITCH:s            {:RESULT = s;:}
     |   FOR:f               {:RESULT = f;:}
     |   BREAK:i             {:RESULT = i;:}
     |   CONTINUE:c          {:RESULT = c;:}
@@ -157,13 +162,13 @@ INSTR ::=
 ;
 
 SWITCH ::=
-        RSWITCH PARIZQ EXP PARDER LLAVEIZQ L_CASE LLAVEDER
-    |   RSWITCH PARIZQ EXP PARDER LLAVEIZQ L_CASE RDEFAULT DOSPUNTOS L_INSTR LLAVEDER
+        RSWITCH PARIZQ EXP:e PARDER LLAVEIZQ L_CASE:l LLAVEDER                                  {:RESULT = new Switch(e,l,eleft,eright);:}
+    |   RSWITCH PARIZQ EXP:e PARDER LLAVEIZQ L_CASE:lc RDEFAULT DOSPUNTOS L_INSTR:l LLAVEDER    {:RESULT = new Switch(e,lc,new DefaultSw(l,lleft,lright),eleft,eright);:}
 ;
 
 L_CASE ::=
-        L_CASE RCASE PRIMITIVO DOSPUNTOS L_INSTR
-    |   RCASE PRIMITIVO DOSPUNTOS L_INSTR
+        L_CASE:lc RCASE PRIMITIVO:e DOSPUNTOS L_INSTR:l {:RESULT = lc; RESULT.add(new Case(e,l,eleft,eright));:}
+    |   RCASE PRIMITIVO:e DOSPUNTOS L_INSTR:l           {:RESULT = new LinkedList<>(); RESULT.add(new Case(e,l,eleft,eright));:}
 ;
 
 CONTINUE ::=
@@ -303,6 +308,6 @@ L_INDEX ::=
 ;
 
 INDEX ::=
-        CORIZQ EXP:e CORDER         {:RESULT = new Indice(e);:}
-    |   DCORIZQ EXP:e DCORDER       {:RESULT = new Indice(e,false);:}
+        CORIZQ EXP:e CORDER                     {:RESULT = new Indice(e);:}
+    |   CORIZQ CORIZQ EXP:e CORDER CORDER       {:RESULT = new Indice(e,false);:}
 ;

@@ -5,8 +5,13 @@
  */
 package Interprete.Expresiones.Operaciones;
 
+import Interprete.Expresiones.Colecciones.Coleccion;
+import Interprete.Expresiones.Colecciones.MatrixArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.TipoPrimitivo;
+import java.util.LinkedList;
+import java.util.Objects;
 
 /**
  * Claes abstracta operación de la que heredan todas las operaciones
@@ -119,12 +124,36 @@ public abstract class Operacion extends Expresion {
 
     /**
      * Determina si la operación es entre dos vectores de tamaño n
+     *
      * @param izq operador izquierdo
      * @param der operador derecho
      * @return valor booleano
      */
     protected boolean NvsN(VectorArit izq, VectorArit der) {
+        if (izq instanceof MatrixArit && der instanceof MatrixArit) {
+            return Objects.equals(((MatrixArit) izq).getNum_columnas(), ((MatrixArit) der).getNum_columnas()) && Objects.equals(((MatrixArit) izq).getNum_filas(), ((MatrixArit) der).getNum_filas());
+        }
         return izq.getTamanio() == der.getTamanio();
+    }
+
+    /**
+     * Genera el resultado en función si hay una matrix en la operación
+     *
+     * @param izq Operador Izquierdo
+     * @param der Operador derecho
+     * @param t Tipo de dato
+     * @param l Lista de valores
+     * @return Colección: VectorArit o MatrixArit dependiendo de los operadores
+     */
+    protected Coleccion GenResultado(VectorArit izq, VectorArit der, TipoPrimitivo t, LinkedList<Object> l) {
+        if (izq instanceof MatrixArit || der instanceof MatrixArit) {
+            int f = izq instanceof MatrixArit ? ((MatrixArit) izq).getNum_filas() : ((MatrixArit) der).getNum_filas();
+            int c = izq instanceof MatrixArit ? ((MatrixArit) izq).getNum_columnas() : ((MatrixArit) der).getNum_columnas();
+
+            return new MatrixArit(f, c, t, l);
+        }
+
+        return new VectorArit(t, l);
     }
 
 }

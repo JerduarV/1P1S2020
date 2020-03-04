@@ -33,6 +33,11 @@ public class ListArit extends Coleccion {
         return new ListArit(l);
     }
 
+    /**
+     * Sobre escritura del método toString para el vector
+     *
+     * @return String
+     */
     @Override
     public String toString() {
         String l = "", aux = "";

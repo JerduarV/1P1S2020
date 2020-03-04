@@ -70,4 +70,12 @@ public class MatrixArit extends VectorArit {
         return new MatrixArit(this.num_filas, this.num_columnas, this.getTipo_dato(), l);
     }
 
+    public Integer getNum_filas() {
+        return num_filas;
+    }
+
+    public Integer getNum_columnas() {
+        return num_columnas;
+    }
+
 }

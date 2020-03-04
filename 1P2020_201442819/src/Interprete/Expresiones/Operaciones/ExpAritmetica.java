@@ -146,9 +146,10 @@ public class ExpAritmetica extends Operacion {
                                     l.add((Integer) vector_izq.Acceder(i) + (Integer) vector_der.Acceder(i));
                                 }
                             } else {
-                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Suma: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                             }
-                            return new VectorArit(TipoPrimitivo.INTEGER, l);
+                            return this.GenResultado(vector_izq, vector_der, TipoPrimitivo.INTEGER, l);
+                            //return new VectorArit(TipoPrimitivo.INTEGER, l);
                         }
                         //ENTERO + DOUBLE
                         case DOUBLE: {
@@ -168,13 +169,13 @@ public class ExpAritmetica extends Operacion {
                                     l.add((Integer) vector_izq.Acceder(i) + (Double) vector_der.Acceder(i));
                                 }
                             } else {
-                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Suma: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                             }
-                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
+                            return this.GenResultado(vector_izq, vector_der, TipoPrimitivo.DOUBLE, l);
+                            //return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         }
                         //ENTERO + CADENA
                         case STRING:
-                            //l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
@@ -190,9 +191,10 @@ public class ExpAritmetica extends Operacion {
                                     l.add(vector_izq.Acceder(i).toString() + vector_der.Acceder(i).toString());
                                 }
                             } else {
-                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Suma: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                             }
-                            return new VectorArit(TipoPrimitivo.STRING, l);
+                            return this.GenResultado(vector_izq, vector_der, TipoPrimitivo.STRING, l);
+                            //return new VectorArit(TipoPrimitivo.STRING, l);
 
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar integer con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -218,9 +220,10 @@ public class ExpAritmetica extends Operacion {
                                     l.add((Double) vector_izq.Acceder(i) + (Double) vector_der.Acceder(i));
                                 }
                             } else {
-                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Suma: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                             }
-                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
+                            return this.GenResultado(vector_izq, vector_der, TipoPrimitivo.DOUBLE, l);
+                            //return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE + ENTERO
                         case INTEGER:
                             //l.add((Double) vector_izq.Acceder(0) + (Integer) vector_der.Acceder(0));
@@ -239,9 +242,10 @@ public class ExpAritmetica extends Operacion {
                                     l.add((Double) vector_izq.Acceder(i) + (Integer) vector_der.Acceder(i));
                                 }
                             } else {
-                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Suma: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                             }
-                            return new VectorArit(TipoPrimitivo.DOUBLE, l);
+                            return this.GenResultado(vector_izq, vector_der, TipoPrimitivo.DOUBLE, l);
+                            //return new VectorArit(TipoPrimitivo.DOUBLE, l);
                         //DOUBLE + CADENA
                         case STRING:
                             //l.add(vector_izq.Acceder(0).toString() + vector_der.Acceder(0).toString());
@@ -260,9 +264,10 @@ public class ExpAritmetica extends Operacion {
                                     l.add(vector_izq.Acceder(i).toString() + vector_der.Acceder(i).toString());
                                 }
                             } else {
-                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Suma: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                             }
-                            return new VectorArit(TipoPrimitivo.STRING, l);
+                            return this.GenResultado(vector_izq, vector_der, TipoPrimitivo.STRING, l);
+                            //return new VectorArit(TipoPrimitivo.STRING, l);
 
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -288,10 +293,10 @@ public class ExpAritmetica extends Operacion {
                                     l.add(vector_izq.Acceder(i).toString() + vector_der.Acceder(i).toString());
                                 }
                             } else {
-                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Suma: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                             }
-                            return new VectorArit(TipoPrimitivo.STRING, l);
-
+                            return this.GenResultado(vector_izq, vector_der, TipoPrimitivo.STRING, l);
+                            //return new VectorArit(TipoPrimitivo.STRING, l);
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar bool con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
@@ -312,9 +317,10 @@ public class ExpAritmetica extends Operacion {
                             l.add(vector_izq.Acceder(i).toString() + vector_der.Acceder(i).toString());
                         }
                     } else {
-                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mult: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
+                        return VentanaErrores.getVenErrores().AgregarError("Semantico", "Suma: Hay problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.STRING, l);
+                    return this.GenResultado(vector_izq, vector_der, TipoPrimitivo.STRING, l);
+                    //return new VectorArit(TipoPrimitivo.STRING, l);
 
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar" + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -947,4 +953,6 @@ public class ExpAritmetica extends Operacion {
                 return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede volver negativo " + vector.getTipo_dato(), this.getFila(), this.getColumna());
         }
     }
+    
+    
 }

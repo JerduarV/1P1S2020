@@ -1,2 +1,2 @@
-y = matrix(c(4,5,6,"casa"),4,5);
-print(y);
+y = matrix(c(3,5,8),7,3);
+print(y+matrix(4,7,3));

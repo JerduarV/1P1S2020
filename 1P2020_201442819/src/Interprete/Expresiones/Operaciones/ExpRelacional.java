@@ -84,7 +84,7 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "MayorQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
                 case MENOR:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -103,7 +103,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "MenorQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MENORIGUAL:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -122,7 +123,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "MenorIgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MAYORIGUAL:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -141,7 +143,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "MayorIgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 case IGUALQUE:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -160,7 +163,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "IgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 default:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -179,7 +183,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "DiferenteQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
             }
         } else if (izq.isString() && der.isString()) {
             switch (this.getTipo()) {
@@ -201,7 +206,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "IgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 case DIFERENTE:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -220,7 +226,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "DiferenteQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MAYOR:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -242,7 +249,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "MayorQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MENOR:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -264,7 +272,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "MenorQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 case MAYORIGUAL:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -286,7 +295,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "MayorIgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 default:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -308,7 +318,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "MenorIgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
             }
         } else if (izq.isBool() && der.isBool()) {
             switch (this.getTipo()) {
@@ -330,7 +341,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "IgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 case DIFERENTE:
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
@@ -349,7 +361,8 @@ public class ExpRelacional extends Operacion {
                     } else {
                         return VentanaErrores.getVenErrores().AgregarError("Semantico", "IgualQue: Problema con el tamaño de los vectores", this.getFila(), this.getColumna());
                     }
-                    return new VectorArit(TipoPrimitivo.BOOL, l);
+                    return this.GenResultado(izq, der, TipoPrimitivo.BOOL, l);
+                    //return new VectorArit(TipoPrimitivo.BOOL, l);
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "Comparación no valida entre booleanos", this.getFila(), this.getColumna());
             }

@@ -149,7 +149,8 @@ public class ExpLogica extends Operacion {
                 }
                 break;
         }
-        return new VectorArit(TipoPrimitivo.BOOL, l);
+        return der != null ? this.GenResultado(izq, der, TipoPrimitivo.BOOL, l) : this.GenResultado(izq, l);
+        //return new VectorArit(TipoPrimitivo.BOOL, l);
     }
 
 }

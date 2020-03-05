@@ -143,9 +143,9 @@ public abstract class Operacion extends Expresion {
      * @param der Operador derecho
      * @param t Tipo de dato
      * @param l Lista de valores
-     * @return Colección: VectorArit o MatrixArit dependiendo de los operadores
+     * @return VectorArit: VectorArit o MatrixArit dependiendo de los operadores
      */
-    protected Coleccion GenResultado(VectorArit izq, VectorArit der, TipoPrimitivo t, LinkedList<Object> l) {
+    protected VectorArit GenResultado(VectorArit izq, VectorArit der, TipoPrimitivo t, LinkedList<Object> l) {
         if (izq instanceof MatrixArit || der instanceof MatrixArit) {
             int f = izq instanceof MatrixArit ? ((MatrixArit) izq).getNum_filas() : ((MatrixArit) der).getNum_filas();
             int c = izq instanceof MatrixArit ? ((MatrixArit) izq).getNum_columnas() : ((MatrixArit) der).getNum_columnas();
@@ -154,6 +154,22 @@ public abstract class Operacion extends Expresion {
         }
 
         return new VectorArit(t, l);
+    }
+
+    /**
+     * Genera el resultado en función si el vector es una matrix o no para un
+     * operación unaria
+     *
+     * @param vector Operador único
+     * @param l Lista de valores
+     * @return VectorArit o MatrixArit
+     */
+    protected VectorArit GenResultado(VectorArit vector, LinkedList<Object> l) {
+        if (vector instanceof MatrixArit) {
+            return new MatrixArit(((MatrixArit) vector).getNum_filas(), ((MatrixArit) vector).getNum_columnas(), vector.getTipo_dato(), l);
+        }
+
+        return new VectorArit(vector.getTipo_dato(), l);
     }
 
 }

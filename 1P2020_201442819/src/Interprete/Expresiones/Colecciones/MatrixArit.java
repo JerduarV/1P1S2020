@@ -41,13 +41,13 @@ public class MatrixArit extends VectorArit {
 
     @Override
     public String toString() {
-        String cad = "";
+        String cad = "    ";
         for (int i = 0; i < num_columnas; i++) {
-            cad += " [" + i + "]";
+            cad += "[" + (i + 1) + "]";
         }
         cad += "\n>>>";
         for (int y = 0; y < this.num_filas; y++) {
-            cad += " [" + y + "]";
+            cad += " [" + (y + 1) + "]";
             for (int k = 0; k < this.num_columnas; k++) {
                 cad += " " + this.AccederMatrix(y, k).toString();
             }

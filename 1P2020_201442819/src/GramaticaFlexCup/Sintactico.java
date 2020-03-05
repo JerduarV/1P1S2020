@@ -679,6 +679,10 @@ public class Sintactico extends java_cup.runtime.lr_parser {
                 return new Remove(l,fila,col);
             case "matrix":
                 return new Matrix(l,fila,col);
+            case "mean":
+                return new Mean(l,fila,col);
+            case "mode":
+                return new Mode(l,fila,col);
             default:
                 return new CallFun(id,l,fila,col);
         }

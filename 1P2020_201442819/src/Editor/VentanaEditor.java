@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
+ * Clase de la ventana principal del editor
  *
  * @author Jerson Villatoro
  */
@@ -39,7 +40,6 @@ public class VentanaEditor extends javax.swing.JFrame {
             return;
         }
         if (this.dbOpciones.getSelectedIndex() == 1) {
-
 
         } else if (this.dbOpciones.getSelectedIndex() == 0) {
             Interprete i = new Interprete();
@@ -76,7 +76,7 @@ public class VentanaEditor extends javax.swing.JFrame {
      */
     private void AbrirArchivo() {
         JFileChooser fc = new JFileChooser();
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Texto (*.fs, *.gxml, *.gdato)", "fs", "gxml", "gdato");
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos Arit (*.arit)", "arit");
         fc.setFileFilter(filtro);
 
         int file = fc.showOpenDialog(this);

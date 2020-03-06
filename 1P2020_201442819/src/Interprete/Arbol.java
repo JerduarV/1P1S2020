@@ -102,6 +102,18 @@ public class Arbol extends Instruccion {
         //RERVANDO EL NOMBRE DE LA FUNCIÓN MATRIX
         DecFuncion matrix = new DecFuncion("matrix");
         global.GuardarFuncion("matrix", matrix);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN MEAN
+        DecFuncion mean = new DecFuncion("mean");
+        global.GuardarFuncion("mean", mean);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN MODE
+        DecFuncion mode = new DecFuncion("mode");
+        global.GuardarFuncion("mode", mode);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN MEDIAN
+        DecFuncion median = new DecFuncion("median");
+        global.GuardarFuncion("median", median);
     }
 
     @Override

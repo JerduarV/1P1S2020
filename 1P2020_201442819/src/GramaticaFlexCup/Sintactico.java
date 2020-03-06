@@ -683,6 +683,8 @@ public class Sintactico extends java_cup.runtime.lr_parser {
                 return new Mean(l,fila,col);
             case "mode":
                 return new Mode(l,fila,col);
+            case "median":
+                return new Median(l,fila,col);
             default:
                 return new CallFun(id,l,fila,col);
         }

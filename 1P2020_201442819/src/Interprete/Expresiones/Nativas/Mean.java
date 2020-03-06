@@ -42,7 +42,7 @@ public class Mean extends CallFun {
     }
 
     /**
-     * Promedio sin trim
+     * Promedio con trim
      *
      * @param t Tabla de símbolos
      * @return VectorArit o Errorcompi

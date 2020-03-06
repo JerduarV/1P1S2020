@@ -30,14 +30,15 @@ parser code
             for(int i : expected_token_ids()){
                 error += symbl_name_from_id(i) + " ";
             }
-            System.err.println(error);
+            //System.err.println(error);
             VentanaErrores.getVenErrores().AgregarError("Sintactico",error, s.left , s.right);
     } 
     /**
      * Método al que se llama en el momento en que ya no es posible una recuperación de errores.
      **/ 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-            System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
+            //System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido.");
+            VentanaErrores.getVenErrores().AgregarError("Sintactico","Error síntactico irrecuperable, componente " + s.value + " no reconocido.",s.left,s.right);
     }  
     /**
      * Método que devuelve el AST que se generó después de realizar el análisis sintáctico. 
@@ -77,6 +78,10 @@ parser code
                 return new Mode(l,fila,col);
             case "median":
                 return new Median(l,fila,col);
+            case "ncol":
+                return new nCol(l,fila,col);
+            case "nrow":
+                return new nRow(l,fila,col);
             default:
                 return new CallFun(id,l,fila,col);
         }
@@ -165,6 +170,8 @@ INSTR ::=
     |   DEC_FUN:d           {:RESULT = d;:}
     |   CALL_FUN:c          {:RESULT = c;:}
     |   CALL_FUN:c PTCOMA   {:RESULT = c;:}
+    |   error PTCOMA
+    |   error
 ;
 
 SWITCH ::=
@@ -261,7 +268,7 @@ ELSE ::=
 EXP ::=
         EXP:e1 OR EXP:e2            {:RESULT = new ExpLogica(e1left,e1right,e1,e2,TipoOpe.OR);:}
     |   EXP:e1 AND EXP:e2           {:RESULT = new ExpLogica(e1left,e1right,e1,e2,TipoOpe.AND);:}
-    |   EXP_TERNARIA              
+    |   EXP_TERNARIA:e              {:RESULT = e;:}              
     |   NOT EXP:e                   {:RESULT = new ExpLogica(e,eleft,eright);:}
     |   EXP2:e                      {:RESULT = e;:}
 ;
@@ -301,7 +308,7 @@ PRIMITIVO ::=
 ;
 
 EXP_TERNARIA ::=
-        EXP TERNARIO EXP DOSPUNTOS EXP
+        EXP:e TERNARIO EXP:e1 DOSPUNTOS EXP:e2      {:RESULT = new ExpTernaria(e,e1,e2,eleft,eright);:}
 ;
 
 ACCESO ::=

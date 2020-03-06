@@ -114,6 +114,14 @@ public class Arbol extends Instruccion {
         //RERVANDO EL NOMBRE DE LA FUNCIÓN MEDIAN
         DecFuncion median = new DecFuncion("median");
         global.GuardarFuncion("median", median);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN NCOL
+        DecFuncion ncol = new DecFuncion("ncol");
+        global.GuardarFuncion("ncol", ncol);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN NROW
+        DecFuncion nrow = new DecFuncion("nrow");
+        global.GuardarFuncion("nrow", nrow);
     }
 
     @Override

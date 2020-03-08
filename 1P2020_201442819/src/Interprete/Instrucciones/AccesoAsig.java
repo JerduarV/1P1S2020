@@ -64,7 +64,7 @@ public class AccesoAsig extends Instruccion {
         }
 
         if (o instanceof MatrixArit) {
-
+            return this.SetMatriz((MatrixArit) o, t);
         } else if (o instanceof VectorArit) {
             return AccesoSetVector((VectorArit) o, t);
         } else if (o instanceof ListArit) {
@@ -74,17 +74,183 @@ public class AccesoAsig extends Instruccion {
         throw new UnsupportedOperationException("Todavía no tengo asignación para esa estructura"); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * función de seteo a una matrizArit
+     *
+     * @param matriz Matriz a la que se va a modificar
+     * @param t Tabla de Símbolos
+     * @return null o ErrorCompi
+     */
     private Object SetMatriz(MatrixArit matriz, TablaSimbolos t) {
-        if(this.lista_index.size() != 1 || this.lista_index.getFirst().isDoble()){
+        if (this.lista_index.size() != 1 || this.lista_index.getFirst().isDoble()) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "Error en los índices", this.getFila(), this.getColumna());
         }
-        
-        switch(this.lista_index.getFirst().getTipo()){
+
+        switch (this.lista_index.getFirst().getTipo()) {
             case SIMPLE:
                 return AccesoSetVector(matriz, t);
             case MATRIX:
-                
+                return this.SetMatrizDoble(matriz, t, this.lista_index.getFirst());
+            case MATRIX_ROW:
+                return this.SetMatrizRow(matriz, t, this.lista_index.getFirst());
+            case MATRIX_COL:
+                return this.SetMatrizCol(matriz, t, this.lista_index.getFirst());
         }
+        return null;
+    }
+
+    /**
+     * Modificación de una matriz usando un índice [E,E]
+     *
+     * @param matriz Matriz que se va a modificar
+     * @param t Tabla de Símbolos
+     * @param index Índice de la forma [E,E]
+     * @return
+     */
+    private Object SetMatrizDoble(MatrixArit matriz, TablaSimbolos t, Indice index) {
+        Object i1 = index.getExp().Resolver(t),
+                i2 = index.getExp2().Resolver(t);
+
+        if ((i1 instanceof ErrorCompi) || (i2 instanceof ErrorCompi)) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Error en los índices", this.getFila(), this.getColumna());
+        }
+
+        if (!(i1 instanceof VectorArit) || !(i2 instanceof VectorArit)) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Los índices deben ser númericos", this.getFila(), this.getColumna());
+        }
+
+        VectorArit fila = (VectorArit) i1, col = (VectorArit) i2;
+
+        if (!fila.isNumerico() || !col.isNumerico()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Los índices deben ser números", this.getFila(), this.getColumna());
+        }
+
+        Integer f = fila.isInteger() ? (Integer) fila.Acceder(0) : ((Double) fila.Acceder(0)).intValue(),
+                c = col.isInteger() ? (Integer) col.Acceder(0) : ((Double) col.Acceder(0)).intValue();
+
+        if (f < 1 || f > matriz.getNum_filas() || c < 1 || c > matriz.getNum_columnas()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indices fuera de rango", this.getFila(), this.getColumna());
+        }
+
+        Object nuevo_valor = this.valor.Resolver(t);
+
+        if (nuevo_valor instanceof ErrorCompi) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Error en la expresón de valor nuevo", this.getFila(), this.getColumna());
+        }
+
+        if (!(nuevo_valor instanceof VectorArit)) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "La expresión debe ser un vector primitivo", this.getFila(), this.getColumna());
+        }
+
+        VectorArit v = (VectorArit) nuevo_valor;
+
+        if (v.getTamanio() != 1) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "La expresión debe ser un vector primitivo de tamanio 1", this.getFila(), this.getColumna());
+        }
+
+        matriz.SetPosicion(f - 1, c - 1, v);
+        return null;
+    }
+
+    /**
+     * Modificación de matriz de la forma [E,]
+     *
+     * @param matriz Matriz a modificar
+     * @param t Tabla de Símbolos
+     * @param index Índice
+     * @return null o ErrorCompi
+     */
+    private Object SetMatrizRow(MatrixArit matriz, TablaSimbolos t, Indice index) {
+        Object i1 = index.getExp().Resolver(t);
+
+        if (i1 instanceof ErrorCompi) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Error en los índices", this.getFila(), this.getColumna());
+        }
+
+        if (!(i1 instanceof VectorArit)) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Los índices deben ser númericos", this.getFila(), this.getColumna());
+        }
+
+        VectorArit fila = (VectorArit) i1;
+
+        if (!fila.isNumerico()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Los índices deben ser números", this.getFila(), this.getColumna());
+        }
+
+        Integer f = fila.isInteger() ? (Integer) fila.Acceder(0) : ((Double) fila.Acceder(0)).intValue();
+
+        if (f < 1 || f > matriz.getNum_filas()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indices fuera de rango", this.getFila(), this.getColumna());
+        }
+
+        Object nuevo_valor = this.valor.Resolver(t);
+
+        if (nuevo_valor instanceof ErrorCompi) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Error en la expresón de valor nuevo", this.getFila(), this.getColumna());
+        }
+
+        if (!(nuevo_valor instanceof VectorArit)) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "La expresión debe ser un vector primitivo", this.getFila(), this.getColumna());
+        }
+
+        VectorArit v = (VectorArit) nuevo_valor;
+
+        if (v.getTamanio() != 1 && v.getTamanio() != matriz.getNum_columnas()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "La expresión debe ser un vector primitivo de tamanio 1", this.getFila(), this.getColumna());
+        }
+
+        matriz.SetRow(f - 1, v);
+        return null;
+    }
+
+    /**
+     * Modificación de una matriz de la forma [,E]
+     *
+     * @param matriz Matriz a modificar
+     * @param t Tabla de Simbolos
+     * @param index Índice
+     * @return null o ErrorCompi
+     */
+    private Object SetMatrizCol(MatrixArit matriz, TablaSimbolos t, Indice index) {
+        Object i1 = index.getExp().Resolver(t);
+
+        if (i1 instanceof ErrorCompi) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Error en los índices", this.getFila(), this.getColumna());
+        }
+
+        if (!(i1 instanceof VectorArit)) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Los índices deben ser númericos", this.getFila(), this.getColumna());
+        }
+
+        VectorArit columna = (VectorArit) i1;
+
+        if (!columna.isNumerico()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Los índices deben ser números", this.getFila(), this.getColumna());
+        }
+
+        Integer c = columna.isInteger() ? (Integer) columna.Acceder(0) : ((Double) columna.Acceder(0)).intValue();
+
+        if (c < 1 || c > matriz.getNum_filas()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indices fuera de rango", this.getFila(), this.getColumna());
+        }
+
+        Object nuevo_valor = this.valor.Resolver(t);
+
+        if (nuevo_valor instanceof ErrorCompi) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Error en la expresón de valor nuevo", this.getFila(), this.getColumna());
+        }
+
+        if (!(nuevo_valor instanceof VectorArit)) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "La expresión debe ser un vector primitivo", this.getFila(), this.getColumna());
+        }
+
+        VectorArit v = (VectorArit) nuevo_valor;
+
+        if (v.getTamanio() != 1 && v.getTamanio() != matriz.getNum_filas()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "La expresión debe ser un vector primitivo de tamanio 1", this.getFila(), this.getColumna());
+        }
+
+        matriz.SetCol(c - 1, v);
         return null;
     }
 

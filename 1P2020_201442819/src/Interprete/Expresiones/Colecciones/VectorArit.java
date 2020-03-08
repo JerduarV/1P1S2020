@@ -124,16 +124,20 @@ public class VectorArit extends Coleccion {
             if (nuevo_valor.isInteger()) {
                 nuevo_valor.CasteoIntADouble();
             } else if (nuevo_valor.isBool()) {
-                nuevo_valor.casteoBoolACualquierNumerico(this.getTipo_dato());
+                nuevo_valor.casteoBoolToDouble();
             }
         } else if (this.isInteger()) {
             if (nuevo_valor.isDouble()) {
                 this.CasteoIntADouble();
             } else if (nuevo_valor.isBool()) {
-                nuevo_valor.casteoBoolACualquierNumerico(this.getTipo_dato());
+                nuevo_valor.casteoBoolToInt();
             }
         } else if (this.isBool()) {
-            this.casteoBoolACualquierNumerico(nuevo_valor.getTipo_dato());
+            if (nuevo_valor.isDouble()) {
+                this.CasteoIntADouble();
+            } else {
+                this.casteoBoolToInt();
+            }
         }
     }
 
@@ -154,11 +158,27 @@ public class VectorArit extends Coleccion {
      *
      * @param t
      */
+    /*
     public void casteoBoolACualquierNumerico(TipoPrimitivo t) {
         this.setTipo_dato(t);
         for (int i = 0; i < this.getValores().size(); i++) {
             Boolean e = (Boolean) this.getValores().get(i);
             this.getValores().set(i, e ? (t == TipoPrimitivo.INTEGER ? 1 : 1.0) : (t == TipoPrimitivo.INTEGER ? 0 : 0.0));
+        }
+    }*/
+    public void casteoBoolToInt() {
+        this.setTipo_dato(TipoPrimitivo.INTEGER);
+        for (int i = 0; i < this.getValores().size(); i++) {
+            Boolean e = (Boolean) this.getValores().get(i);
+            this.getValores().set(i, e ? 1 : 0);
+        }
+    }
+
+    public void casteoBoolToDouble() {
+        this.setTipo_dato(TipoPrimitivo.DOUBLE);
+        for (int i = 0; i < this.getValores().size(); i++) {
+            Boolean e = (Boolean) this.getValores().get(i);
+            this.getValores().set(i, e ? 1.0 : 0.0);
         }
     }
 

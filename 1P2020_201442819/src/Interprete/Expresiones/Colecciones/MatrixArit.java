@@ -44,13 +44,20 @@ public class MatrixArit extends VectorArit {
         for (int y = 0; y < this.num_filas; y++) {
             cad += " [" + (y + 1) + "]";
             for (int k = 0; k < this.num_columnas; k++) {
-                cad += " " + ( this.isString() ? "\"" + this.AccederMatrix(y, k).toString() + "\"" : this.AccederMatrix(y, k).toString());
+                cad += " " + (this.isString() ? "\"" + this.AccederMatrix(y, k).toString() + "\"" : this.AccederMatrix(y, k).toString());
             }
             cad += "\n>>>";
         }
         return cad;
     }
 
+    /**
+     * Función para acceder a una matriz de la forma [E,E]
+     *
+     * @param i Índice de las filas
+     * @param j Índice de las columnas
+     * @return Object
+     */
     public Object AccederMatrix(int i, int j) {
         int y = j * this.num_filas + i;
         return this.Acceder(y);
@@ -65,12 +72,70 @@ public class MatrixArit extends VectorArit {
         return new MatrixArit(this.num_filas, this.num_columnas, this.getTipo_dato(), l);
     }
 
+    /**
+     * Retorna el número de filas
+     *
+     * @return Entero positivo
+     */
     public Integer getNum_filas() {
         return num_filas;
     }
 
+    /**
+     * Retorna el número de columnas
+     *
+     * @return Entero positivo
+     */
     public Integer getNum_columnas() {
         return num_columnas;
+    }
+
+    /**
+     * Setea una posición de la matriz usando índice de filas y columnas
+     *
+     * @param i Índice de las filas
+     * @param j Índice de las columnas
+     * @param c Nuevo valor a asignar
+     */
+    public void SetPosicion(int i, int j, Coleccion c) {
+        int y = j * this.num_filas + i;
+        this.SetPosicion(y, c);
+    }
+
+    /**
+     * Modificación de una fila completa
+     *
+     * @param i Índice de la fila a modificar
+     * @param c Valor nuevo que se asignará
+     */
+    public void SetRow(int i, Coleccion c) {
+        if (c.getTamanio() == 1) {
+            for (int j = 0; j < this.getNum_columnas(); j++) {
+                this.SetPosicion(i, j, c);
+            }
+        } else {
+            for (int j = 0; j < this.getNum_columnas(); j++) {
+                this.SetPosicion(i, j, new VectorArit(c.getTipo_dato(), c.Acceder(j)));
+            }
+        }
+    }
+
+    /**
+     * Modificación de una columna completa
+     *
+     * @param j Índice de la columna a modificar
+     * @param c Valor nuevo que se quiere asignar
+     */
+    public void SetCol(int j, Coleccion c) {
+        if (c.getTamanio() == 1) {
+            for (int i = 0; i < this.getNum_filas(); i++) {
+                this.SetPosicion(i, j, c);
+            }
+        } else {
+            for (int i = 0; i < this.getNum_filas(); i++) {
+                this.SetPosicion(i, j, new VectorArit(c.getTipo_dato(), c.Acceder(j)));
+            }
+        }
     }
 
 }

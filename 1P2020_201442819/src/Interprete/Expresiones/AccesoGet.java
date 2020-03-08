@@ -228,7 +228,7 @@ public class AccesoGet extends Expresion {
                 c = col.isInteger() ? (Integer) col.Acceder(0) : ((Double) col.Acceder(0)).intValue();
 
         if (f < 1 || f > matriz.getNum_filas() || c < 1 || c > matriz.getNum_columnas()) {
-            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indices fuera de ranto", this.getFila(), this.getColumna());
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indices fuera de rango", this.getFila(), this.getColumna());
         }
 
         return new VectorArit(matriz.getTipo_dato(), matriz.AccederMatrix(f - 1, c - 1));

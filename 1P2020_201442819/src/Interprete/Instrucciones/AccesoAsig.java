@@ -10,6 +10,7 @@ import Interprete.ErrorCompi;
 import Interprete.Expresiones.AccesoGet;
 import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.ListArit;
+import Interprete.Expresiones.Colecciones.MatrixArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Identificador;
@@ -61,7 +62,7 @@ public class AccesoAsig extends Instruccion {
         if (o instanceof ErrorCompi) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se realizó la asignación", this.getFila(), this.getColumna());
         }
-
+        
         if (o instanceof VectorArit) {
             return AccesoSetVector((VectorArit) o, t);
         } else if (o instanceof ListArit) {
@@ -91,7 +92,6 @@ public class AccesoAsig extends Instruccion {
         }
 
         Object i = this.lista_index.getFirst().getExp().Resolver(t);
-
         //REVISO QUE NO HAYA ERRORES AL RESOLVER EL ÍNDICE
         if (i instanceof ErrorCompi) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "Hubo un error en los indices", this.getFila(), this.getColumna());
@@ -114,6 +114,12 @@ public class AccesoAsig extends Instruccion {
         if (y < 1) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indice fuera de rango", this.getFila(), this.getColumna());
         }
+        
+        if(vector instanceof MatrixArit){
+            if(((MatrixArit)vector).getTamanio() < y){
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indice fuera de rango", this.getFila(), this.getColumna());
+            }
+        }
 
         Object v = this.valor.Resolver(t);
 
@@ -131,8 +137,8 @@ public class AccesoAsig extends Instruccion {
         if (nuevo_valor.getTamanio() != 1) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "A un vector solo se le puede asignar un vector de tamanio 1", this.getFila(), this.getColumna());
         }
-
         vector.SetPosicion(y - 1, nuevo_valor);
+        
         return null;
     }
 

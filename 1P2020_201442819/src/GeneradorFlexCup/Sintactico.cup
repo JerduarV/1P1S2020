@@ -294,7 +294,7 @@ EXP3 ::=
     |   CALL_FUN:c                  {:RESULT = c;:}
     |   PARIZQ EXP:e PARDER         {:RESULT = e;:}
     |   PRIMITIVO:e                 {:RESULT = e;:}
-    |   EXP3:e INDEX:l              {:LinkedList<Indice> lista = new LinkedList<>();lista.add(l);RESULT = new AccesoGet(e,lista);:}
+    |   EXP3:e L_INDEX:l            {:RESULT = new AccesoGet(e,l);:}
     |   IDENTIFICADOR:id            {:RESULT = new Identificador(id,idleft,idright);:}  
     |   RNULL
 ;
@@ -322,5 +322,8 @@ L_INDEX ::=
 
 INDEX ::=
         CORIZQ EXP:e CORDER                     {:RESULT = new Indice(e);:}
-    |   CORIZQ CORIZQ EXP:e CORDER CORDER       {:RESULT = new Indice(e,false);:}
+    |   CORIZQ CORIZQ EXP:e CORDER CORDER       {:RESULT = new Indice(e,Indice.TipoIndice.DOBLE);:}
+    |   CORIZQ EXP:e COMA EXP:e2 CORDER         {:RESULT = new Indice(e,e2);:}
+    |   CORIZQ EXP:e COMA CORDER                {:RESULT = new Indice(e,Indice.TipoIndice.MATRIX_ROW);:}
+    |   CORIZQ COMA EXP:e CORDER                {:RESULT = new Indice(e,Indice.TipoIndice.MATRIX_COL);:}
 ;

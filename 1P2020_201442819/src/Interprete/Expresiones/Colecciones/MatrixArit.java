@@ -35,11 +35,6 @@ public class MatrixArit extends VectorArit {
     }
 
     @Override
-    public void SetPosicion(int index, Coleccion valor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public String toString() {
         String cad = "    ";
         for (int i = 0; i < num_columnas; i++) {
@@ -49,7 +44,7 @@ public class MatrixArit extends VectorArit {
         for (int y = 0; y < this.num_filas; y++) {
             cad += " [" + (y + 1) + "]";
             for (int k = 0; k < this.num_columnas; k++) {
-                cad += " " + this.AccederMatrix(y, k).toString();
+                cad += " " + ( this.isString() ? "\"" + this.AccederMatrix(y, k).toString() + "\"" : this.AccederMatrix(y, k).toString());
             }
             cad += "\n>>>";
         }

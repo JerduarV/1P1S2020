@@ -5,6 +5,7 @@
  */
 package Interprete.Expresiones.Colecciones;
 
+import Editor.VentanaErrores;
 import Interprete.Expresiones.TipoPrimitivo;
 import java.util.LinkedList;
 
@@ -100,7 +101,7 @@ public class VectorArit extends Coleccion {
         }
 
         //SE RELLENA LAS CASILLAS INTERMEDIAS CON EL VALOR POR DEFECTO
-        if (index > this.getValores().size() - 1) {
+        if (index > this.getValores().size() - 1 && !(this instanceof MatrixArit)) {
             this.RellenarConDefault(index - this.getValores().size());
             this.getValores().add(nuevo_valor.Acceder(0));
             return;
@@ -198,7 +199,7 @@ public class VectorArit extends Coleccion {
                 l += aux + (this.isString() ? "\"" + e.toString() + "\"" : e.toString());
                 aux = ",";
             }
-            return l;
+            return "[" + l + "]";
         }
     }
 

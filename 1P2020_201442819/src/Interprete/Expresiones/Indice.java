@@ -12,15 +12,24 @@ package Interprete.Expresiones;
  */
 public class Indice {
 
+    public enum TipoIndice {
+        SIMPLE,
+        DOBLE,
+        MATRIX,
+        MATRIX_COL,
+        MATRIX_ROW
+    }
+
     /**
-     * Expresión asociada al índice
+     * Expresión asociada al índice, la exp2 se usa para el índice de tipo
+     * matrizs
      */
-    private final Expresion exp;
+    private final Expresion exp, exp2;
 
     /**
      * Tipo de indice [] -> simble : true [[]] -> doble : false
      */
-    private final boolean Simple;
+    private final TipoIndice tipo;
 
     /**
      * Constructor de la clase Indice para un índice simple
@@ -29,24 +38,38 @@ public class Indice {
      */
     public Indice(Expresion exp) {
         this.exp = exp;
-        this.Simple = true;
+        this.tipo = TipoIndice.SIMPLE;
+        this.exp2 = null;
     }
 
     /**
      * Constructor de la clase Indice para un índice doble
      *
      * @param exp Expresion asociada
-     * @param Simple al venir indica que el indice es doble
+     * @param t Tipo de Indice que se contruye
      */
-    public Indice(Expresion exp, boolean Simple) {
+    public Indice(Expresion exp, TipoIndice t) {
         this.exp = exp;
-        this.Simple = false;
+        this.tipo = t;
+        this.exp2 = null;
+    }
+
+    /**
+     * Constructor para un índice de tipo matrix (con fila y columna)
+     *
+     * @param e Expresión para las filas
+     * @param e2 Expresión para las columnas
+     */
+    public Indice(Expresion e, Expresion e2) {
+        this.tipo = TipoIndice.MATRIX;
+        this.exp = e;
+        this.exp2 = e2;
     }
 
     /**
      * Retorna la Expresion
      *
-     * @return
+     * @return Expresión
      */
     public Expresion getExp() {
         return exp;
@@ -55,10 +78,37 @@ public class Indice {
     /**
      * Retorna si es simple o doble
      *
-     * @return
+     * @return Valor booleano
      */
     public boolean isSimple() {
-        return Simple;
+        return this.tipo == TipoIndice.SIMPLE;
+    }
+
+    /**
+     * Retorna la expresión 2 que debe ser el índice de las columnas en un
+     * matriz
+     *
+     * @return Expresión
+     */
+    public Expresion getExp2() {
+        return exp2;
+    }
+
+    /**
+     * Retorna si un indice es doble
+     *
+     * @return valor booleano
+     */
+    public boolean isDoble() {
+        return this.tipo == TipoIndice.DOBLE;
+    }
+
+    /**
+     * Retorna el tipo de Indice
+     * @return TipoIndice
+     */
+    public TipoIndice getTipo() {
+        return tipo;
     }
 
 }

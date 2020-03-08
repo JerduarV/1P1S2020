@@ -57,7 +57,7 @@ public class AccesoGet extends Expresion {
             } else if (o instanceof VectorArit) {
                 o = AccesoGetVector((VectorArit) o, t, i);
             } else if (o instanceof ListArit) {
-                o = this.AccesoLista((ListArit) o, t);
+                o = this.AccesoLista((ListArit) o, t, i);
             } else {
                 return o;
             }
@@ -131,15 +131,14 @@ public class AccesoGet extends Expresion {
      * @param t Tabla de símbolos
      * @return Objeto colección o ErrorCompi
      */
-    private Object AccesoLista(ListArit lista, TablaSimbolos t) {
+    private Object AccesoLista(ListArit lista, TablaSimbolos t, Indice indice) {
 
-        Indice i = this.lista_index.getFirst();
 
-        if (!(i.isSimple() || i.isDoble())) {
+        if (!(indice.isSimple() || indice.isDoble())) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "El índice no corresponde a una lista", this.getFila(), this.getColumna());
         }
 
-        Object in = i.getExp().Resolver(t);
+        Object in = indice.getExp().Resolver(t);
 
         if (in instanceof ErrorCompi) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "Hubo un error en los indices", this.getFila(), this.getColumna());
@@ -164,7 +163,7 @@ public class AccesoGet extends Expresion {
         }
 
         //SI ES UN ACCESO SIMPLE RETORNA LO QUE CONTIENE EL POSICIÓN Y DENTRO DE UNA NUEVA LISTA
-        if (i.isSimple()) {
+        if (indice.isSimple()) {
             LinkedList<Object> l = new LinkedList<>();
             l.add(lista.Acceder(y - 1));
             return new ListArit(l);

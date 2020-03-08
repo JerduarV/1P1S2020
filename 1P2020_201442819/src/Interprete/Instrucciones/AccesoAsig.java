@@ -62,14 +62,30 @@ public class AccesoAsig extends Instruccion {
         if (o instanceof ErrorCompi) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se realizó la asignación", this.getFila(), this.getColumna());
         }
-        
-        if (o instanceof VectorArit) {
+
+        if (o instanceof MatrixArit) {
+
+        } else if (o instanceof VectorArit) {
             return AccesoSetVector((VectorArit) o, t);
         } else if (o instanceof ListArit) {
             return this.AccesoSetList((ListArit) o, t);
         }
 
         throw new UnsupportedOperationException("Todavía no tengo asignación para esa estructura"); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private Object SetMatriz(MatrixArit matriz, TablaSimbolos t) {
+        if(this.lista_index.size() != 1 || this.lista_index.getFirst().isDoble()){
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Error en los índices", this.getFila(), this.getColumna());
+        }
+        
+        switch(this.lista_index.getFirst().getTipo()){
+            case SIMPLE:
+                return AccesoSetVector(matriz, t);
+            case MATRIX:
+                
+        }
+        return null;
     }
 
     /**
@@ -114,9 +130,9 @@ public class AccesoAsig extends Instruccion {
         if (y < 1) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indice fuera de rango", this.getFila(), this.getColumna());
         }
-        
-        if(vector instanceof MatrixArit){
-            if(((MatrixArit)vector).getTamanio() < y){
+
+        if (vector instanceof MatrixArit) {
+            if (((MatrixArit) vector).getTamanio() < y) {
                 return VentanaErrores.getVenErrores().AgregarError("Semantico", "Indice fuera de rango", this.getFila(), this.getColumna());
             }
         }
@@ -138,10 +154,17 @@ public class AccesoAsig extends Instruccion {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "A un vector solo se le puede asignar un vector de tamanio 1", this.getFila(), this.getColumna());
         }
         vector.SetPosicion(y - 1, nuevo_valor);
-        
+
         return null;
     }
 
+    /**
+     * Seteo de Lista
+     *
+     * @param lista Lista a modificar
+     * @param t Tabla de Simbolos
+     * @return null o ErrorCompi
+     */
     private Object AccesoSetList(ListArit lista, TablaSimbolos t) {
 
         Coleccion col = lista;
@@ -238,11 +261,11 @@ public class AccesoAsig extends Instruccion {
                 if (valor_asig.getTamanio() > 1) {
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "Solo se puede asignar de tamanio 1", this.getFila(), this.getColumna());
                 }
-                valor_asig = (valor_asig instanceof VectorArit) ? valor_asig : (Coleccion)valor_asig.Acceder(0);
+                valor_asig = (valor_asig instanceof VectorArit) ? valor_asig : (Coleccion) valor_asig.Acceder(0);
             }
             col.SetPosicion(y - 1, valor_asig);
         }
-        
+
         return null;
 
     }

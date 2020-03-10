@@ -150,14 +150,19 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" pref="1199" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="1494" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="btInterpretar" min="-2" pref="95" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="dbOpciones" min="-2" pref="190" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="tabpane" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="tabpane" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="tabpaneGraficas" min="-2" pref="655" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -172,7 +177,10 @@
                   <Component id="btInterpretar" alignment="0" min="-2" pref="70" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabpane" pref="472" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="tabpane" pref="472" max="32767" attributes="0"/>
+                  <Component id="tabpaneGraficas" max="32767" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="184" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -196,6 +204,9 @@
       </AuxValues>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="tabpane">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
     </Container>
@@ -235,5 +246,12 @@
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
+    <Container class="javax.swing.JTabbedPane" name="tabpaneGraficas">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
+    </Container>
   </SubComponents>
 </Form>

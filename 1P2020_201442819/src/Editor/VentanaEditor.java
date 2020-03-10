@@ -11,7 +11,9 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -36,6 +38,7 @@ public class VentanaEditor extends javax.swing.JFrame {
      */
     private void Interpretar() {
         this.LimpiarConsola();
+        tabpaneGraficas.removeAll();
         if ("".equals(this.getContenido())) {
             return;
         }
@@ -125,6 +128,18 @@ public class VentanaEditor extends javax.swing.JFrame {
     }
 
     /**
+     * Método para insertar una gráfica a las pestañas del sistemas
+     * @param nombreFile Nombre del archivo que se creó para la imagen
+     * @param nombre_tab Nombre que tendrá la pestaña
+     */
+    public static void InsertarGrafica(String nombreFile, String nombre_tab) {
+        JLabel panel = new JLabel();
+        ImageIcon i = new ImageIcon(nombreFile);
+        panel.setIcon(i);
+        tabpaneGraficas.add(nombre_tab, panel);
+    }
+
+    /**
      * Método para limpiar la consola del sistema
      */
     private void LimpiarConsola() {
@@ -146,6 +161,7 @@ public class VentanaEditor extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         taConsola = new javax.swing.JTextArea();
         dbOpciones = new javax.swing.JComboBox<>();
+        tabpaneGraficas = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         opcAbrir = new javax.swing.JMenuItem();
@@ -281,13 +297,17 @@ public class VentanaEditor extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1199, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1494, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btInterpretar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(dbOpciones, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(tabpane))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(tabpane)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tabpaneGraficas, javax.swing.GroupLayout.PREFERRED_SIZE, 655, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -298,7 +318,9 @@ public class VentanaEditor extends javax.swing.JFrame {
                     .addComponent(dbOpciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btInterpretar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabpane, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tabpane, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                    .addComponent(tabpaneGraficas))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                 .addContainerGap())
@@ -401,7 +423,8 @@ public class VentanaEditor extends javax.swing.JFrame {
     private javax.swing.JMenuItem opcCerrarPestania;
     private javax.swing.JMenuItem opcGuardar;
     public static javax.swing.JTextArea taConsola;
-    private javax.swing.JTabbedPane tabpane;
+    public javax.swing.JTabbedPane tabpane;
+    private static javax.swing.JTabbedPane tabpaneGraficas;
     // End of variables declaration//GEN-END:variables
 
     private void GuardarComo() {

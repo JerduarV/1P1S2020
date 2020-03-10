@@ -10,6 +10,7 @@ import Interprete.Arbol;
 import Interprete.Expresiones.*;
 import Interprete.Expresiones.Operaciones.*;
 import Interprete.Expresiones.Nativas.*;
+import Interprete.Expresiones.Nativas.Graficas.*;
 import Interprete.Instrucciones.*;
 import java.util.LinkedList;
 import Interprete.NodoAST;
@@ -751,6 +752,8 @@ public class Sintactico extends java_cup.runtime.lr_parser {
                 return new nCol(l,fila,col);
             case "nrow":
                 return new nRow(l,fila,col);
+            case "pie":
+                return new Pie(l,fila,col);
             default:
                 return new CallFun(id,l,fila,col);
         }

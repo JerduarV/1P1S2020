@@ -122,6 +122,14 @@ public class Arbol extends Instruccion {
         //RERVANDO EL NOMBRE DE LA FUNCIÓN NROW
         DecFuncion nrow = new DecFuncion("nrow");
         global.GuardarFuncion("nrow", nrow);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN PIE
+        DecFuncion pie = new DecFuncion("pie");
+        global.GuardarFuncion("pie", pie);
+        
+        //RERVANDO EL NOMBRE DE LA FUNCIÓN BARPLOT
+        DecFuncion barplot = new DecFuncion("barplot");
+        global.GuardarFuncion("barplot", barplot);
     }
 
     @Override

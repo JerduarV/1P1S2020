@@ -107,8 +107,13 @@ public class Switch extends Instruccion {
             }
 
             VectorArit b = (VectorArit) c;
-
-            if (a.Acceder(0).equals(b.Acceder(0))) {
+            boolean valor;
+            if(a.isNumerico() && b.isNumerico()){
+                valor = (a.isInteger() ? (Integer)a.Acceder(0) : (Double)a.Acceder(0)) == (b.isInteger() ? (Integer)b.Acceder(0) : (Double)b.Acceder(0));
+            }else{
+                valor = a.Acceder(0).equals(b.Acceder(0));
+            }
+            if (valor) {
                 Object r = caso.Ejecutar(nueva);
                 bandera = true;
                 if (r instanceof Break) {

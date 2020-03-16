@@ -78,7 +78,7 @@ public class Mean extends CallFun {
             suma += i;
             contador++;
         }
-        return new VectorArit(TipoPrimitivo.DOUBLE, contador != 0 ? suma / contador : 0.0);
+        return contador == 0 ? this.Mean(t) : new VectorArit(TipoPrimitivo.DOUBLE, suma / contador);
     }
 
     /**

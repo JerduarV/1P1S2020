@@ -8,6 +8,7 @@ package Interprete.Instrucciones;
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Colecciones.Coleccion;
+import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
@@ -49,6 +50,12 @@ public class For extends Instruccion {
         for (Object v : col.getValores()) {
             TablaSimbolos nueva = new TablaSimbolos(t);
             nueva.IncrementarDisplay();
+            
+            if(col instanceof VectorArit){
+                v = new VectorArit(col.getTipo_dato(), v);
+            }else if(v instanceof Coleccion){
+                v = ((Coleccion)v).copiar();
+            }
             
             nueva.GuardarVariable(id, v);
             Object result = this.Recorrer(nueva);

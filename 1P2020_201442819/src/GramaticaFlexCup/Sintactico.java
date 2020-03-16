@@ -754,6 +754,12 @@ public class Sintactico extends java_cup.runtime.lr_parser {
                 return new nRow(l,fila,col);
             case "pie":
                 return new Pie(l,fila,col);
+            case "barplot":
+                return new Barplot(l,fila,col);
+            case "plot":
+                return new Plot(l,fila,col);
+            case "hist":
+                return new Hist(l,fila,col);
             default:
                 return new CallFun(id,l,fila,col);
         }

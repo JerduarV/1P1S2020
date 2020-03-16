@@ -23,13 +23,27 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
 /**
+ * Clase para el manejo de la función nativa pie que contruye una gráfica de
+ * pastel
  *
  * @author Jerduar
  */
 public class Pie extends CallFun {
 
+    /**
+     * Contador estático usado para nombrar las gráficas según se vayan
+     * generando
+     */
     private static int i = 0;
 
+    /**
+     * Constructor de una llamade la función nativa Pie que contruye una gráfica
+     * circular en el lenguaje arit
+     *
+     * @param p Lista de parámetros actuales
+     * @param fila Fila en la que se encuentra
+     * @param col Columna en la que se encuentra
+     */
     public Pie(LinkedList<Expresion> p, Integer fila, Integer col) {
         super("Pie", p, fila, col);
     }
@@ -58,6 +72,7 @@ public class Pie extends CallFun {
             LinkedList<Object> label = new LinkedList<>();
             label.addAll(lb.getValores());
             if (lb.getTamanio() < datos.getTamanio()) {
+                VentanaErrores.getVenErrores().AgregarError("Warning", "Pie: Hacen falta etiquetas para los datos", this.getFila(), this.getColumna());
                 for (int y = 0; y < datos.getTamanio() - lb.getTamanio(); y++) {
                     label.add("Desconocido" + y);
                 }
@@ -65,7 +80,11 @@ public class Pie extends CallFun {
             String nombre = titulo.Acceder(0).toString();
             DefaultPieDataset dataset = new DefaultPieDataset();
             for (int i = 0; i < label.size() && i < datos.getValores().size(); i++) {
-                dataset.setValue(label.get(i).toString(), datos.isInteger() ? ((Integer) datos.Acceder(i)).doubleValue() : (Double) datos.Acceder(i));
+                Double dato = datos.isInteger() ? ((Integer) datos.Acceder(i)).doubleValue() : (Double) datos.Acceder(i);
+                if(dato < 0){
+                    return VentanaErrores.getVenErrores().AgregarError("Semantico", "Pie: Los datos no pueden ser negativos", this.getFila(), this.getColumna());
+                }
+                dataset.setValue(label.get(i).toString(), dato);
             }
             JFreeChart pieChar = ChartFactory.createPieChart(nombre, dataset, true, true, false);
             int width = 640, height = 480;

@@ -5,7 +5,6 @@
  */
 package Interprete.Expresiones.Colecciones;
 
-import Editor.VentanaErrores;
 import Interprete.Expresiones.TipoPrimitivo;
 import java.util.LinkedList;
 
@@ -36,51 +35,6 @@ public class VectorArit extends Coleccion {
     public VectorArit(TipoPrimitivo tipo_dato, Object valor) {
         super(tipo_dato, new LinkedList<>());
         this.getValores().add(valor);
-    }
-
-    /**
-     * Retorna si el Vector es de tipo Entero
-     *
-     * @return valor booleano
-     */
-    public boolean isInteger() {
-        return this.getTipo_dato() == TipoPrimitivo.INTEGER;
-    }
-
-    /**
-     * Retorna si el vector es de tipo Double
-     *
-     * @return valor booleano
-     */
-    public boolean isDouble() {
-        return this.getTipo_dato() == TipoPrimitivo.DOUBLE;
-    }
-
-    /**
-     * Retorna si el vector es de tipo string
-     *
-     * @return
-     */
-    public boolean isString() {
-        return this.getTipo_dato() == TipoPrimitivo.STRING;
-    }
-
-    /**
-     * Retorna si el vector es de tipo Numerico: int o double
-     *
-     * @return valor booleano
-     */
-    public boolean isNumerico() {
-        return this.isInteger() || this.isDouble();
-    }
-
-    /**
-     * Retorna si el vector es de tipo Numerico: int o double
-     *
-     * @return
-     */
-    public boolean isBool() {
-        return this.getTipo_dato() == TipoPrimitivo.BOOL;
     }
 
     /**
@@ -117,7 +71,7 @@ public class VectorArit extends Coleccion {
      *
      * @param nuevo_valor Nuevo valor que se cambiará
      */
-    private void casteoImplicito(VectorArit nuevo_valor) {
+    private void casteoImplicito(Coleccion nuevo_valor) {
         if (this.isString() || nuevo_valor.isString()) {
             this.setTipo_dato(TipoPrimitivo.STRING);
         } else if (this.isDouble()) {
@@ -138,47 +92,6 @@ public class VectorArit extends Coleccion {
             } else {
                 this.casteoBoolToInt();
             }
-        }
-    }
-
-    /**
-     * Método que castea todos los elementos del arreglo de entero a double
-     */
-    public void CasteoIntADouble() {
-        this.setTipo_dato(TipoPrimitivo.DOUBLE);
-        for (int i = 0; i < this.getValores().size(); i++) {
-            Integer e = (Integer) this.getValores().get(i);
-            Double nuevo = e.doubleValue();
-            this.getValores().set(i, nuevo);
-        }
-    }
-
-    /**
-     * Casteo de los elementos booleanos del arreglo a numericos
-     *
-     * @param t
-     */
-    /*
-    public void casteoBoolACualquierNumerico(TipoPrimitivo t) {
-        this.setTipo_dato(t);
-        for (int i = 0; i < this.getValores().size(); i++) {
-            Boolean e = (Boolean) this.getValores().get(i);
-            this.getValores().set(i, e ? (t == TipoPrimitivo.INTEGER ? 1 : 1.0) : (t == TipoPrimitivo.INTEGER ? 0 : 0.0));
-        }
-    }*/
-    public void casteoBoolToInt() {
-        this.setTipo_dato(TipoPrimitivo.INTEGER);
-        for (int i = 0; i < this.getValores().size(); i++) {
-            Boolean e = (Boolean) this.getValores().get(i);
-            this.getValores().set(i, e ? 1 : 0);
-        }
-    }
-
-    public void casteoBoolToDouble() {
-        this.setTipo_dato(TipoPrimitivo.DOUBLE);
-        for (int i = 0; i < this.getValores().size(); i++) {
-            Boolean e = (Boolean) this.getValores().get(i);
-            this.getValores().set(i, e ? 1.0 : 0.0);
         }
     }
 

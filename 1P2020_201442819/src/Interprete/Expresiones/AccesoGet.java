@@ -7,6 +7,8 @@ package Interprete.Expresiones;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
+import Interprete.Expresiones.Colecciones.ArrayArit;
+import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.ListArit;
 import Interprete.Expresiones.Colecciones.MatrixArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
@@ -49,6 +51,10 @@ public class AccesoGet extends Expresion {
         //SI NO SE ECONTRÓ LA VARIABLE SE RETORNA EL ERROR
         if (o instanceof ErrorCompi) {
             return o;
+        }
+
+        if (o instanceof ArrayArit) {
+            return this.AccesoArray((ArrayArit) o, t);
         }
 
         for (Indice i : this.lista_index) {
@@ -132,7 +138,6 @@ public class AccesoGet extends Expresion {
      * @return Objeto colección o ErrorCompi
      */
     private Object AccesoLista(ListArit lista, TablaSimbolos t, Indice indice) {
-
 
         if (!(indice.isSimple() || indice.isDoble())) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "El índice no corresponde a una lista", this.getFila(), this.getColumna());
@@ -317,6 +322,55 @@ public class AccesoGet extends Expresion {
     @Override
     public void dibujar() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Acceso a un arreglo
+     *
+     * @param array Arreglo al que se accederá
+     * @return Object con valor o ErrorCompi
+     */
+    private Object AccesoArray(ArrayArit array, TablaSimbolos t) {
+        if (this.lista_index.size() < array.getCantidadDims()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: Índices insuficientes", this.getFila(), this.getColumna());
+        }
+
+        LinkedList<Integer> lista_index = new LinkedList<>();
+        int i = 0;
+        for (i = 0; i < this.lista_index.size() && i < array.getCantidadDims(); i++) {
+            Object index = this.lista_index.get(i).getExp().Resolver(t);
+            if (index instanceof ErrorCompi) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: Error en el índice", this.getFila(), this.getColumna());
+            }
+
+            Coleccion in = (Coleccion) index;
+            if (!in.isVector() || !in.isInteger()) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: El índice debe ser vector entero", this.getFila(), this.getColumna());
+            }
+
+            Integer y = (int) in.Acceder(0);
+            if (y < 1 || y > array.getLista_dim().get(i)) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: indice fuera de rango", this.getFila(), this.getColumna());
+            }
+
+            lista_index.add(y - 1);
+        }
+        Object v = array.Acceso(lista_index);
+
+        for (int y = i; y < this.lista_index.size(); y++) {
+            if (v instanceof MatrixArit) {
+                v = this.AccesoMatriz((MatrixArit) v, t, this.lista_index.get(y));
+            } else if (v instanceof VectorArit) {
+                v = AccesoGetVector((VectorArit) v, t, this.lista_index.get(y));
+            } else if (v instanceof ListArit) {
+                v = this.AccesoLista((ListArit) v, t, this.lista_index.get(y));
+            } else {
+                return v;
+            }
+        }
+
+        return v;
+
     }
 
 }

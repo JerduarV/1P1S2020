@@ -8,6 +8,7 @@ package Interprete.Expresiones.Nativas;
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.CallFun;
+import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.TipoPrimitivo;
@@ -53,10 +54,6 @@ public class Mean extends CallFun {
 
         if (param1 instanceof ErrorCompi || param2 instanceof ErrorCompi) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mean: Hay error en los parámetros", this.getFila(), this.getColumna());
-        }
-
-        if (!(param1 instanceof VectorArit && param2 instanceof VectorArit)) {
-            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Mean: Se esperaba un vector", this.getFila(), this.getColumna());
         }
 
         VectorArit vector = (VectorArit) param1,

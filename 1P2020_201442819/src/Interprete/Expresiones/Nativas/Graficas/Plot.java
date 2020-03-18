@@ -14,7 +14,6 @@ import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import TablaSimbolos.TablaSimbolos;
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;

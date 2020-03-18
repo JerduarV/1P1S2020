@@ -760,6 +760,8 @@ public class Sintactico extends java_cup.runtime.lr_parser {
                 return new Plot(l,fila,col);
             case "hist":
                 return new Hist(l,fila,col);
+            case "array":
+                return new Array(l,fila,col);
             default:
                 return new CallFun(id,l,fila,col);
         }

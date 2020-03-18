@@ -100,7 +100,83 @@ public abstract class Coleccion {
      * @return valor booleano
      */
     public final boolean isVector() {
-        return this instanceof VectorArit;
+        return this instanceof VectorArit && !(this instanceof MatrixArit);
+    }
+    
+    /**
+     * Retorna si el Vector es de tipo Entero
+     *
+     * @return valor booleano
+     */
+    public boolean isInteger() {
+        return this.getTipo_dato() == TipoPrimitivo.INTEGER;
+    }
+
+    /**
+     * Retorna si el vector es de tipo Double
+     *
+     * @return valor booleano
+     */
+    public boolean isDouble() {
+        return this.getTipo_dato() == TipoPrimitivo.DOUBLE;
+    }
+
+    /**
+     * Retorna si el vector es de tipo string
+     *
+     * @return
+     */
+    public boolean isString() {
+        return this.getTipo_dato() == TipoPrimitivo.STRING;
+    }
+
+    /**
+     * Retorna si el vector es de tipo Numerico: int o double
+     *
+     * @return valor booleano
+     */
+    public boolean isNumerico() {
+        return this.isInteger() || this.isDouble();
+    }
+
+    /**
+     * Retorna si el vector es de tipo Numerico: int o double
+     *
+     * @return
+     */
+    public boolean isBool() {
+        return this.getTipo_dato() == TipoPrimitivo.BOOL;
+    }
+    
+    /**
+     * Método que castea todos los elementos del arreglo de entero a double
+     */
+    public void CasteoIntADouble() {
+        this.setTipo_dato(TipoPrimitivo.DOUBLE);
+        for (int i = 0; i < this.getValores().size(); i++) {
+            Integer e = (Integer) this.getValores().get(i);
+            Double nuevo = e.doubleValue();
+            this.getValores().set(i, nuevo);
+        }
+    }
+
+    /**
+     * Casteo de los elementos booleanos del arreglo a numericos
+     */
+    public void casteoBoolToInt() {
+        this.setTipo_dato(TipoPrimitivo.INTEGER);
+        for (int i = 0; i < this.getValores().size(); i++) {
+            Boolean e = (Boolean) this.getValores().get(i);
+            this.getValores().set(i, e ? 1 : 0);
+        }
+    }
+
+    public void casteoBoolToDouble() {
+        this.setTipo_dato(TipoPrimitivo.DOUBLE);
+        for (int i = 0; i < this.getValores().size(); i++) {
+            Boolean e = (Boolean) this.getValores().get(i);
+            this.getValores().set(i, e ? 1.0 : 0.0);
+        }
     }
 
 }

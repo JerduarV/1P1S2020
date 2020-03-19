@@ -45,12 +45,107 @@ public class ArrayArit extends Coleccion {
 
     @Override
     public void SetPosicion(int index, Coleccion valor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (valor.getTipo_dato() == this.getTipo_dato()) {
+            this.getValores().set(index, valor);
+        } else {
+            System.out.println(valor.getTipo_dato() + " " + this.getTipo_dato());
+            this.Casteo(valor, index);
+        }
+    }
+
+    public void Casteo(Coleccion valor, int index) {
+        if (this.isList() || valor.isList()) {
+            System.out.println("LISTA");
+            if (!this.isList()) {
+                this.CastToList();
+            } else {
+                System.out.println("ENTRO ACA");
+                this.SetPosicion(index, new ListArit(valor));
+                return;
+            }
+        } else if (this.isString() || valor.isString()) {
+            if (!this.isString()) {
+                this.CastToString();
+            } else {
+                valor.setTipo_dato(TipoPrimitivo.STRING);
+            }
+        } else if (this.isDouble()) {
+            if (valor.isInteger()) {
+                valor.CasteoIntADouble();
+            } else {
+                valor.casteoBoolToDouble();
+            }
+        } else if (this.isInteger()) {
+            if (valor.isBool()) {
+                valor.casteoBoolToInt();
+            } else {
+                this.CasteoIntADouble();
+            }
+        } else if (this.isBool()) {
+            if (valor.isInteger()) {
+                this.casteoBoolToInt();
+            } else {
+                this.casteoBoolToDouble();
+            }
+        }
+        this.SetPosicion(index, valor);
+    }
+
+    @Override
+    public void casteoBoolToDouble() {
+        this.setTipo_dato(TipoPrimitivo.DOUBLE);
+        for (Object v : this.getValores()) {
+            Coleccion c = (Coleccion) v;
+            if (c.isDouble()) {
+                continue;
+            }
+            c.casteoBoolToDouble();
+        }
+    }
+
+    @Override
+    public void casteoBoolToInt() {
+        this.setTipo_dato(TipoPrimitivo.INTEGER);
+        for (Object v : this.getValores()) {
+            Coleccion c = (Coleccion) v;
+            if (c.isInteger()) {
+                continue;
+            }
+            c.casteoBoolToInt();
+        }
+    }
+
+    @Override
+    public void CasteoIntADouble() {
+        this.setTipo_dato(TipoPrimitivo.DOUBLE);
+        for (Object v : this.getValores()) {
+            Coleccion c = (Coleccion) v;
+            if (c.isDouble()) {
+                continue;
+            }
+            c.CasteoIntADouble();
+        }
+    }
+
+    private void CastToString() {
+        this.setTipo_dato(TipoPrimitivo.STRING);
+        for (Object v : this.getValores()) {
+            Coleccion c = (Coleccion) v;
+            c.setTipo_dato(TipoPrimitivo.STRING);
+        }
+    }
+
+    private void CastToList() {
+        System.out.println("cast");
+        for (int i = 0; i < this.getTamanio(); i++) {
+            this.getValores().set(i, new ListArit(this.Acceder(i)));
+        }
+        this.setTipo_dato(TipoPrimitivo.LIST);
     }
 
     @Override
     public String toString() {
-        String cad = "";
+        String cad;
         switch (this.getCantidadDims()) {
             case 1:
                 cad = "";
@@ -67,6 +162,12 @@ public class ArrayArit extends Coleccion {
         }
     }
 
+    /**
+     * Función que devuelve la representación en cadena de un array de N
+     * dimensiones con N > 2
+     *
+     * @return Cadena
+     */
     private String toStringNDims() {
         String cad = "";
         int cuadrado = 0;
@@ -123,12 +224,33 @@ public class ArrayArit extends Coleccion {
     }
 
     /**
+     * Setea un valor dentro del array
+     *
+     * @param indices Lista de índices
+     * @param valor_nuevo Valor nuevo a setear
+     */
+    public void SetPosicion(LinkedList<Integer> indices, Coleccion valor_nuevo) {
+        int indice_real = this.getIndiceReal(indices);
+        this.SetPosicion(indice_real, valor_nuevo);
+    }
+
+    /**
      * Función para acceder a una dirección del arreglo
      *
      * @param indices Lista de enteros que representan los índices
      * @return Object con el valor que contiene el arreglo
      */
     public Object Acceso(LinkedList<Integer> indices) {
+        return this.Acceder(this.getIndiceReal(indices));
+    }
+
+    /**
+     * Calcula el índice real de acuerdo al mapeo lexicográfico
+     *
+     * @param indices
+     * @return
+     */
+    public int getIndiceReal(LinkedList<Integer> indices) {
         int indice_real = 0;
         for (int i = 0; i < indices.size(); i++) {
             int indice = indices.get(i);
@@ -137,7 +259,7 @@ public class ArrayArit extends Coleccion {
             }
             indice_real += indice;
         }
-        return this.Acceder(indice_real);
+        return indice_real;
     }
 
     /**
@@ -156,5 +278,14 @@ public class ArrayArit extends Coleccion {
      */
     public LinkedList<Integer> getLista_dim() {
         return lista_dim;
+    }
+
+    /**
+     * Retorna si el arreglo es de tipo primitivo
+     *
+     * @return valor booleano
+     */
+    public boolean isPrimitivo() {
+        return !this.isList();
     }
 }

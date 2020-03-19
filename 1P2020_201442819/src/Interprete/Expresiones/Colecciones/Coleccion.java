@@ -91,7 +91,7 @@ public abstract class Coleccion {
      * @return valor booleano
      */
     public final boolean isList() {
-        return this instanceof ListArit;
+        return this.getTipo_dato() == TipoPrimitivo.LIST;
     }
 
     /**

@@ -24,6 +24,16 @@ public class ListArit extends Coleccion {
         super(TipoPrimitivo.LIST, v);
     }
 
+    /**
+     * Constructor de una lista con un valor
+     *
+     * @param v
+     */
+    public ListArit(Object v) {
+        super(TipoPrimitivo.LIST, new LinkedList<>());
+        this.getValores().add(v);
+    }
+
     @Override
     public Coleccion copiar() {
         LinkedList<Object> l = new LinkedList<>();

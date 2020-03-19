@@ -88,7 +88,7 @@ public class VectorArit extends Coleccion {
             }
         } else if (this.isBool()) {
             if (nuevo_valor.isDouble()) {
-                this.CasteoIntADouble();
+                this.casteoBoolToDouble();
             } else {
                 this.casteoBoolToInt();
             }
@@ -125,7 +125,7 @@ public class VectorArit extends Coleccion {
     @Override
     public String toString() {
         if (this.getValores().size() == 1) {
-            return this.getValores().getFirst().toString();
+            return this.isString() ? "\"" + this.getValores().getFirst().toString() + "\"" : this.getValores().getFirst().toString();
         } else {
             String l = "", aux = "";
             for (Object e : this.getValores()) {

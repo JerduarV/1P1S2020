@@ -76,8 +76,9 @@ public class Array extends CallFun {
             for (int y = 0; i < tam && y < datos.getTamanio(); y++) {
                 if (datos.isList()) {
                     LinkedList<Object> l = new LinkedList<>();
+                    Coleccion v = ((Coleccion) datos.Acceder(y)).copiar();
                     l.add(((Coleccion) datos.Acceder(y)).copiar());
-                    valores.add(new ListArit(l));
+                    valores.add(v.isList() ? v : new ListArit(l));
                 } else {
                     valores.add(new VectorArit(datos.getTipo_dato(), datos.Acceder(y)));
                 }

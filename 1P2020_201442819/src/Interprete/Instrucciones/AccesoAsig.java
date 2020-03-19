@@ -8,6 +8,7 @@ package Interprete.Instrucciones;
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.AccesoGet;
+import Interprete.Expresiones.Colecciones.ArrayArit;
 import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.ListArit;
 import Interprete.Expresiones.Colecciones.MatrixArit;
@@ -62,13 +63,14 @@ public class AccesoAsig extends Instruccion {
         if (o instanceof ErrorCompi) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se realizó la asignación", this.getFila(), this.getColumna());
         }
-
-        if (o instanceof MatrixArit) {
+        if (o instanceof ArrayArit) {
+            return this.AccesoSetArray((ArrayArit) o, t);
+        } else if (o instanceof MatrixArit) {
             return this.SetMatriz((MatrixArit) o, t);
         } else if (o instanceof VectorArit) {
-            return AccesoSetVector((VectorArit) o, t);
+            return AccesoSetVector((VectorArit) o, t, this.lista_index);
         } else if (o instanceof ListArit) {
-            return this.AccesoSetList((ListArit) o, t);
+            return this.AccesoSetList((ListArit) o, t, this.lista_index);
         }
 
         throw new UnsupportedOperationException("Todavía no tengo asignación para esa estructura"); //To change body of generated methods, choose Tools | Templates.
@@ -88,7 +90,7 @@ public class AccesoAsig extends Instruccion {
 
         switch (this.lista_index.getFirst().getTipo()) {
             case SIMPLE:
-                return AccesoSetVector(matriz, t);
+                return AccesoSetVector(matriz, t, this.lista_index);
             case MATRIX:
                 return this.SetMatrizDoble(matriz, t, this.lista_index.getFirst());
             case MATRIX_ROW:
@@ -261,19 +263,19 @@ public class AccesoAsig extends Instruccion {
      * @param t Tabla de simbolos
      * @return null si todo salió correctamente o ErrorCompi de lo contrario
      */
-    private Object AccesoSetVector(VectorArit vector, TablaSimbolos t) {
+    private Object AccesoSetVector(VectorArit vector, TablaSimbolos t, LinkedList<Indice> lista_indices) {
 
         //RESVISO QUE LA LISTA DE ÍNDICES NO SEA MAYOR A 1
-        if (this.lista_index.size() > 1) {
+        if (lista_indices.size() > 1) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede acceder más de una vez al vector", this.getFila(), this.getColumna());
         }
 
         //REVISO QUE EL INDICE SEA DE ACCESO SIMPLE []
-        if (!this.lista_index.getFirst().isSimple()) {
+        if (!lista_indices.getFirst().isSimple()) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "En los vectores solo se pueden hacer accesos simples", this.getFila(), this.getColumna());
         }
 
-        Object i = this.lista_index.getFirst().getExp().Resolver(t);
+        Object i = lista_indices.getFirst().getExp().Resolver(t);
         //REVISO QUE NO HAYA ERRORES AL RESOLVER EL ÍNDICE
         if (i instanceof ErrorCompi) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "Hubo un error en los indices", this.getFila(), this.getColumna());
@@ -331,16 +333,16 @@ public class AccesoAsig extends Instruccion {
      * @param t Tabla de Simbolos
      * @return null o ErrorCompi
      */
-    private Object AccesoSetList(ListArit lista, TablaSimbolos t) {
+    private Object AccesoSetList(ListArit lista, TablaSimbolos t, LinkedList<Indice> lista_indices) {
 
         Coleccion col = lista;
 
-        for (int i = 0; i < this.lista_index.size() - 1; i++) {
-            if (!this.lista_index.get(i).isSimple() && !(col instanceof ListArit)) {
+        for (int i = 0; i < lista_indices.size() - 1; i++) {
+            if (!lista_indices.get(i).isSimple() && !(col instanceof ListArit)) {
                 return VentanaErrores.getVenErrores().AgregarError("Semantico", "A un vector solo se le puede acceder por corchete simple", this.getFila(), this.getColumna());
             }
 
-            Object a = lista_index.get(i).getExp().Resolver(t);
+            Object a = lista_indices.get(i).getExp().Resolver(t);
 
             //REVISO QUE NO HAYA ERRORES AL RESOLVER EL ÍNDICE
             if (a instanceof ErrorCompi) {
@@ -373,11 +375,11 @@ public class AccesoAsig extends Instruccion {
             col = (Coleccion) estruct;
         }
 
-        if (!this.lista_index.getLast().isSimple() && !(col instanceof ListArit)) {
+        if (!lista_indices.getLast().isSimple() && !(col instanceof ListArit)) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "A un vector solo se le puede acceder por corchete simple", this.getFila(), this.getColumna());
         }
 
-        Object a = lista_index.getLast().getExp().Resolver(t);
+        Object a = lista_indices.getLast().getExp().Resolver(t);
 
         //REVISO QUE NO HAYA ERRORES AL RESOLVER EL ÍNDICE
         if (a instanceof ErrorCompi) {
@@ -423,17 +425,75 @@ public class AccesoAsig extends Instruccion {
             col.SetPosicion(y - 1, nuevo_valor);
         } else {
             Coleccion valor_asig = (Coleccion) v;
-            if (this.lista_index.getLast().isSimple()) {
+            if (lista_indices.getLast().isSimple()) {
                 if (valor_asig.getTamanio() > 1) {
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "Solo se puede asignar de tamanio 1", this.getFila(), this.getColumna());
                 }
                 valor_asig = (valor_asig instanceof VectorArit) ? valor_asig : (Coleccion) valor_asig.Acceder(0);
             }
-            col.SetPosicion(y - 1, valor_asig);
+            col.SetPosicion(y - 1, valor_asig.copiar());
         }
 
         return null;
 
+    }
+
+    private Object AccesoSetArray(ArrayArit array, TablaSimbolos t) {
+        if (this.lista_index.size() < array.getCantidadDims()) {
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: Índices insuficientes", this.getFila(), this.getColumna());
+        }
+
+        LinkedList<Integer> lista_index = new LinkedList<>();
+        int i = 0;
+        for (i = 0; i < this.lista_index.size() && i < array.getCantidadDims(); i++) {
+            Object index = this.lista_index.get(i).getExp().Resolver(t);
+            if (index instanceof ErrorCompi) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: Error en el índice", this.getFila(), this.getColumna());
+            }
+
+            Coleccion in = (Coleccion) index;
+            if (!in.isVector() || !in.isInteger()) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: El índice debe ser vector entero", this.getFila(), this.getColumna());
+            }
+
+            Integer y = (int) in.Acceder(0);
+            if (y < 1 || y > array.getLista_dim().get(i)) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: indice fuera de rango", this.getFila(), this.getColumna());
+            }
+
+            lista_index.add(y - 1);
+        }
+
+        if (i == this.lista_index.size()) {
+            Object val = this.valor.Resolver(t);
+            if (val instanceof ErrorCompi) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: Error en el valor a asignar", this.getFila(), this.getColumna());
+            }
+            Coleccion nuevo_valor = ((Coleccion) val).copiar();
+
+            if (nuevo_valor.getTamanio() != 1) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "AccesoArray: Solo se pueden asignar elementos de tamanio 1", this.getFila(), this.getColumna());
+            }
+            array.SetPosicion(lista_index, nuevo_valor);
+            return null;
+        }
+        LinkedList<Indice> l_in = new LinkedList<>();
+
+        for (int y = i; y < this.lista_index.size(); y++) {
+            l_in.add(this.lista_index.get(i));
+        }
+
+        Coleccion v = (Coleccion) array.Acceso(lista_index);
+
+        if (v.isVector()) {
+            this.AccesoSetVector((VectorArit) v, t, l_in);
+            v = (Coleccion) array.Acceso(lista_index);
+            array.SetPosicion(lista_index, v);
+        } else {
+            this.AccesoSetList((ListArit) v, t, l_in);
+        }
+
+        return null;
     }
 
     @Override

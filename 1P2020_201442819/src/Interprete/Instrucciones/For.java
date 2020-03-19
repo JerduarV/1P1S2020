@@ -16,6 +16,7 @@ import Utileria.Retorno;
 import java.util.LinkedList;
 
 /**
+ * Clase para manejar la instrucción for que funciona como un foreach
  *
  * @author Jerduar
  */
@@ -31,6 +32,15 @@ public class For extends Instruccion {
      */
     private final Expresion e;
 
+    /**
+     * constructor de la instrucción for
+     *
+     * @param id Identificador de la variable para iterar
+     * @param e Expresión que contiene la estructura a iterar
+     * @param cuerpo Cuerpo del for
+     * @param fila Fila en la que se encuentra
+     * @param col Columna en la que se encuentra
+     */
     public For(String id, Expresion e, LinkedList<NodoAST> cuerpo, Integer fila, Integer col) {
         super(fila, col, cuerpo);
         this.id = id;
@@ -47,32 +57,31 @@ public class For extends Instruccion {
 
         Coleccion col = (Coleccion) valor;
 
-        for (Object v : col.getValores()) {
+        for (int y = 0; y < col.getTamanio(); y++) {
+            Object v = col.Acceder(y);
             TablaSimbolos nueva = new TablaSimbolos(t);
             nueva.IncrementarDisplay();
-            
-            if(col instanceof VectorArit){
+
+            if (col instanceof VectorArit) {
                 v = new VectorArit(col.getTipo_dato(), v);
-            }else if(v instanceof Coleccion){
-                v = ((Coleccion)v).copiar();
             }
-            
+
             nueva.GuardarVariable(id, v);
             Object result = this.Recorrer(nueva);
-            
-            if(result instanceof Break){
+            col.getValores().set(y, nueva.BusarVariable(id));
+            if (result instanceof Break) {
                 break;
             }
-            
-            if(result instanceof Continue){
+
+            if (result instanceof Continue) {
                 continue;
             }
-            
-            if(result instanceof Retorno){
+
+            if (result instanceof Retorno) {
                 return result;
             }
         }
-        
+
         return null;
     }
 

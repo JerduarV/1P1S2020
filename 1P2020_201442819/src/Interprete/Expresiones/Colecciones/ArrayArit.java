@@ -216,7 +216,7 @@ public class ArrayArit extends Coleccion {
             cad += " [" + (y + 1) + "]";
             for (int k = 0; k < this.getLista_dim().get(1); k++) {
                 int index = k * this.getLista_dim().get(0) + y + suma;
-                cad += " " + this.Acceder(index).toString();
+                cad += " |" + this.Acceder(index).toString()  + "|";
             }
             cad += "\n>>>";
         }

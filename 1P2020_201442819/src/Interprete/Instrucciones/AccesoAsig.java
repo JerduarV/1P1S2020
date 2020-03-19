@@ -316,7 +316,19 @@ public class AccesoAsig extends Instruccion {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "A un vector solo se le puede asignar otro vector de uno", this.getFila(), this.getColumna());
         }
 
-        VectorArit nuevo_valor = (VectorArit) v;
+        Coleccion nuevo_valor = (Coleccion) v;
+
+        if (nuevo_valor.isList()) {
+            LinkedList<Object> l = new LinkedList<>();
+            for (Object o : vector.getValores()) {
+                VectorArit vec = new VectorArit(vector.getTipo_dato(), o);
+                l.add(vec);
+            }
+            ListArit lista = new ListArit(l);
+            t.GuardarVariable(this.id.getId(), lista);
+            lista.SetPosicion(y - 1, nuevo_valor);
+            return null;
+        }
 
         if (nuevo_valor.getTamanio() != 1) {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "A un vector solo se le puede asignar un vector de tamanio 1", this.getFila(), this.getColumna());

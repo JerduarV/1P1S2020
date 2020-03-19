@@ -44,7 +44,7 @@ public class MatrixArit extends VectorArit {
         for (int y = 0; y < this.num_filas; y++) {
             cad += " [" + (y + 1) + "]";
             for (int k = 0; k < this.num_columnas; k++) {
-                cad += " " + (this.isString() ? "\"" + this.AccederMatrix(y, k).toString() + "\"" : this.AccederMatrix(y, k).toString());
+                cad += " |" + (this.isString() ? "\"" + this.AccederMatrix(y, k).toString() + "\"" : this.AccederMatrix(y, k).toString()) + "|";
             }
             cad += "\n>>>";
         }

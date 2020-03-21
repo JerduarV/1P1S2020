@@ -63,10 +63,19 @@ public class Primitivo extends Expresion {
         Interprete.Interprete.Conectar(padre, n);
     }
 
+    /**
+     * Función usada para el dibujo del árbol en el caso de que los datos sean
+     * de tipo string
+     *
+     * @param cadena String que se recibe
+     * @return cadena
+     */
     private String Escapar(String cadena) {
-        cadena = valor.toString().replace("\\", "\\\\");
-        cadena = valor.toString().replace("\"", "\\\"");
-        cadena = valor.toString().replace("\n", "\\\n");
+        cadena = cadena.replace("\\", "\\\\");
+        cadena = cadena.replace("\"", "\\\"");
+        cadena = cadena.replace("\n", "\\\\n");
+        cadena = cadena.replace("\t", "\\\\t");
+        cadena = cadena.replace("\r", "\\\\r");
         return cadena;
     }
 

@@ -69,8 +69,18 @@ public class DecFuncion extends Instruccion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("DEC_FUN"), m = NodoAST.getIdNodo(this.id);
+        Interprete.Interprete.Conectar(padre, n);
+        Interprete.Interprete.Conectar(n, m);
+        if(!this.lista_param.isEmpty()){
+            String l = NodoAST.getIdNodo("LPARAM_F");
+            Interprete.Interprete.Conectar(n, l);
+            for(Declaracion i: this.getLista_param()){
+                i.dibujar(l);
+            }
+        }
+        this.DibujarCuerpo(n);
     }
 
     /**

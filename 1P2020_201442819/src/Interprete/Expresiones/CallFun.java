@@ -9,6 +9,7 @@ import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Instrucciones.DecFuncion;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 import Utileria.Retorno;
 import java.util.LinkedList;
@@ -100,8 +101,15 @@ public class CallFun extends Expresion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String x = NodoAST.getIdNodo("CALL_FUN"), y = NodoAST.getIdNodo(this.id), z = NodoAST.getIdNodo("LPARAM_ACT");
+        Interprete.Interprete.Conectar(padre, x);
+        Interprete.Interprete.Conectar(x, y);
+        Interprete.Interprete.Conectar(x, z);
+        
+        for(Expresion e : this.getParam_act()){
+            e.dibujar(z);
+        }
     }
 
     /**

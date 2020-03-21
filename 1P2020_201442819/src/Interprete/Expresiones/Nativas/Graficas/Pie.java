@@ -86,6 +86,8 @@ public class Pie extends CallFun {
                 }
                 dataset.setValue(label.get(i).toString(), dato);
             }
+            
+            
             JFreeChart pieChar = ChartFactory.createPieChart(nombre, dataset, true, true, false);
             int width = 640, height = 480;
             File pie = new File("Graficas\\" + nombre + i + ".jpeg");

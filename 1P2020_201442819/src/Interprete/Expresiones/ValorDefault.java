@@ -5,6 +5,7 @@
  */
 package Interprete.Expresiones;
 
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 
 /**
@@ -31,8 +32,9 @@ public class ValorDefault extends Expresion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("default");
+        Interprete.Interprete.Conectar(padre, n);
     }
 
 }

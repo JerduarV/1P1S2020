@@ -6,6 +6,7 @@
 package Interprete.Instrucciones;
 
 import Editor.VentanaErrores;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 
 /**
@@ -31,8 +32,8 @@ public class Continue extends Instruccion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        Interprete.Interprete.Conectar(padre, NodoAST.getIdNodo("CONTINUE"));
     }
 
 }

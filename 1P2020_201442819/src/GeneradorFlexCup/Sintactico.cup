@@ -191,8 +191,8 @@ SWITCH ::=
 ;
 
 L_CASE ::=
-        L_CASE:lc RCASE PRIMITIVO:e DOSPUNTOS L_INSTR:l {:RESULT = lc; RESULT.add(new Case(e,l,eleft,eright));:}
-    |   RCASE PRIMITIVO:e DOSPUNTOS L_INSTR:l           {:RESULT = new LinkedList<>(); RESULT.add(new Case(e,l,eleft,eright));:}
+        L_CASE:lc RCASE EXP:e DOSPUNTOS L_INSTR:l {:RESULT = lc; RESULT.add(new Case(e,l,eleft,eright));:}
+    |   RCASE EXP:e DOSPUNTOS L_INSTR:l           {:RESULT = new LinkedList<>(); RESULT.add(new Case(e,l,eleft,eright));:}
 ;
 
 CONTINUE ::=

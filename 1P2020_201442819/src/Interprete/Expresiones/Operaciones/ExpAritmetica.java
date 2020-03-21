@@ -107,11 +107,6 @@ public class ExpAritmetica extends Operacion {
         }
     }
 
-    @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     /**
      * Función para sumar vector de tamanio uno
      *

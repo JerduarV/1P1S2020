@@ -8,6 +8,7 @@ package Interprete.Instrucciones;
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Expresion;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 
 /**
@@ -69,8 +70,13 @@ public class Declaracion extends Instruccion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("PARAMF"), m = NodoAST.getIdNodo(this.id);
+        Interprete.Interprete.Conectar(padre, n);
+        Interprete.Interprete.Conectar(n, m);
+        if(this.exp != null){
+            this.exp.dibujar(n);
+        }
     }
 
     /**

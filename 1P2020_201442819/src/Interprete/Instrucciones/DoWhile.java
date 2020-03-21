@@ -68,8 +68,11 @@ public class DoWhile extends Instruccion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("DOWHILE");
+        Interprete.Interprete.Conectar(padre, n);
+        this.DibujarCuerpo(n);
+        this.cond.dibujar(n);
     }
 
 }

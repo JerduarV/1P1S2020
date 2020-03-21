@@ -12,6 +12,7 @@ import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.ListArit;
 import Interprete.Expresiones.Colecciones.MatrixArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 import java.util.LinkedList;
 
@@ -320,8 +321,15 @@ public class AccesoGet extends Expresion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String x = NodoAST.getIdNodo("ACC_GET");
+        Interprete.Interprete.Conectar(padre, x);
+        this.id.dibujar(x);
+        String z = NodoAST.getIdNodo("LINDICE");
+        Interprete.Interprete.Conectar(x, z);
+        for (Indice i : this.getLista_index()) {
+            i.Dibujar(z);
+        }
     }
 
     /**

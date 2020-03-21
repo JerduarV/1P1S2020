@@ -12,6 +12,9 @@ import TablaSimbolos.TablaSimbolos;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Clase para interpretar el lenguaje usando el árbol generado
@@ -20,7 +23,9 @@ import java.io.FileWriter;
  */
 public class Interprete {
 
-    public void Interpretar(String contenido){
+    private static String dot;
+
+    public void Interpretar(String contenido) {
         Sintactico pars;
         VentanaErrores.getVenErrores().LimpiarTabla();
 
@@ -33,14 +38,78 @@ public class Interprete {
 
             Arbol a = pars.getAST();
             if (a != null) {
+                this.ConstruirDot(a);
                 TablaSimbolos global = new TablaSimbolos(null);
                 a.Ejecutar(global);
             } else {
-                //System.err.println("HUBIERON PROBLEMAS :(");
+                System.err.println("HUBIERON PROBLEMAS :(");
             }
 
         } catch (Exception ex) {
             System.err.println("Error fatal en compilación de entrada " + ex.toString());
         }
     }
+
+    /**
+     * Inicia con la escritura del dot que es usado para dibujar el árbol
+     *
+     * @param tree Árbol a dibujar
+     */
+    private void ConstruirDot(Arbol tree) {
+        dot = "digraph G{\nnode[shape=\"box\"];\n";
+        tree.dibujar(null);
+        dot += "\n}\n";
+        this.DibujarArbol();
+    }
+
+    public static void DeclararNodo(String id, String label) {
+        appendDot("\t\"" + id + "\" [label = \"" + label + "\"];\n");
+    }
+
+    public static void Conectar(String padre, String hijo) {
+        appendDot("\t\"" + padre + "\" -> \"" + hijo + "\";\n");
+    }
+
+    /**
+     * Método para concatenar con la variable dot
+     *
+     * @param cad String que se concatenará
+     */
+    public static void appendDot(String cad) {
+        dot = dot.concat(cad);
+    }
+
+    /**
+     * Método para dibujar el árbol y generar la imagen
+     */
+    public void DibujarArbol() {
+        BufferedWriter bw = null;
+        String dir = System.getProperty("user.dir");
+        try {
+            System.out.println(dot);
+            bw = new BufferedWriter(new FileWriter("ArbolDot.dot"));
+            bw.write(dot);
+            bw.close();
+            String[] cmd = new String[5];
+            cmd[0] = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot";
+            cmd[1] = "-Tpng";
+            cmd[2] = dir + "\\ArbolDot.dot";
+            cmd[3] = "-o";
+            cmd[4] = dir + "\\Arbol.png";
+            System.out.println(cmd[4]);
+            //Invocamos nuestra clase
+            Runtime rt = Runtime.getRuntime();
+            //Ahora ejecutamos como lo hacemos en consola
+            rt.exec(cmd);
+        } catch (IOException ex) {
+            Logger.getLogger(Interprete.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                bw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Interprete.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
 }

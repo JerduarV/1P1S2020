@@ -5,6 +5,8 @@
  */
 package Interprete.Expresiones;
 
+import Interprete.NodoAST;
+
 /**
  * Clase que maneja los tipo de índices que existen para acceder a las listas
  *
@@ -105,10 +107,44 @@ public class Indice {
 
     /**
      * Retorna el tipo de Indice
+     *
      * @return TipoIndice
      */
     public TipoIndice getTipo() {
         return tipo;
+    }
+
+    public void Dibujar(String padre) {
+        String label = "I";
+        if (null == this.getTipo()) {
+            label = "[I,I]";
+        } else {
+            switch (this.getTipo()) {
+                case DOBLE:
+                    label = "[[" + label + "]]";
+                    break;
+                case SIMPLE:
+                    label = "[" + label + "]";
+                    break;
+                case MATRIX_ROW:
+                    label = "[I,]";
+                    break;
+                case MATRIX_COL:
+                    label = "[,I]";
+                    break;
+                default:
+                    label = "[I,I]";
+                    break;
+            }
+        }
+        String n = NodoAST.getIdNodo(label);
+        Interprete.Interprete.Conectar(padre, n);
+        
+        this.exp.dibujar(n);
+        
+        if(this.exp2 != null){
+            this.exp2.dibujar(n);
+        }
     }
 
 }

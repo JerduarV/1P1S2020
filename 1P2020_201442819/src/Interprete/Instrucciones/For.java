@@ -63,12 +63,22 @@ public class For extends Instruccion {
             nueva.IncrementarDisplay();
 
             if (col instanceof VectorArit) {
+                System.out.println(v.toString());
                 v = new VectorArit(col.getTipo_dato(), v);
             }
 
+            //CAMBIO EL VALOR DE LA VARIABLE EN LA TABLA DE SÍMBOLOS
             nueva.GuardarVariable(id, v);
+
             Object result = this.Recorrer(nueva);
-            col.getValores().set(y, nueva.BusarVariable(id));
+
+            //SETEO DE LA VARIABLE EN EL ARREGLO
+//            if (col instanceof VectorArit) {
+//                Coleccion b = (Coleccion )nueva.BusarVariable(id);
+//                if (b.isVector()) {
+//                    col.getValores().set(y, ((VectorArit) b).Acceder(0));
+//                }
+//            }
             if (result instanceof Break) {
                 break;
             }
@@ -86,8 +96,11 @@ public class For extends Instruccion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("FOR"), m = NodoAST.getIdNodo(this.id);
+        Interprete.Interprete.Conectar(padre, n);
+        Interprete.Interprete.Conectar(n, m);
+        this.DibujarCuerpo(n);
     }
 
 }

@@ -6,6 +6,7 @@
 package Interprete.Expresiones;
 
 import Editor.VentanaErrores;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 
 /**
@@ -37,8 +38,9 @@ public class Identificador extends Expresion{
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo(this.id);
+        Interprete.Interprete.Conectar(padre, n);
     }
 
     public String getId() {

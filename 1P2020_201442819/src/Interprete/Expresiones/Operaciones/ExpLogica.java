@@ -90,11 +90,6 @@ public class ExpLogica extends Operacion {
         throw new UnsupportedOperationException("No soporto operaciones lógicas que no sean vectores"); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     /**
      * Función para realizar las operaciones lógicas entre vectores de tamanio 1
      *

@@ -59,6 +59,21 @@ public abstract class Instruccion extends NodoAST {
     public abstract Object Ejecutar(TablaSimbolos t);
 
     /**
+     * Genera el dot del cuerpo de instrucciones asociado a un instrucción
+     *
+     * @param padre
+     */
+    public void DibujarCuerpo(String padre) {
+        if (this.cuerpo != null) {
+            String l = NodoAST.getIdNodo("LSENT");
+            Interprete.Interprete.Conectar(padre, l);
+            for (NodoAST n : this.getCuerpo()) {
+                n.dibujar(l);
+            }
+        }
+    }
+
+    /**
      * Función usada por las instrucciones que tiene un cuerpo asociado para
      * recorrerlo en su ejecución
      *

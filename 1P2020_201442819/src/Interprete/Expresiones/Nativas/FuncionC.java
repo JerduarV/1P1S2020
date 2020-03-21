@@ -7,6 +7,7 @@ package Interprete.Expresiones.Nativas;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
+import Interprete.Expresiones.CallFun;
 import Interprete.Expresiones.Colecciones.ArrayArit;
 import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.ListArit;
@@ -23,7 +24,7 @@ import java.util.LinkedList;
  *
  * @author Jerduar
  */
-public class FuncionC extends Expresion {
+public class FuncionC extends CallFun {
 
     /**
      * Lista de elementos a concatenar
@@ -39,7 +40,7 @@ public class FuncionC extends Expresion {
      * @param col
      */
     public FuncionC(LinkedList<Expresion> l, Integer fila, Integer col) {
-        super(fila, col);
+        super("C", l, fila, col);
         this.Lista = l;
     }
 
@@ -75,12 +76,6 @@ public class FuncionC extends Expresion {
         } else {
             return crearList(lo);
         }
-    }
-
-    @Override
-    public void dibujar() {
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

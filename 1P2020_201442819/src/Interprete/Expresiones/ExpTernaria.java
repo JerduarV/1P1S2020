@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Colecciones.VectorArit;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 
 /**
@@ -62,8 +63,12 @@ public class ExpTernaria extends Expresion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("?");
+        Interprete.Interprete.Conectar(padre, n);
+        this.cond.dibujar(n);
+        this.exp1.dibujar(n);
+        this.exp2.dibujar(n);
     }
 
 }

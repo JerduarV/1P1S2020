@@ -174,8 +174,9 @@ public class ArrayArit extends Coleccion {
         int s = 1;
         LinkedList<Integer> lista = new LinkedList<>();
         for (int r = 2; r < this.lista_dim.size(); r++) {
-            lista.add(1);
+            lista.add(1);//[5][5][7][4][4] -> 1,1,1 -> 1,1,2 
         }
+        
         for (int k = 2; k < this.lista_dim.size(); k++) {
             s *= this.lista_dim.get(k);
         }
@@ -195,6 +196,8 @@ public class ArrayArit extends Coleccion {
     private void Contador(LinkedList<Integer> lista) {
         for (int y = lista.size() - 1; y >= 0; y--) {
             //System.out.println(y  + " == " + this.lista_dim.get(y + 2));
+            //array(2,2,3,3,4)
+            //1,1,1 -> 1,1,2 ... 1,1,4 -> 1,2,1-> 1,3,4... 2
             if (!Objects.equals(lista.get(y), this.lista_dim.get(y + 2))) {
                 lista.set(y, lista.get(y) + 1);
                 for (int k = y + 1; k < lista.size(); k++) {

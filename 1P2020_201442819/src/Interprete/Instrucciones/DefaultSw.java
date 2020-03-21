@@ -31,8 +31,10 @@ public class DefaultSw extends Instruccion{
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("DEFAULT");
+        Interprete.Interprete.Conectar(padre, n);
+        this.DibujarCuerpo(n);
     }
     
 }

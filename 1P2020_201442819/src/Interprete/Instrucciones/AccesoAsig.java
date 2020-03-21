@@ -16,6 +16,7 @@ import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Identificador;
 import Interprete.Expresiones.Indice;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 import java.util.LinkedList;
 
@@ -504,13 +505,20 @@ public class AccesoAsig extends Instruccion {
         } else {
             this.AccesoSetList((ListArit) v, t, l_in);
         }
-
         return null;
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String x = NodoAST.getIdNodo("ACC_ASIG");
+        this.id.dibujar(x);
+        Interprete.Interprete.Conectar(padre, x);
+        String z = NodoAST.getIdNodo("LINDICE");
+        Interprete.Interprete.Conectar(x, z);
+        for (Indice i : this.lista_index) {
+            i.Dibujar(z);
+        }
+        this.valor.dibujar(x);
     }
 
 }

@@ -8,8 +8,8 @@ package Interprete.Instrucciones;
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Colecciones.Coleccion;
-import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 
 /**
@@ -58,8 +58,11 @@ public class Asignacion extends Instruccion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("DEC"), m = NodoAST.getIdNodo(this.identificador);
+        Interprete.Interprete.Conectar(padre, n);
+        Interprete.Interprete.Conectar(n, m);
+        this.exp.dibujar(n);
     }
 
 }

@@ -40,8 +40,11 @@ public class Case extends Instruccion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("CASE");
+        Interprete.Interprete.Conectar(padre, n);
+        this.e.dibujar(n);
+        this.DibujarCuerpo(n);
     }
 
     public Expresion getE() {

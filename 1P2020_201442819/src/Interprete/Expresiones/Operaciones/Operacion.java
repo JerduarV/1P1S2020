@@ -5,11 +5,11 @@
  */
 package Interprete.Expresiones.Operaciones;
 
-import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.MatrixArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.TipoPrimitivo;
+import Interprete.NodoAST;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -170,6 +170,54 @@ public abstract class Operacion extends Expresion {
         }
 
         return new VectorArit(vector.getTipo_dato(), l);
+    }
+
+    @Override
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo(this.getSimbolo());
+        Interprete.Interprete.Conectar(padre, n);
+        if (this.op_unario != null) {
+            this.op_unario.dibujar(n);
+        } else {
+            this.op_izq.dibujar(n);
+            this.op_der.dibujar(n);
+        }
+    }
+
+    private String getSimbolo() {
+        switch (this.getTipo()) {
+            case AND:
+                return "&";
+            case OR:
+                return "|";
+            case DIFERENTE:
+                return "!=";
+            case DIV:
+                return "/";
+            case IGUALQUE:
+                return "==";
+            case MAYOR:
+                return ">";
+            case MAYORIGUAL:
+                return ">=";
+            case MENOR:
+                return "<";
+            case MENORIGUAL:
+                return "<=";
+            case MOD:
+                return "%";
+            case MULT:
+                return "*";
+            case RESTA:
+            case NEGATIVO:
+                return "-";
+            case NOT:
+                return "!";
+            case POT:
+                return "^";
+            default:
+                return "+";
+        }
     }
 
 }

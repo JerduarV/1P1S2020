@@ -85,7 +85,7 @@ public class Si extends Instruccion {
     }
 
     @Override
-    public void dibujar() {
+    public void dibujar(String padre) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

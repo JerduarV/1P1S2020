@@ -9,6 +9,7 @@ import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 import Utileria.Retorno;
 import java.util.LinkedList;
@@ -133,8 +134,18 @@ public class Switch extends Instruccion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("SWITCH");
+        this.e.dibujar(n);
+        String m = NodoAST.getIdNodo("LCASOS");
+        Interprete.Interprete.Conectar(padre, n);
+        Interprete.Interprete.Conectar(n, m);
+        for(Case c: this.lista_casos){
+            c.dibujar(m);
+        }
+        if(this.defecto != null){
+            this.defecto.dibujar(m);
+        }
     }
 
 }

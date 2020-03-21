@@ -6,6 +6,7 @@
 package Interprete.Expresiones;
 
 import Editor.VentanaErrores;
+import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 import Utileria.Retorno;
 
@@ -54,8 +55,12 @@ public class Return extends Expresion {
     }
 
     @Override
-    public void dibujar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dibujar(String padre) {
+        String n = NodoAST.getIdNodo("return");
+        Interprete.Interprete.Conectar(padre, n);
+        if(this.e !=  null){
+            this.e.dibujar(n);
+        }
     }
 
 }

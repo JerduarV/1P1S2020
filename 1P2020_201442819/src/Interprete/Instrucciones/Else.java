@@ -57,7 +57,13 @@ public class Else extends Instruccion {
 
     @Override
     public void dibujar(String padre) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (this.si != null) {
+            this.si.dibujar(padre);
+        } else {
+            String n = NodoAST.getIdNodo("ELSE");
+            Interprete.Interprete.Conectar(padre, n);
+            this.DibujarCuerpo(n);
+        }
     }
 
 }

@@ -86,7 +86,13 @@ public class Si extends Instruccion {
 
     @Override
     public void dibujar(String padre) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String n = NodoAST.getIdNodo("IF");
+        Interprete.Interprete.Conectar(padre, n);
+        this.condicion.dibujar(n);
+        this.DibujarCuerpo(n);
+        if (this.Sino != null) {
+            this.Sino.dibujar(n);
+        }
     }
 
 }

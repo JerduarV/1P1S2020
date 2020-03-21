@@ -56,9 +56,9 @@ public class Interprete {
      * @param tree Árbol a dibujar
      */
     private void ConstruirDot(Arbol tree) {
-        dot = "digraph G{\nnode[shape=\"box\"];\n";
+        dot = "digraph G{\n\tnode[shape=\"box\"];\n";
         tree.dibujar(null);
-        dot += "\n}\n";
+        dot += "}\n";
         this.DibujarArbol();
     }
 
@@ -86,7 +86,7 @@ public class Interprete {
         BufferedWriter bw = null;
         String dir = System.getProperty("user.dir");
         try {
-            System.out.println(dot);
+            //System.out.println(dot);
             bw = new BufferedWriter(new FileWriter("ArbolDot.dot"));
             bw.write(dot);
             bw.close();
@@ -96,7 +96,7 @@ public class Interprete {
             cmd[2] = dir + "\\ArbolDot.dot";
             cmd[3] = "-o";
             cmd[4] = dir + "\\Arbol.png";
-            System.out.println(cmd[4]);
+            //System.out.println(cmd[4]);
             //Invocamos nuestra clase
             Runtime rt = Runtime.getRuntime();
             //Ahora ejecutamos como lo hacemos en consola

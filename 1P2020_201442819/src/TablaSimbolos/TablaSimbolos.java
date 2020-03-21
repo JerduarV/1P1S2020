@@ -154,7 +154,7 @@ public class TablaSimbolos extends Hashtable {
         if (this.containsKey(key)) {
             VentanaErrores.getVenErrores().AgregarError("Semantico", "Ya existe la función " + nombre, funcion.getFila(), funcion.getColumna());
         } else {
-            System.out.println("Se guardó con éxito la función: " + nombre);
+            //System.out.println("Se guardó con éxito la función: " + nombre);
             this.put(key, funcion);
         }
     }

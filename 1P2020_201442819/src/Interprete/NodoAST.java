@@ -40,6 +40,8 @@ public abstract class NodoAST {
 
     /**
      * Metodo usado para generar el codigo graphviz para el reporte del AST
+     *
+     * @param padre Nodo padre
      */
     public abstract void dibujar(String padre);
 
@@ -64,6 +66,7 @@ public abstract class NodoAST {
     /**
      * Genera identificador para los nodos
      *
+     * @param label Etiqueta para crear el nodo
      * @return String identificador
      */
     public static String getIdNodo(String label) {

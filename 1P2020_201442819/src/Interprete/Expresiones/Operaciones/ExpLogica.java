@@ -11,6 +11,7 @@ import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.TipoPrimitivo;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 
 /**
@@ -108,11 +109,11 @@ public class ExpLogica extends Operacion {
                 } else if (this.UnoVsN(izq, der)) {
                     if (izq.getTamanio() == 1) {
                         for (Object e : der.getValores()) {
-                            l.add((Boolean) izq.Acceder(0) && (Boolean) e);
+                            l.add((Boolean) izq.Acceder(0) && (Boolean) ((ValorArit) e).getVal());
                         }
                     } else {
                         for (Object e : izq.getValores()) {
-                            l.add((Boolean) e && (Boolean) der.Acceder(0));
+                            l.add((Boolean) ((ValorArit) e).getVal() && (Boolean) der.Acceder(0));
                         }
                     }
                 } else {
@@ -127,11 +128,11 @@ public class ExpLogica extends Operacion {
                 } else if (this.UnoVsN(izq, der)) {
                     if (izq.getTamanio() == 1) {
                         for (Object e : der.getValores()) {
-                            l.add((Boolean) izq.Acceder(0) || (Boolean) e);
+                            l.add((Boolean) izq.Acceder(0) || (Boolean) ((ValorArit) e).getVal());
                         }
                     } else {
                         for (Object e : izq.getValores()) {
-                            l.add((Boolean) e || (Boolean) der.Acceder(0));
+                            l.add((Boolean) ((ValorArit) e).getVal() || (Boolean) der.Acceder(0));
                         }
                     }
                 } else {
@@ -140,7 +141,7 @@ public class ExpLogica extends Operacion {
                 break;
             case NOT:
                 for (Object e : izq.getValores()) {
-                    l.add(!(Boolean) e);
+                    l.add(!(Boolean) ((ValorArit) e).getVal());
                 }
                 break;
         }

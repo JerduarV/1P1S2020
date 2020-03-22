@@ -8,7 +8,6 @@ package Interprete.Expresiones;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
-import java.util.LinkedList;
 
 /**
  * Clase que se usa para el proceso de los datos primitivos, su función ejecutar
@@ -37,22 +36,16 @@ public class Primitivo extends Expresion {
 
     @Override
     public Object Resolver(TablaSimbolos t) {
-        LinkedList<Object> l = new LinkedList<>();
         if (valor instanceof Integer) {
-            l.add(valor);
-            return new VectorArit(TipoPrimitivo.INTEGER, l);
+            return new VectorArit(TipoPrimitivo.INTEGER, this.valor);
         } else if (valor instanceof String) {
-            l.add(valor);
-            return new VectorArit(TipoPrimitivo.STRING, l);
+            return new VectorArit(TipoPrimitivo.STRING, this.valor);
         } else if (valor instanceof Boolean) {
-            l.add(valor);
-            return new VectorArit(TipoPrimitivo.BOOL, l);
+            return new VectorArit(TipoPrimitivo.BOOL, this.valor);
         } else if (valor instanceof Double) {
-            l.add(valor);
-            return new VectorArit(TipoPrimitivo.DOUBLE, l);
+            return new VectorArit(TipoPrimitivo.DOUBLE, this.valor);
         } else if (valor == null) {
-            l.add("NULL");
-            return new VectorArit(TipoPrimitivo.STRING, l);
+            return new VectorArit(TipoPrimitivo.STRING, "NULL");
         }
         return null;
     }

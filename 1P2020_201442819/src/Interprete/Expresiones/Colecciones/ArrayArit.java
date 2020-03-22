@@ -181,10 +181,10 @@ public class ArrayArit extends Coleccion {
             s *= this.lista_dim.get(k);
         }
         for (int y = 0; y < s; y++) {
-            cad += "\n>>> , ";
-            for (Integer i : lista) {
-                cad += ", " + i;
-            }
+            cad += "\n>>>";
+//            for (Integer i : lista) {
+//                cad += ", " + i;
+//            }
             cad += "\n";
             cad += this.toStringCuadrado(cuadrado);
             cuadrado += this.lista_dim.get(1) * this.lista_dim.get(0);

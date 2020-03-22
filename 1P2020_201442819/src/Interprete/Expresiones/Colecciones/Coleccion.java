@@ -6,6 +6,7 @@
 package Interprete.Expresiones.Colecciones;
 
 import Interprete.Expresiones.TipoPrimitivo;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 
 /**
@@ -53,7 +54,12 @@ public abstract class Coleccion {
     public Object Acceder(Integer index) {
         return this.valores.get(index);
     }
-    
+
+    /**
+     * 
+     * @param index
+     * @param valor 
+     */
     public abstract void SetPosicion(int index, Coleccion valor);
 
     /**
@@ -102,7 +108,7 @@ public abstract class Coleccion {
     public final boolean isVector() {
         return this instanceof VectorArit && !(this instanceof MatrixArit);
     }
-    
+
     /**
      * Retorna si el Vector es de tipo Entero
      *
@@ -147,16 +153,16 @@ public abstract class Coleccion {
     public boolean isBool() {
         return this.getTipo_dato() == TipoPrimitivo.BOOL;
     }
-    
+
     /**
      * Método que castea todos los elementos del arreglo de entero a double
      */
     public void CasteoIntADouble() {
         this.setTipo_dato(TipoPrimitivo.DOUBLE);
         for (int i = 0; i < this.getValores().size(); i++) {
-            Integer e = (Integer) this.getValores().get(i);
+            Integer e = (Integer) this.Acceder(i);
             Double nuevo = e.doubleValue();
-            this.getValores().set(i, nuevo);
+            this.getValores().set(i, new ValorArit(nuevo));
         }
     }
 
@@ -166,16 +172,16 @@ public abstract class Coleccion {
     public void casteoBoolToInt() {
         this.setTipo_dato(TipoPrimitivo.INTEGER);
         for (int i = 0; i < this.getValores().size(); i++) {
-            Boolean e = (Boolean) this.getValores().get(i);
-            this.getValores().set(i, e ? 1 : 0);
+            Boolean e = (Boolean) this.Acceder(i);
+            this.getValores().set(i, new ValorArit(e ? 1 : 0));
         }
     }
 
     public void casteoBoolToDouble() {
         this.setTipo_dato(TipoPrimitivo.DOUBLE);
         for (int i = 0; i < this.getValores().size(); i++) {
-            Boolean e = (Boolean) this.getValores().get(i);
-            this.getValores().set(i, e ? 1.0 : 0.0);
+            Boolean e = (Boolean) this.Acceder(i);
+            this.getValores().set(i, new ValorArit(e ? 1.0 : 0.0));
         }
     }
 

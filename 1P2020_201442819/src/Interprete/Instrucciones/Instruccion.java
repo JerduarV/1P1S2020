@@ -119,7 +119,7 @@ public abstract class Instruccion extends NodoAST {
             if (!vc.isBool()) {
                 return VentanaErrores.getVenErrores().AgregarError("Semántico", "Se esperaba un booleano en la condición", this.getFila(), this.getColumna());
             }
-            return (Boolean) vc.getValores().getFirst();
+            return (Boolean) vc.Acceder(0);
         } else {
             throw new UnsupportedOperationException("Solo puedo manejar vectores en el while");
         }

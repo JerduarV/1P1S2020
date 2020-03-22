@@ -6,6 +6,7 @@
 package Interprete.Expresiones.Colecciones;
 
 import Interprete.Expresiones.TipoPrimitivo;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 
 /**
@@ -23,6 +24,9 @@ public class VectorArit extends Coleccion {
      */
     public VectorArit(TipoPrimitivo tipo_dato, LinkedList<Object> valores) {
         super(tipo_dato, valores);
+        for (int i = 0; i < this.getValores().size(); i++) {
+            this.getValores().set(i, new ValorArit(this.getValores().get(i)));
+        }
     }
 
     /**
@@ -34,7 +38,12 @@ public class VectorArit extends Coleccion {
      */
     public VectorArit(TipoPrimitivo tipo_dato, Object valor) {
         super(tipo_dato, new LinkedList<>());
-        this.getValores().add(valor);
+        this.getValores().add(new ValorArit(valor));
+    }
+
+    public VectorArit(TipoPrimitivo tipo_dato, ValorArit v) {
+        super(tipo_dato, new LinkedList<>());
+        this.getValores().add(v);
     }
 
     /**
@@ -57,12 +66,19 @@ public class VectorArit extends Coleccion {
         //SE RELLENA LAS CASILLAS INTERMEDIAS CON EL VALOR POR DEFECTO
         if (index > this.getValores().size() - 1 && !(this instanceof MatrixArit)) {
             this.RellenarConDefault(index - this.getValores().size());
-            this.getValores().add(nuevo_valor.Acceder(0));
+            this.getValores().add(new ValorArit(nuevo_valor.Acceder(0)));
             return;
         }
 
         //SE ASIGNA EL NUEVO VALOR
-        this.getValores().set(index, nuevo_valor.Acceder(0));
+        //this.getValores().set(index, new ValorArit(nuevo_valor.Acceder(0)));
+        ((ValorArit) this.getValores().get(index)).setVal(nuevo_valor.Acceder(0));
+    }
+
+    @Override
+    public Object Acceder(Integer index) {
+        ValorArit v = (ValorArit) super.Acceder(index); //To change body of generated methods, choose Tools | Templates.
+        return v.getVal();
     }
 
     /**
@@ -118,7 +134,7 @@ public class VectorArit extends Coleccion {
         }
 
         for (int i = 0; i < cantidad; i++) {
-            this.getValores().add(defecto);
+            this.getValores().add(new ValorArit(defecto));
         }
     }
 
@@ -146,7 +162,7 @@ public class VectorArit extends Coleccion {
     public Coleccion copiar() {
         LinkedList<Object> l = new LinkedList<>();
         for (Object o : this.getValores()) {
-            l.add(o);
+            l.add(((ValorArit) o).getVal());
         }
         return new VectorArit(this.getTipo_dato(), l);
     }

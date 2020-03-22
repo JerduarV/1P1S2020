@@ -46,7 +46,7 @@ public class Interprete {
             }
 
         } catch (Exception ex) {
-            System.err.println("Error fatal en compilación de entrada " + ex.toString());
+            System.err.println("Error fatal en compilación de entrada " + ex.toString() + "\n" + ex.getMessage());
         }
     }
 

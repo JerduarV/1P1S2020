@@ -11,6 +11,7 @@ import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.TipoPrimitivo;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 
 /**
@@ -125,15 +126,16 @@ public class ExpAritmetica extends Operacion {
                     switch (vector_der.getTipo_dato()) {
                         //ENTERO + ENTERO
                         case INTEGER: {
+                            //System.out.println(vector_izq.Acceder(0).getClass() + " " + vector_der.Acceder(0).getClass());
                             //l.add((Integer) vector_izq.Acceder(0) + (Integer) vector_der.Acceder(0));
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) + (Integer) e);
+                                        l.add((Integer) vector_izq.Acceder(0) + (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e + (Integer) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() + (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -152,11 +154,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) + (Double) e);
+                                        l.add((Integer) vector_izq.Acceder(0) + (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e + (Double) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() + (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -203,11 +205,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) + (Double) e);
+                                        l.add((Double) vector_izq.Acceder(0) + (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e + (Double) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() + (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -225,11 +227,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) + (Integer) e);
+                                        l.add((Double) vector_izq.Acceder(0) + (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e + (Integer) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() + (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -346,11 +348,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) - (Integer) e);
+                                        l.add((Integer) vector_izq.Acceder(0) - (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e - (Integer) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() - (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -368,11 +370,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) - (Double) e);
+                                        l.add((Integer) vector_izq.Acceder(0) - (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e - (Double) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() - (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -395,11 +397,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) - (Double) e);
+                                        l.add((Double) vector_izq.Acceder(0) - (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e - (Double) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() - (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -417,11 +419,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) - (Integer) e);
+                                        l.add((Double) vector_izq.Acceder(0) - (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e - (Integer) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() - (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -465,11 +467,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) * (Integer) e);
+                                        l.add((Integer) vector_izq.Acceder(0) * (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e * (Integer) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() * (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -488,11 +490,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) * (Double) e);
+                                        l.add((Integer) vector_izq.Acceder(0) * (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e * (Double) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() * (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -518,11 +520,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) * (Double) e);
+                                        l.add((Double) vector_izq.Acceder(0) * (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e * (Double) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() * (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -541,11 +543,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) * (Integer) e);
+                                        l.add((Double) vector_izq.Acceder(0) * (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e * (Integer) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() * (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -589,11 +591,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) % (Integer) e);
+                                        l.add((Integer) vector_izq.Acceder(0) % (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e % (Integer) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() % (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -612,11 +614,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) % (Double) e);
+                                        l.add((Integer) vector_izq.Acceder(0) % (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e % (Double) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() % (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -641,11 +643,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) % (Double) e);
+                                        l.add((Double) vector_izq.Acceder(0) % (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e % (Double) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() % (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -663,11 +665,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) % (Integer) e);
+                                        l.add((Double) vector_izq.Acceder(0) % (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e % (Integer) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() % (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -710,11 +712,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) / (Integer) e);
+                                        l.add((Integer) vector_izq.Acceder(0) / (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e / (Integer) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() / (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -733,11 +735,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Integer) vector_izq.Acceder(0) / (Double) e);
+                                        l.add((Integer) vector_izq.Acceder(0) / (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Integer) e / (Double) vector_der.Acceder(0));
+                                        l.add((Integer) ((ValorArit) e).getVal() / (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -762,11 +764,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) / (Double) e);
+                                        l.add((Double) vector_izq.Acceder(0) / (Double) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e / (Double) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() / (Double) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -784,11 +786,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add((Double) vector_izq.Acceder(0) / (Integer) e);
+                                        l.add((Double) vector_izq.Acceder(0) / (Integer) ((ValorArit) e).getVal());
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add((Double) e / (Integer) vector_der.Acceder(0));
+                                        l.add((Double) ((ValorArit) e).getVal() / (Integer) vector_der.Acceder(0));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -832,11 +834,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add(Math.pow((Integer) vector_izq.Acceder(0), (Integer) e));
+                                        l.add(Math.pow((Integer) vector_izq.Acceder(0), (Integer) ((ValorArit) e).getVal()));
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add(Math.pow((Integer) e, (Integer) vector_der.Acceder(0)));
+                                        l.add(Math.pow((Integer) ((ValorArit) e).getVal(), (Integer) vector_der.Acceder(0)));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -855,11 +857,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add(Math.pow((Integer) vector_izq.Acceder(0), (Double) e));
+                                        l.add(Math.pow((Integer) vector_izq.Acceder(0), (Double) ((ValorArit) e).getVal()));
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add(Math.pow((Integer) e, (Double) vector_der.Acceder(0)));
+                                        l.add(Math.pow((Integer) ((ValorArit) e).getVal(), (Double) vector_der.Acceder(0)));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -884,11 +886,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add(Math.pow((Double) vector_izq.Acceder(0), (Double) e));
+                                        l.add(Math.pow((Double) vector_izq.Acceder(0), (Double) ((ValorArit) e).getVal()));
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add(Math.pow((Double) e, (Double) vector_der.Acceder(0)));
+                                        l.add(Math.pow((Double) ((ValorArit) e).getVal(), (Double) vector_der.Acceder(0)));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -906,11 +908,11 @@ public class ExpAritmetica extends Operacion {
                             if (this.UnoVsN(vector_izq, vector_der)) {//VECTOR[1] * V[n] || V[n] * V[1]
                                 if (vector_izq.getTamanio() == 1) {
                                     for (Object e : vector_der.getValores()) {
-                                        l.add(Math.pow((Double) vector_izq.Acceder(0), (Integer) e));
+                                        l.add(Math.pow((Double) vector_izq.Acceder(0), (Integer) ((ValorArit) e).getVal()));
                                     }
                                 } else {
                                     for (Object e : vector_izq.getValores()) {
-                                        l.add(Math.pow((Double) e, (Integer) vector_der.Acceder(0)));
+                                        l.add(Math.pow((Double) ((ValorArit) e).getVal(), (Integer) vector_der.Acceder(0)));
                                     }
                                 }
                             } else if (this.NvsN(vector_izq, vector_der)) {
@@ -946,7 +948,7 @@ public class ExpAritmetica extends Operacion {
                     l.add(-1 * (Double) vector.Acceder(0));
                 } else {
                     for (Object e : vector.getValores()) {
-                        l.add(-1 * (Double) e);
+                        l.add(-1 * (Double) ((ValorArit) e).getVal());
                     }
                 }
                 return this.GenResultado(vector, l);
@@ -956,7 +958,7 @@ public class ExpAritmetica extends Operacion {
                     l.add(-1 * (Integer) vector.Acceder(0));
                 } else {
                     for (Object e : vector.getValores()) {
-                        l.add(-1 * (Integer) e);
+                        l.add(-1 * (Integer) ((ValorArit) e).getVal());
                     }
                 }
                 return this.GenResultado(vector, l);

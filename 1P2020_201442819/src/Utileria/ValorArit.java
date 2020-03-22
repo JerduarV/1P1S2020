@@ -24,4 +24,9 @@ public class ValorArit {
     public void setVal(Object val) {
         this.val = val;
     }
+
+    @Override
+    public String toString() {
+        return this.val + "";
+    }
 }

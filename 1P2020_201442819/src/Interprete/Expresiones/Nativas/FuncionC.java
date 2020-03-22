@@ -16,6 +16,7 @@ import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.TipoPrimitivo;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 
 /**
@@ -51,7 +52,7 @@ public class FuncionC extends CallFun {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "La función C espera al menos un parámetro", this.getFila(), this.getColumna());
         }
 
-        LinkedList<Object> lo = new LinkedList<>();
+        LinkedList<Coleccion> lo = new LinkedList<>();
 
         for (Expresion e : this.Lista) {
             Object o = e.Resolver(t);
@@ -62,7 +63,7 @@ public class FuncionC extends CallFun {
             if (o instanceof MatrixArit || o instanceof ArrayArit) {
                 return VentanaErrores.getVenErrores().AgregarError("Semantico", "C: Solo acepta list y vectores primitivos", this.getFila(), this.getColumna());
             }
-            lo.add(o);
+            lo.add((Coleccion) o);
         }
 
         TipoPrimitivo tipo_result = getTipoPredominante(lo);
@@ -85,10 +86,10 @@ public class FuncionC extends CallFun {
      * @param lista
      * @return
      */
-    private ListArit crearList(LinkedList<Object> lista) {
+    private ListArit crearList(LinkedList<Coleccion> lista) {
         LinkedList<Object> valores = new LinkedList<>();
-        for (Object o : lista) {
-            if (o instanceof ListArit) {
+        for (Coleccion o : lista) {
+            if (o.isList()) {
                 ListArit la = (ListArit) o;
                 for (Object ob : la.getValores()) {
                     valores.add(ob);
@@ -106,14 +107,13 @@ public class FuncionC extends CallFun {
      * @param l Lista de objetos
      * @return Tipo de dato que tendrá el resultado
      */
-    private TipoPrimitivo getTipoPredominante(LinkedList<Object> l) {
-
+    private TipoPrimitivo getTipoPredominante(LinkedList<Coleccion> l) {
         if (l.size() == 1) {
-            return ((Coleccion) l.get(0)).getTipo_dato();
+            return l.get(0).getTipo_dato();
         } else {
-            TipoPrimitivo t = ((Coleccion) l.get(0)).getTipo_dato();
+            TipoPrimitivo t = l.get(0).getTipo_dato();
             for (int i = 1; i < l.size(); i++) {
-                t = (((Coleccion) l.get(i)).getTipo_dato().ordinal() < t.ordinal()) ? ((Coleccion) l.get(i)).getTipo_dato() : t;
+                t = (l.get(i).getTipo_dato().ordinal() < t.ordinal()) ? l.get(i).getTipo_dato() : t;
             }
             return t;
         }
@@ -147,8 +147,8 @@ public class FuncionC extends CallFun {
      */
     private VectorArit VectorToString(VectorArit v) {
         LinkedList<Object> l = new LinkedList<>();
-        for (Object o : v.getValores()) {
-            l.add(o.toString());
+        for (int i = 0; i < v.getTamanio(); i++) {
+            l.add(v.Acceder(i).toString());
         }
         return new VectorArit(TipoPrimitivo.STRING, l);
     }
@@ -161,7 +161,8 @@ public class FuncionC extends CallFun {
      */
     private VectorArit VectorToDouble(VectorArit v) {
         LinkedList<Object> l = new LinkedList<>();
-        for (Object o : v.getValores()) {
+        for (int i = 0; i < v.getTamanio(); i++) {
+            Object o = v.Acceder(i);
             if (o instanceof Double) {
                 l.add(o);
             } else {
@@ -180,7 +181,8 @@ public class FuncionC extends CallFun {
      */
     private VectorArit VectorToInt(VectorArit v) {
         LinkedList<Object> l = new LinkedList<>();
-        for (Object o : v.getValores()) {
+        for (int i = 0; i < v.getTamanio(); i++) {
+            Object o = v.Acceder(i);
             if (o instanceof Integer) {
                 l.add(o);
             } else {
@@ -200,7 +202,7 @@ public class FuncionC extends CallFun {
     private void LlenarNuevoVector(LinkedList<Object> l, VectorArit v, TipoPrimitivo t) {
         v = CasteoVectores(v, t);
         for (Object o : v.getValores()) {
-            l.add(o);
+            l.add(((ValorArit)o).getVal());
         }
     }
 

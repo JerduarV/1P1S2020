@@ -74,7 +74,7 @@ public class Si extends Instruccion {
             if (!vc.isBool()) {
                 return VentanaErrores.getVenErrores().AgregarError("Semántico", "Se esperaba un booleano en la condición del if", this.getFila(), this.getColumna());
             }
-            b = (Boolean) vc.getValores().getFirst();
+            b = (Boolean) vc.Acceder(0);
         } else {
             throw new UnsupportedOperationException("No puedo manejar otras estructuras en el if");
         }

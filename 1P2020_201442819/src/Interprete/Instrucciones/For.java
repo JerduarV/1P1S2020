@@ -13,6 +13,7 @@ import Interprete.Expresiones.Expresion;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
 import Utileria.Retorno;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 
 /**
@@ -57,14 +58,12 @@ public class For extends Instruccion {
 
         Coleccion col = (Coleccion) valor;
 
-        for (int y = 0; y < col.getTamanio(); y++) {
-            Object v = col.Acceder(y);
+        for (Object v : col.getValores()) {
             TablaSimbolos nueva = new TablaSimbolos(t);
             nueva.IncrementarDisplay();
 
             if (col instanceof VectorArit) {
-                System.out.println(v.toString());
-                v = new VectorArit(col.getTipo_dato(), v);
+                v = new VectorArit(col.getTipo_dato(), (ValorArit)v);
             }
 
             //CAMBIO EL VALOR DE LA VARIABLE EN LA TABLA DE SÍMBOLOS
@@ -72,13 +71,6 @@ public class For extends Instruccion {
 
             Object result = this.Recorrer(nueva);
 
-            //SETEO DE LA VARIABLE EN EL ARREGLO
-//            if (col instanceof VectorArit) {
-//                Coleccion b = (Coleccion )nueva.BusarVariable(id);
-//                if (b.isVector()) {
-//                    col.getValores().set(y, ((VectorArit) b).Acceder(0));
-//                }
-//            }
             if (result instanceof Break) {
                 break;
             }

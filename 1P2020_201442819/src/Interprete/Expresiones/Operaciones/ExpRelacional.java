@@ -11,6 +11,7 @@ import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.TipoPrimitivo;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -70,11 +71,11 @@ public class ExpRelacional extends Operacion {
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
                             for (Object e : der.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) > (der.isInteger() ? (Integer) e : (Double) e));
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) > (der.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()));
                             }
                         } else {
                             for (Object e : izq.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) e : (Double) e) > (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                                l.add((izq.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()) > (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
                             }
                         }
                     } else if (this.NvsN(izq, der)) {
@@ -89,11 +90,11 @@ public class ExpRelacional extends Operacion {
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
                             for (Object e : der.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) < (der.isInteger() ? (Integer) e : (Double) e));
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) < (der.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()));
                             }
                         } else {
                             for (Object e : izq.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) e : (Double) e) < (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                                l.add((izq.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()) < (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
                             }
                         }
                     } else if (this.NvsN(izq, der)) {
@@ -109,11 +110,11 @@ public class ExpRelacional extends Operacion {
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
                             for (Object e : der.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) <= (der.isInteger() ? (Integer) e : (Double) e));
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) <= (der.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()));
                             }
                         } else {
                             for (Object e : izq.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) e : (Double) e) <= (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                                l.add((izq.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()) <= (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
                             }
                         }
                     } else if (this.NvsN(izq, der)) {
@@ -129,11 +130,11 @@ public class ExpRelacional extends Operacion {
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
                             for (Object e : der.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) >= (der.isInteger() ? (Integer) e : (Double) e));
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) >= (der.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()));
                             }
                         } else {
                             for (Object e : izq.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) e : (Double) e) >= (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                                l.add((izq.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()) >= (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
                             }
                         }
                     } else if (this.NvsN(izq, der)) {
@@ -149,11 +150,11 @@ public class ExpRelacional extends Operacion {
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
                             for (Object e : der.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) == (der.isInteger() ? (Integer) e : (Double) e));
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) == (der.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()));
                             }
                         } else {
                             for (Object e : izq.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) e : (Double) e) == (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                                l.add((izq.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()) == (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
                             }
                         }
                     } else if (this.NvsN(izq, der)) {
@@ -169,11 +170,11 @@ public class ExpRelacional extends Operacion {
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
                             for (Object e : der.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) != (der.isInteger() ? (Integer) e : (Double) e));
+                                l.add((izq.isInteger() ? (Integer) izq.Acceder(0) : (Double) izq.Acceder(0)) != (der.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()));
                             }
                         } else {
                             for (Object e : izq.getValores()) {
-                                l.add((izq.isInteger() ? (Integer) e : (Double) e) != (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
+                                l.add((izq.isInteger() ? (Integer) ((ValorArit) e).getVal() : (Double) ((ValorArit) e).getVal()) != (der.isInteger() ? (Integer) der.Acceder(0) : (Double) der.Acceder(0)));
                             }
                         }
                     } else if (this.NvsN(izq, der)) {
@@ -327,11 +328,11 @@ public class ExpRelacional extends Operacion {
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
                             for (Object e : der.getValores()) {
-                                l.add(Objects.equals((Boolean) izq.Acceder(0), e));
+                                l.add(Objects.equals((Boolean) izq.Acceder(0), ((ValorArit) e).getVal()));
                             }
                         } else {
                             for (Object e : izq.getValores()) {
-                                l.add(Objects.equals((Boolean) e, (Boolean) der.Acceder(0)));
+                                l.add(Objects.equals((Boolean) ((ValorArit) e).getVal(), (Boolean) der.Acceder(0)));
                             }
                         }
                     } else if (this.NvsN(izq, der)) {
@@ -347,11 +348,11 @@ public class ExpRelacional extends Operacion {
                     if (this.UnoVsN(izq, der)) {
                         if (izq.getTamanio() == 1) {
                             for (Object e : der.getValores()) {
-                                l.add(!Objects.equals((Boolean) izq.Acceder(0), e));
+                                l.add(!Objects.equals((Boolean) izq.Acceder(0), ((ValorArit) e).getVal()));
                             }
                         } else {
                             for (Object e : izq.getValores()) {
-                                l.add(!Objects.equals((Boolean) e, (Boolean) der.Acceder(0)));
+                                l.add(!Objects.equals((Boolean) ((ValorArit) e).getVal(), (Boolean) der.Acceder(0)));
                             }
                         }
                     } else if (this.NvsN(izq, der)) {

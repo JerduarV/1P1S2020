@@ -55,6 +55,21 @@ public class AccesoAsig extends Instruccion {
         this.valor = e;
     }
 
+    /**
+     * Constructor del acceso asignación
+     * @param lista_index Lista de índices
+     * @param id Idnetificador de la variable a acceder
+     * @param valor Nuevo valor a asignar
+     * @param fila Fila en la que se encuentra
+     * @param col Columna en la que se encuentra
+     */
+    public AccesoAsig(LinkedList<Indice> lista_index, Identificador id, Expresion valor, Integer fila, Integer col) {
+        super(fila, col);
+        this.lista_index = lista_index;
+        this.id = id;
+        this.valor = valor;
+    }
+
     @Override
     public Object Ejecutar(TablaSimbolos t) {
 

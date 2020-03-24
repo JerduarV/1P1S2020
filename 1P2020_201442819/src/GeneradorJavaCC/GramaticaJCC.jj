@@ -153,8 +153,12 @@ LinkedList<NodoAST> BLOQUE() :
 }
 
 /** 
-    INSTR ->    ASIGNACION
+    INSTR ->    DEC_FUN
             |   CALL_FUN
+            |   ASIGNACION
+            |   CALL_FUN
+            |   RETURN
+            |   IF
 */
 NodoAST INSTR() :
 {
@@ -165,6 +169,42 @@ NodoAST INSTR() :
     |   LOOKAHEAD(2) i = CALL_FUN() (<PTCOMA>)? {return i;}
     |   i = ASIGNACION()                        {return i;}
     |   i = RETURN() (<PTCOMA>)?                {return i;}
+    |   i = IF()                                {return i;}
+}
+
+/**
+    IF -> 'IF' '(' EXP ')' ( ELSE )?
+*/
+NodoAST IF() :
+{
+    Expresion e;
+    Instruccion i;
+    LinkedList<NodoAST> c;
+    NodoAST n;
+}
+{
+        <RIF> <PARIZQ> e = EXP() <PARDER> c = BLOQUE() {n = new Si(e,c,token.beginLine,token.beginColumn);} 
+        ( 
+            i = ELSE() {n = new Si(e,c,(Else)i,token.beginLine,token.beginColumn);}
+        )?
+        {return n;}
+}
+
+/**
+    ELSE ->     'ELSE' BLOQUE
+            |   'ELSE' IF
+*/
+Instruccion ELSE() :
+{
+    LinkedList<NodoAST> l;
+    NodoAST si;
+}
+{
+        <RELSE>
+        (
+            si = IF()       {return new Else((Si)si,token.beginLine,token.beginColumn);}
+        |   l = BLOQUE()    {return new Else(l,token.beginLine,token.beginColumn);}
+        )
 }
 
 /**
@@ -226,9 +266,14 @@ Instruccion ASIGNACION() :
 {
     Token id;
     Expresion e;
+    LinkedList<Indice> l = new LinkedList<Indice>();
 }
-{
-    id = <IDENTIFICADOR> <IGUAL> e = EXP() (<PTCOMA>)?  {return new Asignacion(token.beginLine,token.beginColumn,id.image,e);}
+{   
+        LOOKAHEAD(2) id = <IDENTIFICADOR> l = L_INDEX() <IGUAL> e = EXP() (<PTCOMA>)?
+        {return new AccesoAsig(l,new Identificador(id.image,id.beginLine,id.beginColumn),e,id.beginLine,id.beginColumn);}
+
+    |   id = <IDENTIFICADOR> <IGUAL> e = EXP() (<PTCOMA>)?  
+        {return new Asignacion(token.beginLine,token.beginColumn,id.image,e);}
 }
 
 
@@ -360,14 +405,28 @@ Expresion EXP_A() :
         {return e;}
 }
 
+/**
+    L_INDEX ->  L_INDEX INDEX
+            |   INDEX
+*/
 LinkedList<Indice> L_INDEX() :
 {
     LinkedList<Indice> l = new LinkedList<Indice>();
-    Expresion e;
+    Expresion e, e1;
+    Indice i;
 }
 {
     (
-        <CORIZQ> e = EXP() <CORDER> {l.add(new Indice(e));}
+            LOOKAHEAD(2) <CORIZQ> <CORIZQ> e = EXP() <CORDER> <CORDER>  {l.add(new Indice(e, Indice.TipoIndice.DOBLE));}
+        |   LOOKAHEAD(2) <CORIZQ> <COMA> e = EXP() <CORDER>             {l.add(new Indice(e,Indice.TipoIndice.MATRIX_COL));}
+        |   <CORIZQ> e = EXP() {i = new Indice(e);}
+            ( 
+                <COMA> {i = new Indice(e, Indice.TipoIndice.MATRIX_ROW);}
+                (
+                    e1 = EXP() {i = new Indice(e,e1);}
+                )?
+            )? 
+            <CORDER> {l.add(i);}
     )+
     {return l;}
 }

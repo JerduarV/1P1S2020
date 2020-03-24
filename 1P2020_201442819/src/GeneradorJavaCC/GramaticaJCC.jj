@@ -5,9 +5,30 @@ options {
 }
 
 PARSER_BEGIN(Gramatica)
-/** Analizador de expresiones aritmeticas sencillas. */
-package Analizador; 
+/** Analizador de Lenguaje Arit en JAVACC */
+
+package GramaticaJavaCC; 
+
+import Interprete.Arbol;
+import Interprete.Expresiones.*;
+import Interprete.Expresiones.Operaciones.*;
+import Interprete.Instrucciones.*;
+import java.util.LinkedList;
+import Interprete.NodoAST;
+
 public class Gramatica {
+
+    /**
+     * Función para procesar la cadena
+    */
+    private Expresion procesarCadena(String cad, int fila, int col){
+        cad = cad.substring(1,cad.length()-1);
+        cad = cad.replace("\\","\\");
+        cad = cad.replace("\\n","\n");
+        cad = cad.replace("\\t","\t");
+        return new Primitivo(fila, col, cad);
+    }
+
 }
 PARSER_END(Gramatica)
 
@@ -17,91 +38,418 @@ SKIP : {
     | "\t"
     | "\r"
     | "\n"
+    | <"#" (~["\n", "\r"])*>
+    | <"#*" (~["*"])* "*" ("*" | ~["*","#"] (~["*"])* "*")* "#">
 }
 
 TOKEN : {
       <NUMERO: (["0"-"9"])+>
     | <DECIMAL: (["0"-"9"])+"."(["0"-"9"])+>
-    | <EVALUAR: "Evaluar">
-    | <PCOMA: ";">
-    | <PARENI: "(">
-    | <PAREND: ")">
-    | <CORI: "[">
-    | <CORD: "]">
-    | <MAS: "+">
-    | <MENOS: "-">
-    | <POR: "*">
-    | <DIV: "/">
+    
+    //PALABRAS RESERVADAS
+    |   < RNULL:        "null"      >
+    |   < RTRUE:        "true"      >
+    |   < RFALSE:       "false"     >
+    |   < RIF:          "if"        >
+    |   < RELSE:        "else"      >
+    |   < RSWITCH:      "switch"    >
+    |   < RCASE:        "case"       >
+    |   < RBREAK:       "break"     >
+    |   < RCONTINUE:    "continue"  >
+    |   < RWHILE:       "while"     >
+    |   < RDO:          "do"        >
+    |   < RFOR:         "for"       >
+    |   < RIN:          "in"        >
+    |   < RFUNCTION:    "function"  >
+    |   < RRETURN:      "return"    >
+    |   < RDEFAULT:     "default"   >
+
+    //SIMBOLOS
+    |   < IGUAL:        "="         >
+    |   < PARIZQ:       "("         >
+    |   < PARDER:       ")"         >
+    |   < LLAVEIZQ:     "{"         >
+    |   < LLAVEDER:     "}"         >
+    |   < COMA:         ","         >
+    |   < PTCOMA:       ";"         >
+    |   < DOSPUNTOS:    ":"         >
+    |   < CORIZQ:       "["         >
+    |   < CORDER:       "]"         >
+    |   < FLECHA:       "=>"        >
+
+    //OPERADORES
+    |   < MAS:          "+"         >
+    |   < MENOS:        "-"         >
+    |   < POR:          "*"         >
+    |   < DIV:          "/"         >
+    |   < POT:          "^"         >
+    |   < MOD:          "%%"        >
+
+    |   < MENOR:        "<"         >
+    |   < MAYOR:        ">"         >
+    |   < MENORIGUAL:   "<="        >
+    |   < MAYORIGUAL:   ">="        >
+    |   < IGUALQUE:     "=="        >
+    |   < DIFERENTE:    "!="        >
+
+    |   < AND:          "&"         >
+    |   < OR:           "|"         >
+    |   < NOT:          "!"         >
+
+    |   < TERNARIO:     "?"         >
+
+    |   <IDENTIFICADOR: ((["A"-"Z","a"-"z"])+([".","_","0"-"9","A"-"Z","a"-"z"])*)|((["."])+(["A"-"Z","a"-"z"]([".","_","0"-"9","A"-"Z","a"-"z"])*)?) >
 }
+
+MORE :
+{
+    "\""    :   STRING_STATE
+}
+
+<STRING_STATE> MORE:
+{
+    <~["\""]>
+}
+
+<STRING_STATE> TOKEN:
+{
+        < STRING:   "\"">   :   DEFAULT 
+}
+
 /** Fin Lexico */
 
 /** Producción inicial 
-    Analizar -> (Instruccion)+ EOF
+    INI -> L_INSTR
 */
-void Analizar() :
-{}
+Arbol INI() :
+{LinkedList<NodoAST> l;}
 {
-  (Instruccion())+ <EOF>
+  l = L_INSTR() <EOF> { Arbol a = new Arbol(l); return a;}
 }
 
-/** Instruccion -> evaluar [ Expresion ]; */
-void Instruccion() :
-{double e;}
+/**
+    L_INSTR ->  L_INSTR INSTR
+            |   INSTR
+*/
+LinkedList<NodoAST> L_INSTR() :
 {
-  <EVALUAR> <CORI> e=Expresion() <CORD> <PCOMA> {System.out.println("El valor de la expresion es: "+e);}
+    NodoAST i; 
+    LinkedList<NodoAST> l = new LinkedList<NodoAST>();
+}
+{
+        (i = INSTR(){l.add(i);})+ {return l;}
 }
 
-/** Expresion -> ExpresionMultiplicativa ('+' ExpresionMultiplicativa)*
-              |  ExpresionMultiplicativa ('-' ExpresionMultiplicativa)*
+/**
+    BLOQUE ->   '{' L_INSTR '}'
+            |   '{' '}'
 */
-double Expresion() :
-{double e, e1;}
+LinkedList<NodoAST> BLOQUE() :
 {
-    e=ExpresionMultiplicativa()
+    LinkedList<NodoAST> l = new LinkedList<NodoAST>();
+}
+{
+        <LLAVEIZQ> (l = L_INSTR())? <LLAVEDER>  {return l;}
+}
+
+/** 
+    INSTR ->    ASIGNACION
+            |   CALL_FUN
+*/
+NodoAST INSTR() :
+{
+    NodoAST i;
+}
+{
+        LOOKAHEAD(3) i = DEC_FUN()              {return i;}
+    |   LOOKAHEAD(2) i = CALL_FUN() (<PTCOMA>)? {return i;}
+    |   i = ASIGNACION()                        {return i;}
+    |   i = RETURN() (<PTCOMA>)?                {return i;}
+}
+
+/**
+    RETURN ->   RRETURN '(' EXP ')'
+            |   RRETURN
+*/
+Expresion RETURN() :
+{
+    Expresion e;
+}
+{
     (
-        <MAS> e1=ExpresionMultiplicativa() {e += e1;}
-        |
-        <MENOS> e1=ExpresionMultiplicativa() {e -= e1;}
+        LOOKAHEAD(2) <RRETURN> <PARIZQ> e = EXP() <PARDER>  {return new Return(e, token.beginLine, token.beginColumn);}
+    |   <RRETURN>                                           {return new Return(token.beginLine, token.beginColumn);}
+    )
+}
+
+/**
+    DEC_FUN -> IDENFICADOR IGUAL 'FUNCTION' '(' (L_PARAM_FORM)? ')' '{' BLOQUE '}'
+*/
+Instruccion DEC_FUN() :
+{
+    LinkedList<Declaracion> l = new LinkedList<Declaracion>();
+    LinkedList<NodoAST> b = new LinkedList<NodoAST>();
+    Token t;
+}
+{
+        t = <IDENTIFICADOR> <IGUAL> <RFUNCTION> <PARIZQ> (l = L_PARAM_FORM())? <PARDER> b = BLOQUE()
+        {return new DecFuncion(t.image, l, b, t.beginLine, t.beginColumn);}
+}
+
+LinkedList<Declaracion> L_PARAM_FORM() :
+{
+    Declaracion d;
+    LinkedList<Declaracion> l = new LinkedList<Declaracion>();
+}
+{
+        d = PARAM_FORM()    {l.add(d);}
+        (
+            <COMA> d = PARAM_FORM() {l.add(d);}
+        )*
+        {return l;}
+}
+
+Declaracion PARAM_FORM() :
+{
+    Token t;
+    Expresion e;
+}
+{
+        LOOKAHEAD(2) t = <IDENTIFICADOR> <IGUAL> e = EXP()      {return new Declaracion(t.image, e, t.beginLine, t.beginColumn);}
+    |   t = <IDENTIFICADOR>                                     {return new Declaracion(t.image, t.beginLine, t.beginColumn);}
+}
+
+/**
+    ASIGNACION ->   IDENTIFICADOR IGUAL EXP (PTCOMA)?
+*/
+Instruccion ASIGNACION() :
+{
+    Token id;
+    Expresion e;
+}
+{
+    id = <IDENTIFICADOR> <IGUAL> e = EXP() (<PTCOMA>)?  {return new Asignacion(token.beginLine,token.beginColumn,id.image,e);}
+}
+
+
+/** 
+    EXP -> EXP_AND ( <OR> EXP_AND )*
+*/
+Expresion EXP() :
+{   
+    Expresion e, e1;
+}
+{
+    e = EXP_AND()
+    (
+        <OR> e1 = EXP_AND() { e = new ExpLogica(token.beginLine, token.beginColumn, e, e1, TipoOpe.OR);}
     )*
     {return e;}
 }
 
-/** ExpresionMultiplicativa -> ExpresionUnaria ('*' ExpresionUnaria)*
-                            |  ExpresionUnaria ('/' ExpresionUnaria)*
+/**
+    EXP_AND -> EXP_IGUAL ( <AND> EXP_IGUAL )*
 */
-double ExpresionMultiplicativa() :
-{double e, e1;}
+Expresion EXP_AND() :
 {
-    e=ExpresionUnaria()
+    Expresion e, e1;
+}
+{
+    e = EXP_IGUAL()
     (
-        <POR> e1=ExpresionUnaria() {e *= e1;}
-        |
-        <DIV> e1=ExpresionUnaria() {e /= e1;}
+        <AND> e1 = EXP_IGUAL() {e = new ExpLogica(token.beginLine, token.beginColumn, e, e1, TipoOpe.AND);}
     )*
     {return e;}
 }
 
-/** ExpresionUnaria -> '-' ExpresionUnaria
-                    |  Primitivo
- */
-double ExpresionUnaria() :
-{double e;}
+/**
+    EXP_IGUAL ->    EXP_REL ( == EXP_REL )*
+               |    EXP_REL ( != EXP_REL )*
+*/
+Expresion EXP_IGUAL() :
 {
-    <MENOS> e=ExpresionUnaria() {return -e;}
-    |
-    e=Primitivo() {return e;}
+    Expresion e, e1;
+}
+{
+    e = EXP_REL()
+    (
+            <IGUALQUE> e1 = EXP_REL()   {e = new ExpRelacional(token.beginLine, token.beginColumn, e, e1, TipoOpe.IGUALQUE);}
+        |   <DIFERENTE> e1 = EXP_REL()  {e = new ExpRelacional(token.beginLine, token.beginColumn, e, e1, TipoOpe.DIFERENTE);}
+    )*
+    {return e;}
+}
+
+/**
+    EXP_REL ->  EXP_ADD ( > EXP_ADD )*
+            |   EXP_ADD ( < EXP_ADD )*
+            |   EXP_ADD ( <= EXP_ADD )*
+            |   EXP_ADD ( >= EXP_ADD )*
+*/
+Expresion EXP_REL() :
+{
+    Expresion e, e1;
+}
+{
+    e = EXP_ADD()
+    (
+            <MAYOR> e1 = EXP_ADD()          {e = new ExpRelacional(token.beginLine, token.beginColumn, e, e1, TipoOpe.MAYOR);}
+        |   <MENOR> e1 = EXP_ADD()          {e = new ExpRelacional(token.beginLine, token.beginColumn, e, e1, TipoOpe.MENOR);}
+        |   <MENORIGUAL> e1 = EXP_ADD()     {e = new ExpRelacional(token.beginLine, token.beginColumn, e, e1, TipoOpe.MENORIGUAL);}
+        |   <MAYORIGUAL> e1 = EXP_ADD()     {e = new ExpRelacional(token.beginLine, token.beginColumn, e, e1, TipoOpe.MAYORIGUAL);}
+    )*
+    {return e;}
+}
+
+/**
+    EXP_ADD ->  EXP_MULT ( + EXP_MULT )*
+            |   EXP_MULT ( - EXP_MULT )*
+*/
+Expresion EXP_ADD() :
+{
+    Expresion e, e1;
+}
+{
+    e = EXP_MULT()
+    (
+            <MAS> e1 = EXP_MULT()   {e = new ExpAritmetica(token.beginLine, token.beginColumn, e, e1, TipoOpe.SUMA);}
+        |   <MENOS> e1 = EXP_MULT() {e = new ExpAritmetica(token.beginLine, token.beginColumn, e, e1, TipoOpe.RESTA);}
+    )*
+    {return e;}
+}
+
+/** 
+    EXP_MULT ->     EXP_POT ( * EXP_POT )*
+            |       EXP_POT ( / EXP_POT )*
+*/
+Expresion EXP_MULT() :
+{
+    Expresion e, e1;
+}
+{
+    e = EXP_POT()
+    (
+            <POR> e1 = EXP_POT()    {e = new ExpAritmetica(token.beginLine, token.beginColumn, e, e1, TipoOpe.MULT);}
+       |    <DIV> e1 = EXP_POT()    {e = new ExpAritmetica(token.beginLine, token.beginColumn, e, e1, TipoOpe.DIV);}
+       |    <MOD> e1 = EXP_POT()    {e = new ExpAritmetica(token.beginLine, token.beginColumn, e, e1, TipoOpe.MOD);}
+    )*
+    {return e;}
+}
+
+/**
+    EXP_POT ->  EXP_U ( ^ EXP_U )*
+*/
+Expresion EXP_POT() :
+{
+    Expresion e, e1;
+}
+{
+    e = EXP_A()
+    ( 
+        <POT> e1 = EXP_A()  {e = new ExpAritmetica(token.beginLine, token.beginColumn, e, e1, TipoOpe.POT);}
+    )*
+    {return e;}
+}
+
+Expresion EXP_A() :
+{
+    Expresion e;
+    LinkedList<Indice> l;
+}
+{
+        e = EXP_U() (l = L_INDEX() {e = new AccesoGet(e,l);})?
+        {return e;}
+}
+
+LinkedList<Indice> L_INDEX() :
+{
+    LinkedList<Indice> l = new LinkedList<Indice>();
+    Expresion e;
+}
+{
+    (
+        <CORIZQ> e = EXP() <CORDER> {l.add(new Indice(e));}
+    )+
+    {return l;}
+}
+
+/** 
+    EXP_U ->    - EXP_U
+            |   ! EXP_U
+            |   PRIMITIVO
+*/
+Expresion EXP_U() :
+{
+    Expresion e;
+}
+{
+        <MENOS> e = EXP_U() {return new ExpAritmetica(e, token.beginLine, token.beginColumn);}
+    |   <NOT> e = EXP_U()   {return new ExpLogica(e, token.beginLine, token.beginColumn);}
+    |   e = PRIMITIVO()     {return e;}
 }
 
 /** Primitivo -> Numero
               |  Decimal
               |  '(' Expresion ')' 
 */
-double Primitivo() :
-{double e;}
+Expresion PRIMITIVO() :
 {
-    <NUMERO> {return Double.parseDouble(token.image);}
-    |
-    <DECIMAL> {return Double.parseDouble(token.image);}
-    |
-    <PARENI> e=Expresion() <PAREND> {return e;}
+    Expresion e;
+    String s;
+    Token t;
 }
+{
+        <NUMERO>                            {return new Primitivo(token.beginLine, token.beginColumn, Integer.parseInt(token.image));}
+    |   <DECIMAL>                           {return new Primitivo(token.beginLine, token.beginColumn, Double.parseDouble(token.image));}
+    |   <RTRUE>                             {return new Primitivo(token.beginLine, token.beginColumn, true);}
+    |   <RFALSE>                            {return new Primitivo(token.beginLine, token.beginColumn, false);}
+    |   LOOKAHEAD(2) e = CALL_FUN()         {return e;}
+    |   t = <STRING>                        {return this.procesarCadena(t.image, token.beginLine, token.beginColumn);}
+    |   <PARIZQ> e = EXP() <PARDER>         {return e;}
+    |   LOOKAHEAD(2) t = <IDENTIFICADOR>    {return new Identificador(t.image, token.beginLine,token.beginColumn);}
+}
+
+/**
+    CALL_FUN -> IDENTIFICADOR PARIZQ LISTA_EXP PARDER
+            |   IDENTIFICADOR PARIZQ PARDER
+*/
+Expresion CALL_FUN() :
+{
+    LinkedList<Expresion> l;
+    Token t;
+}
+{
+        t = <IDENTIFICADOR> <PARIZQ> l = L_PARAM_ACT() <PARDER> {return CallFun.ReturnCallFun(t.image,l,token.beginLine,token.beginColumn);}
+}
+
+/**
+    L_PARAM_ACT ->  L_PARAM_ACT PARAM_ACT
+                |   PARAM_ACT
+*/
+LinkedList<Expresion> L_PARAM_ACT() :
+{
+    LinkedList<Expresion> l = new LinkedList<Expresion>();
+    Expresion e;
+}
+{
+    (
+        e = PARAM_ACT() {l.add(e);}
+        (
+            <COMA> e = PARAM_ACT() {l.add(e);}
+        )*
+    )?
+    {return l;}
+}
+
+/**
+    PARAM_ACT ->    EXP
+                |   'DEFAULT'
+*/
+Expresion PARAM_ACT() :
+{
+    Expresion e;
+}
+{
+        e = EXP()   {return e;}
+    |   <RDEFAULT>  {return new ValorDefault(token.beginLine, token.beginColumn);}    
+}
+

@@ -8,11 +8,16 @@ package Interprete;
 import Editor.VentanaErrores;
 import GramaticaFlexCup.Lexico;
 import GramaticaFlexCup.Sintactico;
+import GramaticaJavaCC.Gramatica;
+import GramaticaJavaCC.ParseException;
+import GramaticaJavaCC.TokenMgrError;
 import TablaSimbolos.TablaSimbolos;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,9 +28,19 @@ import java.util.logging.Logger;
  */
 public class Interprete {
 
+    /**
+     * Variable en la que se guarda el texto del dot con el que se generará el
+     * árbol
+     */
     private static String dot;
 
-    public void Interpretar(String contenido) {
+    /**
+     * Método que inicia el análisis de la entrada usando las herramientas Flex
+     * y Cup
+     *
+     * @param contenido Cadena de entrada
+     */
+    public void InterpretarFlexCup(String contenido) {
         Sintactico pars;
         VentanaErrores.getVenErrores().LimpiarTabla();
 
@@ -51,6 +66,25 @@ public class Interprete {
     }
 
     /**
+     * Método que inicia el análisis de la entrada usando JavaCC
+     *
+     * @param contenido Cadena de entrada
+     */
+    public void InterpretarJavaCC(String contenido) {
+        try {
+            Gramatica parser = new Gramatica(new BufferedReader(new StringReader(contenido)));
+            Arbol a = parser.INI();
+            this.ConstruirDot(a);
+            TablaSimbolos global = new TablaSimbolos(null);
+            a.Ejecutar(global);
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+        } catch (TokenMgrError e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    /**
      * Inicia con la escritura del dot que es usado para dibujar el árbol
      *
      * @param tree Árbol a dibujar
@@ -62,10 +96,22 @@ public class Interprete {
         this.DibujarArbol();
     }
 
+    /**
+     * Función que se usa para declarar el nodo en el dot
+     *
+     * @param id Identificador del nodo
+     * @param label Etiqueta que usará
+     */
     public static void DeclararNodo(String id, String label) {
         appendDot("\t\"" + id + "\" [label = \"" + label + "\"];\n");
     }
 
+    /**
+     * Método que se usa para conectar dos nodos en el dot
+     *
+     * @param padre Nodo padre
+     * @param hijo Nodo hijo
+     */
     public static void Conectar(String padre, String hijo) {
         appendDot("\t\"" + padre + "\" -> \"" + hijo + "\";\n");
     }

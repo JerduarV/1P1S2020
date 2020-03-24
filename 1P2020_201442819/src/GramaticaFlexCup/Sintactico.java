@@ -9,8 +9,6 @@ import Editor.VentanaErrores;
 import Interprete.Arbol;
 import Interprete.Expresiones.*;
 import Interprete.Expresiones.Operaciones.*;
-import Interprete.Expresiones.Nativas.*;
-import Interprete.Expresiones.Nativas.Graficas.*;
 import Interprete.Instrucciones.*;
 import java.util.LinkedList;
 import Interprete.NodoAST;
@@ -722,55 +720,6 @@ public class Sintactico extends java_cup.runtime.lr_parser {
     public Arbol getAST(){
         return AST;
     }
-
-    private Expresion ReturnCallFun(String id, LinkedList<Expresion> l, int fila, int col){
-        switch(id.toLowerCase()){
-            case "c":
-                return new FuncionC(l,fila,col);
-            case "list":
-                return new CallList(l,fila,col);
-            case "typeof":
-                return new Typeof(l,fila,col);
-            case "length":
-                return new Length(l,fila,col);
-            case "stringlength":
-                return new StringLength(l,fila,col);
-            case "touppercase":
-                return new ToUpperCase(l,fila,col);
-            case "tolowercase":
-                return new ToLowerCase(l,fila,col);
-            case "trunk":
-                return new Trunk(l,fila,col);
-            case "round":
-                return new Round(l,fila,col);
-            case "remove":
-                return new Remove(l,fila,col);
-            case "matrix":
-                return new Matrix(l,fila,col);
-            case "mean":
-                return new Mean(l,fila,col);
-            case "mode":
-                return new Mode(l,fila,col);
-            case "median":
-                return new Median(l,fila,col);
-            case "ncol":
-                return new nCol(l,fila,col);
-            case "nrow":
-                return new nRow(l,fila,col);
-            case "pie":
-                return new Pie(l,fila,col);
-            case "barplot":
-                return new Barplot(l,fila,col);
-            case "plot":
-                return new Plot(l,fila,col);
-            case "hist":
-                return new Hist(l,fila,col);
-            case "array":
-                return new Array(l,fila,col);
-            default:
-                return new CallFun(id,l,fila,col);
-        }
-    }
     
 
 
@@ -1287,7 +1236,7 @@ class CUP$Sintactico$actions {
 		int eleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		LinkedList<Expresion> e = (LinkedList<Expresion>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		RESULT = ReturnCallFun(id,e,idleft,idright);
+		RESULT = CallFun.ReturnCallFun(id,e,idleft,idright);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("CALL_FUN",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1299,7 +1248,7 @@ class CUP$Sintactico$actions {
 		int idleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
 		int idright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
-		RESULT = ReturnCallFun(id,new LinkedList<Expresion>(),idleft,idright);
+		RESULT = CallFun.ReturnCallFun(id,new LinkedList<Expresion>(),idleft,idright);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("CALL_FUN",23, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;

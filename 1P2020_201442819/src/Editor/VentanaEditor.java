@@ -43,10 +43,11 @@ public class VentanaEditor extends javax.swing.JFrame {
             return;
         }
         if (this.dbOpciones.getSelectedIndex() == 1) {
-
+            Interprete i = new Interprete();
+            i.InterpretarJavaCC(this.getContenido());
         } else if (this.dbOpciones.getSelectedIndex() == 0) {
             Interprete i = new Interprete();
-            i.Interpretar(this.getContenido());
+            i.InterpretarFlexCup(this.getContenido());
         }
 
         if (VentanaErrores.getVenErrores().getErrores() > 0) {

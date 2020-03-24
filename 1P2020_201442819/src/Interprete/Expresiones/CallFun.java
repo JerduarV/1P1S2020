@@ -8,6 +8,8 @@ package Interprete.Expresiones;
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Colecciones.Coleccion;
+import Interprete.Expresiones.Nativas.*;
+import Interprete.Expresiones.Nativas.Graficas.*;
 import Interprete.Instrucciones.DecFuncion;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
@@ -119,6 +121,63 @@ public class CallFun extends Expresion {
      */
     public LinkedList<Expresion> getParam_act() {
         return param_act;
+    }
+    
+    /**
+     * Constructor de Funciones
+     * @param id Identificador de la función
+     * @param l Lista de parámetros actuales
+     * @param fila Fila en la que se encuentra
+     * @param col Columna en la que se encuentra
+     * @return Expresión
+     */
+    public static Expresion ReturnCallFun(String id, LinkedList<Expresion> l, int fila, int col){
+        switch(id.toLowerCase()){
+            case "c":
+                return new FuncionC(l,fila,col);
+            case "list":
+                return new CallList(l,fila,col);
+            case "typeof":
+                return new Typeof(l,fila,col);
+            case "length":
+                return new Length(l,fila,col);
+            case "stringlength":
+                return new StringLength(l,fila,col);
+            case "touppercase":
+                return new ToUpperCase(l,fila,col);
+            case "tolowercase":
+                return new ToLowerCase(l,fila,col);
+            case "trunk":
+                return new Trunk(l,fila,col);
+            case "round":
+                return new Round(l,fila,col);
+            case "remove":
+                return new Remove(l,fila,col);
+            case "matrix":
+                return new Matrix(l,fila,col);
+            case "mean":
+                return new Mean(l,fila,col);
+            case "mode":
+                return new Mode(l,fila,col);
+            case "median":
+                return new Median(l,fila,col);
+            case "ncol":
+                return new nCol(l,fila,col);
+            case "nrow":
+                return new nRow(l,fila,col);
+            case "pie":
+                return new Pie(l,fila,col);
+            case "barplot":
+                return new Barplot(l,fila,col);
+            case "plot":
+                return new Plot(l,fila,col);
+            case "hist":
+                return new Hist(l,fila,col);
+            case "array":
+                return new Array(l,fila,col);
+            default:
+                return new CallFun(id,l,fila,col);
+        }
     }
 
 }

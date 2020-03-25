@@ -57,6 +57,7 @@ public class AccesoAsig extends Instruccion {
 
     /**
      * Constructor del acceso asignación
+     *
      * @param lista_index Lista de índices
      * @param id Idnetificador de la variable a acceder
      * @param valor Nuevo valor a asignar
@@ -328,12 +329,14 @@ public class AccesoAsig extends Instruccion {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "Error en la expresión a asignar", this.getFila(), this.getColumna());
         }
 
-        if (!(v instanceof VectorArit)) {
-            return VentanaErrores.getVenErrores().AgregarError("Semantico", "A un vector solo se le puede asignar otro vector de uno", this.getFila(), this.getColumna());
-        }
-
+        //COMENTE ESTO PARA QUE NO VALIDARA QUE EL NUEVO VALOR FUERA UN VECTOR
+//        if (!(v instanceof VectorArit)) {
+//            return VentanaErrores.getVenErrores().AgregarError("Semantico", "A un vector solo se le puede asignar otro vector de uno", this.getFila(), this.getColumna());
+//        }
         Coleccion nuevo_valor = (Coleccion) v;
 
+        //ESTA VALIDACIÓN CONVIERTE EL VECTOR EN LISTA EN CASO DE QUE EL NUEVO VALOR
+        //SEA UNA LISTA
         if (nuevo_valor.isList()) {
             LinkedList<Object> l = new LinkedList<>();
             for (Object o : vector.getValores()) {

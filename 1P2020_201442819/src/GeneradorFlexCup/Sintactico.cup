@@ -76,6 +76,7 @@ non terminal Instruccion ASIGNACION,IF,ELSE,FOR,SWITCH,WHILE,DOWHILE,BREAK,CONTI
 non terminal Instruccion PARAM_FORM,DEC_FUN;
 non terminal LinkedList<Declaracion> L_PARAM_FORM;
 non terminal LinkedList<Case> L_CASE;
+non terminal Case CASE;
 
 //EXPRESIONES
 non terminal Expresion EXP,EXP2,EXP3,EXP_TERNARIA,PRIMITIVO,ACCESO,CALL_FUN,PARAM_ACT,RETURN;
@@ -136,12 +137,18 @@ INSTR ::=
 
 SWITCH ::=
         RSWITCH PARIZQ EXP:e PARDER LLAVEIZQ L_CASE:l LLAVEDER                                  {:RESULT = new Switch(e,l,eleft,eright);:}
+    |   RSWITCH PARIZQ EXP:e PARDER LLAVEIZQ RDEFAULT DOSPUNTOS L_INSTR:l LLAVEDER              {:RESULT = new Switch(e,new LinkedList<Case>(),new DefaultSw(l,lleft,lright),eleft,eright);:}
     |   RSWITCH PARIZQ EXP:e PARDER LLAVEIZQ L_CASE:lc RDEFAULT DOSPUNTOS L_INSTR:l LLAVEDER    {:RESULT = new Switch(e,lc,new DefaultSw(l,lleft,lright),eleft,eright);:}
 ;
 
 L_CASE ::=
-        L_CASE:lc RCASE EXP:e DOSPUNTOS L_INSTR:l {:RESULT = lc; RESULT.add(new Case(e,l,eleft,eright));:}
-    |   RCASE EXP:e DOSPUNTOS L_INSTR:l           {:RESULT = new LinkedList<>(); RESULT.add(new Case(e,l,eleft,eright));:}
+        L_CASE:lc CASE:c  {:RESULT = lc; lc.add(c);:}
+    |   CASE:c            {:RESULT = new LinkedList<>(); RESULT.add(c);:}
+;
+
+CASE ::=
+        RCASE EXP:e DOSPUNTOS L_INSTR:l {:RESULT = new Case(e,l,eleft,eright);:}
+    |   RCASE EXP:e DOSPUNTOS           {:RESULT = new Case(e,new LinkedList<NodoAST>(),eleft,eright);:}
 ;
 
 CONTINUE ::=

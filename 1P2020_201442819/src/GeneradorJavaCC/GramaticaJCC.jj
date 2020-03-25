@@ -160,6 +160,8 @@ LinkedList<NodoAST> BLOQUE() :
             |   RETURN
             |   IF
             |   WHILE
+            |   FOR
+            |   SWITCH
 */
 NodoAST INSTR() :
 {
@@ -174,6 +176,52 @@ NodoAST INSTR() :
     |   i = WHILE()                             {return i;}
     |   i = DOWHILE()                           {return i;}
     |   i = FOR()                               {return i;}
+    |   i = SWITCH()                            {return i;}
+}
+
+NodoAST SWITCH() :
+{
+    Expresion e;
+    LinkedList<Case> l = new LinkedList<Case>();
+    LinkedList<NodoAST> d = new LinkedList<NodoAST>();
+    NodoAST n;
+}
+{
+        <RSWITCH> <PARIZQ> e = EXP() <PARDER> <LLAVEIZQ>
+        (
+            {n = new Switch(e,l,token.beginLine,token.beginColumn);}
+            ( 
+                l = L_CASE()    {n = new Switch(e,l,token.beginLine,token.beginColumn);} 
+            )?
+            (
+                <RDEFAULT> <DOSPUNTOS>
+                {n = new Switch(e,l,new DefaultSw(d,token.beginLine,token.beginColumn),token.beginLine,token.beginColumn);}
+                (
+                    d = L_INSTR()   {n  = new Switch(e,l,new DefaultSw(d,token.beginLine,token.beginColumn), token.beginLine,token.beginColumn);} 
+                )?
+            )
+        )
+        <LLAVEDER>
+        {return n;}
+}
+
+LinkedList<Case> L_CASE() :
+{
+    Expresion e;
+    LinkedList<Case> l = new LinkedList<Case>();
+    LinkedList<NodoAST> li = new LinkedList<NodoAST>();
+    Case c;
+    Token t;
+}
+{
+        (   
+            t = <RCASE> e = EXP() <DOSPUNTOS> {c = new Case(e,new LinkedList<NodoAST>(),t.beginLine,t.beginColumn);} 
+            ( 
+                li = L_INSTR()  {c = new Case(e,li,t.beginLine,t.beginColumn);}
+            )?
+            {l.add(c);}
+        )+
+        {return l;}
 }
 
 /**
@@ -318,11 +366,27 @@ Instruccion ASIGNACION() :
         {return new Asignacion(token.beginLine,token.beginColumn,id.image,e);}
 }
 
-
-/** 
-    EXP -> EXP_AND ( <OR> EXP_AND )*
+/**
+    EXP ->  EXP_L '?' EXP_L ':' EXP_L
+        |   EXP_L
 */
 Expresion EXP() :
+{
+    Expresion e,e1,e2;
+}
+{
+        e = EXP_L()
+        (
+            <TERNARIO> e1 = EXP_L() <DOSPUNTOS> e2 = EXP_L()    {e = new ExpTernaria(e,e1,e2,token.beginLine,token.beginColumn);}
+        )*
+        {return e;}
+        
+}
+
+/** 
+    EXP_L ->    EXP_AND ( <OR> EXP_AND )*
+*/
+Expresion EXP_L() :
 {   
     Expresion e, e1;
 }

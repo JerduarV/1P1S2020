@@ -159,6 +159,7 @@ LinkedList<NodoAST> BLOQUE() :
             |   CALL_FUN
             |   RETURN
             |   IF
+            |   WHILE
 */
 NodoAST INSTR() :
 {
@@ -170,6 +171,47 @@ NodoAST INSTR() :
     |   i = ASIGNACION()                        {return i;}
     |   i = RETURN() (<PTCOMA>)?                {return i;}
     |   i = IF()                                {return i;}
+    |   i = WHILE()                             {return i;}
+    |   i = DOWHILE()                           {return i;}
+    |   i = FOR()                               {return i;}
+}
+
+/**
+    FOR ->  'FOR' '(' ID 'IN' EXP ')' BLOQUE
+*/
+NodoAST FOR() :
+{
+    Token id;
+    LinkedList<NodoAST> b;
+    Expresion e;
+}
+{
+        <RFOR> <PARIZQ> id = <IDENTIFICADOR> <RIN> e = EXP() <PARDER> b = BLOQUE()
+        {return new For(id.image,e,b,token.beginLine,token.beginColumn);}
+}
+
+/**
+    DOWHILE ->  'DO' BLOQUE '(' EXP ')' ( ';' )?
+*/
+NodoAST DOWHILE() :
+{
+    Expresion e;
+    LinkedList<NodoAST> b;
+}
+{
+        <RDO> b = BLOQUE() <RWHILE> <PARIZQ> e = EXP() <PARDER> (<PTCOMA>)? {return new DoWhile(b,e,token.beginLine,token.beginColumn);}
+}
+
+/**
+    WHILE ->    'WHILE' '(' EXP ')' BLOQUE
+*/
+NodoAST WHILE() :
+{
+    Expresion e;
+    LinkedList<NodoAST> l;
+}
+{
+        <RWHILE> <PARIZQ> e = EXP() <PARDER> l = BLOQUE()   {return new While(e,l,token.beginLine,token.beginColumn);}
 }
 
 /**

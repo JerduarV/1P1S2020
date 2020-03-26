@@ -170,14 +170,32 @@ NodoAST INSTR() :
 {
         LOOKAHEAD(3) i = DEC_FUN()              {return i;}
     |   LOOKAHEAD(2) i = CALL_FUN() (<PTCOMA>)? {return i;}
-    |   i = ASIGNACION()                        {return i;}
+    |   LOOKAHEAD(2) i = ASIGNACION()           {return i;}
     |   i = RETURN() (<PTCOMA>)?                {return i;}
     |   i = IF()                                {return i;}
     |   i = WHILE()                             {return i;}
     |   i = DOWHILE()                           {return i;}
     |   i = FOR()                               {return i;}
     |   i = SWITCH()                            {return i;}
+    |   i = BREAK()                             {return i;}
+    |   i = CONTINUE()                          {return i;}
 }
+
+/**
+    BREAK -> 'BREAK' (';')?
+*/
+NodoAST BREAK() :
+{}
+{
+        <RBREAK> (<PTCOMA>)?    {return new Break(token.beginLine,token.beginColumn);}
+}
+
+NodoAST CONTINUE() :
+{}
+{
+        <RCONTINUE> (<PTCOMA>)? {return new Continue(token.beginLine,token.beginColumn);}
+}
+
 
 NodoAST SWITCH() :
 {
@@ -319,10 +337,16 @@ Instruccion DEC_FUN() :
 {
     LinkedList<Declaracion> l = new LinkedList<Declaracion>();
     LinkedList<NodoAST> b = new LinkedList<NodoAST>();
+    Expresion e;
     Token t;
 }
 {
-        t = <IDENTIFICADOR> <IGUAL> <RFUNCTION> <PARIZQ> (l = L_PARAM_FORM())? <PARDER> b = BLOQUE()
+        t = <IDENTIFICADOR> <IGUAL>
+        (   
+            LOOKAHEAD(4) <PARIZQ> (l = L_PARAM_FORM())? <PARDER> <FLECHA> b = BLOQUE()
+        |   LOOKAHEAD(2) e = EXP() (<PTCOMA>)? {return new Asignacion(t.beginLine,t.beginColumn,t.image,e);}
+        |   <RFUNCTION> <PARIZQ> (l = L_PARAM_FORM())? <PARDER> b = BLOQUE()
+        )
         {return new DecFuncion(t.image, l, b, t.beginLine, t.beginColumn);}
 }
 
@@ -359,11 +383,11 @@ Instruccion ASIGNACION() :
     LinkedList<Indice> l = new LinkedList<Indice>();
 }
 {   
-        LOOKAHEAD(2) id = <IDENTIFICADOR> l = L_INDEX() <IGUAL> e = EXP() (<PTCOMA>)?
+        id = <IDENTIFICADOR> l = L_INDEX() <IGUAL> e = EXP() (<PTCOMA>)?
         {return new AccesoAsig(l,new Identificador(id.image,id.beginLine,id.beginColumn),e,id.beginLine,id.beginColumn);}
 
-    |   id = <IDENTIFICADOR> <IGUAL> e = EXP() (<PTCOMA>)?  
-        {return new Asignacion(token.beginLine,token.beginColumn,id.image,e);}
+    //|   id = <IDENTIFICADOR> <IGUAL> e = EXP() (<PTCOMA>)?  
+    //    {return new Asignacion(token.beginLine,token.beginColumn,id.image,e);}
 }
 
 /**

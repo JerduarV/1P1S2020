@@ -344,7 +344,11 @@ Instruccion DEC_FUN() :
         t = <IDENTIFICADOR> <IGUAL>
         (   
             LOOKAHEAD(4) <PARIZQ> (l = L_PARAM_FORM())? <PARDER> <FLECHA> b = BLOQUE()
+
+            /* id = exp */
         |   LOOKAHEAD(2) e = EXP() (<PTCOMA>)? {return new Asignacion(t.beginLine,t.beginColumn,t.image,e);}
+
+            /*id = function ...*/
         |   <RFUNCTION> <PARIZQ> (l = L_PARAM_FORM())? <PARDER> b = BLOQUE()
         )
         {return new DecFuncion(t.image, l, b, t.beginLine, t.beginColumn);}

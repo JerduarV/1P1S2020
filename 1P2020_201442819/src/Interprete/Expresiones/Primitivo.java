@@ -43,7 +43,7 @@ public class Primitivo extends Expresion {
         } else if (valor instanceof Boolean) {
             return new VectorArit(TipoPrimitivo.BOOL, this.valor);
         } else if (valor instanceof Double) {
-            return new VectorArit(TipoPrimitivo.DOUBLE, this.valor);
+            return new VectorArit(TipoPrimitivo.NUMERIC, this.valor);
         } else if (valor == null) {
             return new VectorArit(TipoPrimitivo.STRING, "NULL");
         }

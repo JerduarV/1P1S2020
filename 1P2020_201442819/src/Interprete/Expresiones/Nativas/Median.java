@@ -79,12 +79,12 @@ public class Median extends CallFun {
             if (vector.isInteger()) {
                 return new VectorArit(TipoPrimitivo.INTEGER, i);
             } else {
-                return new VectorArit(TipoPrimitivo.DOUBLE, m);
+                return new VectorArit(TipoPrimitivo.NUMERIC, m);
             }
         } else {
             m = ((lista_ordenada.get(lista_ordenada.size() / 2) + lista_ordenada.get(((lista_ordenada.size() / 2) - 1)))) / 2;
         }
-        return new VectorArit(TipoPrimitivo.DOUBLE, m);
+        return new VectorArit(TipoPrimitivo.NUMERIC, m);
     }
 
     private Object MedianTrim(TablaSimbolos t) {
@@ -126,12 +126,12 @@ public class Median extends CallFun {
             if (vector.isInteger()) {
                 return new VectorArit(TipoPrimitivo.INTEGER, i);
             } else {
-                return new VectorArit(TipoPrimitivo.DOUBLE, m);
+                return new VectorArit(TipoPrimitivo.NUMERIC, m);
             }
         } else {
             m = ((lista_ordenada.get(lista_ordenada.size() / 2) + lista_ordenada.get(((lista_ordenada.size() / 2) - 1)))) / 2;
         }
-        return new VectorArit(TipoPrimitivo.DOUBLE, m);
+        return new VectorArit(TipoPrimitivo.NUMERIC, m);
     }
 
 }

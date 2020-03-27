@@ -75,7 +75,7 @@ public class Mean extends CallFun {
             suma += i;
             contador++;
         }
-        return contador == 0 ? this.Mean(t) : new VectorArit(TipoPrimitivo.DOUBLE, suma / contador);
+        return contador == 0 ? this.Mean(t) : new VectorArit(TipoPrimitivo.NUMERIC, suma / contador);
     }
 
     /**
@@ -109,7 +109,7 @@ public class Mean extends CallFun {
 
         suma /= vector.getTamanio();
 
-        return new VectorArit(TipoPrimitivo.DOUBLE, suma);
+        return new VectorArit(TipoPrimitivo.NUMERIC, suma);
     }
 
 }

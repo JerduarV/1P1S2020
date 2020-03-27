@@ -38,7 +38,7 @@ public abstract class Coleccion {
      * @return Cadena con el tipo de dato
      */
     public final String Typeof() {
-        return this.getTipo_dato().toString();
+        return this.getTipo_dato().toString().toLowerCase();
     }
 
     public int getTamanio() {
@@ -124,7 +124,7 @@ public abstract class Coleccion {
      * @return valor booleano
      */
     public boolean isDouble() {
-        return this.getTipo_dato() == TipoPrimitivo.DOUBLE;
+        return this.getTipo_dato() == TipoPrimitivo.NUMERIC;
     }
 
     /**
@@ -158,7 +158,7 @@ public abstract class Coleccion {
      * Método que castea todos los elementos del arreglo de entero a double
      */
     public void CasteoIntADouble() {
-        this.setTipo_dato(TipoPrimitivo.DOUBLE);
+        this.setTipo_dato(TipoPrimitivo.NUMERIC);
         for (int i = 0; i < this.getValores().size(); i++) {
             Integer e = (Integer) this.Acceder(i);
             Double nuevo = e.doubleValue();
@@ -178,7 +178,7 @@ public abstract class Coleccion {
     }
 
     public void casteoBoolToDouble() {
-        this.setTipo_dato(TipoPrimitivo.DOUBLE);
+        this.setTipo_dato(TipoPrimitivo.NUMERIC);
         for (int i = 0; i < this.getValores().size(); i++) {
             Boolean e = (Boolean) this.Acceder(i);
             this.getValores().set(i, new ValorArit(e ? 1.0 : 0.0));

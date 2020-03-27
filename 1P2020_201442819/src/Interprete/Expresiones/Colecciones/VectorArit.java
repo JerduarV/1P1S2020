@@ -77,6 +77,9 @@ public class VectorArit extends Coleccion {
 
     @Override
     public Object Acceder(Integer index) {
+        if (index > this.getValores().size() - 1 && this.isVector()) {
+            this.RellenarConDefault(index - this.getTamanio() + 1);
+        }
         ValorArit v = (ValorArit) super.Acceder(index); //To change body of generated methods, choose Tools | Templates.
         return v.getVal();
     }
@@ -123,7 +126,7 @@ public class VectorArit extends Coleccion {
             case BOOL:
                 defecto = false;
                 break;
-            case DOUBLE:
+            case NUMERIC:
                 defecto = 0.0;
                 break;
             case INTEGER:

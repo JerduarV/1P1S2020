@@ -30,6 +30,7 @@ public class MatrixArit extends VectorArit {
      */
     public MatrixArit(Integer f, Integer c, TipoPrimitivo t, LinkedList<Object> v) {
         super(t, v);
+        
         this.num_filas = f;
         this.num_columnas = c;
     }
@@ -66,7 +67,8 @@ public class MatrixArit extends VectorArit {
     @Override
     public Coleccion copiar() {
         LinkedList<Object> l = new LinkedList<>();
-        for (Object o : this.getValores()) {
+        for (int i = 0; i < this.getTamanio(); i++) {
+            Object o = this.Acceder(i);
             l.add(o);
         }
         return new MatrixArit(this.num_filas, this.num_columnas, this.getTipo_dato(), l);

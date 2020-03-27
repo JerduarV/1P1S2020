@@ -130,7 +130,7 @@ public class FuncionC extends CallFun {
         switch (t) {
             case STRING:
                 return VectorToString(v);
-            case DOUBLE:
+            case NUMERIC:
                 return VectorToDouble(v);
             case INTEGER:
                 return VectorToInt(v);
@@ -169,7 +169,7 @@ public class FuncionC extends CallFun {
                 l.add((o instanceof Integer) ? ((Integer) o).doubleValue() : (((Boolean) o) ? 1.0 : 0.0));
             }
         }
-        return new VectorArit(TipoPrimitivo.DOUBLE, l);
+        return new VectorArit(TipoPrimitivo.NUMERIC, l);
     }
 
     /**

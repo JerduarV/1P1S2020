@@ -12,7 +12,7 @@ package Interprete.Expresiones;
 public enum TipoPrimitivo {
     LIST,
     STRING,
-    DOUBLE,
+    NUMERIC,
     INTEGER,
     BOOL
 }

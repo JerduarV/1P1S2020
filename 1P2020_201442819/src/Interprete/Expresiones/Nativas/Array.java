@@ -47,7 +47,6 @@ public class Array extends CallFun {
         if (param1 instanceof ErrorCompi || param2 instanceof ErrorCompi) {
             return VentanaErrores.getVenErrores().AgregarError("Semántico", "Array: Error en los parámetros", this.getFila(), this.getColumna());
         }
-
         Coleccion datos = (Coleccion) param1,
                 dims = (VectorArit) param2;
 
@@ -61,8 +60,8 @@ public class Array extends CallFun {
 
         Integer tam = 1;
         LinkedList<Integer> dimensiones = new LinkedList<>();
-        for (Object j : dims.getValores()) {
-            Integer h = (Integer) j;
+        for (int k=0; k < dims.getTamanio(); k++) {
+            Integer h = (Integer) dims.Acceder(k);
             if (h < 1) {
                 return VentanaErrores.getVenErrores().AgregarError("Semántico", "Array: Las dimensiones deben tener un tamanio mayor a 0", this.getFila(), this.getColumna());
             }
@@ -71,7 +70,6 @@ public class Array extends CallFun {
         }
 
         LinkedList<Object> valores = new LinkedList<>();
-
         for (int i = 0; i < tam;) {
             for (int y = 0; i < tam && y < datos.getTamanio(); y++) {
                 if (datos.isList()) {

@@ -93,7 +93,7 @@ public class ArrayArit extends Coleccion {
 
     @Override
     public void casteoBoolToDouble() {
-        this.setTipo_dato(TipoPrimitivo.DOUBLE);
+        this.setTipo_dato(TipoPrimitivo.NUMERIC);
         for (Object v : this.getValores()) {
             Coleccion c = (Coleccion) v;
             if (c.isDouble()) {
@@ -117,7 +117,7 @@ public class ArrayArit extends Coleccion {
 
     @Override
     public void CasteoIntADouble() {
-        this.setTipo_dato(TipoPrimitivo.DOUBLE);
+        this.setTipo_dato(TipoPrimitivo.NUMERIC);
         for (Object v : this.getValores()) {
             Coleccion c = (Coleccion) v;
             if (c.isDouble()) {

@@ -42,7 +42,7 @@ public class ListArit extends Coleccion {
     public Coleccion copiar() {
         LinkedList<Object> l = new LinkedList<>();
         for (Object o : this.getValores()) {
-            l.add(((ValorArit) o).getVal());
+            l.add(((Coleccion)((ValorArit) o).getVal()).copiar());
         }
         return new ListArit(l);
     }

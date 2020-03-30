@@ -6,6 +6,7 @@
 package Interprete.Expresiones.Colecciones;
 
 import Interprete.Expresiones.TipoPrimitivo;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -60,7 +61,7 @@ public class ArrayArit extends Coleccion {
                 this.CastToList();
             } else {
                 System.out.println("ENTRO ACA");
-                this.SetPosicion(index, new ListArit(valor));
+                this.SetPosicion(index, new ListArit(new ValorArit(valor)));
                 return;
             }
         } else if (this.isString() || valor.isString()) {
@@ -138,7 +139,7 @@ public class ArrayArit extends Coleccion {
     private void CastToList() {
         //System.out.println("cast");
         for (int i = 0; i < this.getTamanio(); i++) {
-            this.getValores().set(i, new ListArit(this.Acceder(i)));
+            this.getValores().set(i, new ListArit(new ValorArit(this.Acceder(i))));
         }
         this.setTipo_dato(TipoPrimitivo.LIST);
     }

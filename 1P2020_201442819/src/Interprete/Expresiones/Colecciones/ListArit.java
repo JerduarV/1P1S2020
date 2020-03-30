@@ -6,6 +6,7 @@
 package Interprete.Expresiones.Colecciones;
 
 import Interprete.Expresiones.TipoPrimitivo;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 
 /**
@@ -22,6 +23,9 @@ public class ListArit extends Coleccion {
      */
     public ListArit(LinkedList<Object> v) {
         super(TipoPrimitivo.LIST, v);
+        for (int i = 0; i < this.getValores().size(); i++) {
+            this.getValores().set(i, new ValorArit(this.getValores().get(i)));
+        }
     }
 
     /**
@@ -29,7 +33,7 @@ public class ListArit extends Coleccion {
      *
      * @param v
      */
-    public ListArit(Object v) {
+    public ListArit(ValorArit v) {
         super(TipoPrimitivo.LIST, new LinkedList<>());
         this.getValores().add(v);
     }
@@ -38,7 +42,7 @@ public class ListArit extends Coleccion {
     public Coleccion copiar() {
         LinkedList<Object> l = new LinkedList<>();
         for (Object o : this.getValores()) {
-            l.add(o);
+            l.add(((ValorArit) o).getVal());
         }
         return new ListArit(l);
     }
@@ -58,11 +62,17 @@ public class ListArit extends Coleccion {
         return "LIST(" + l + ")";
     }
 
+    /**
+     * Función que seteal la posición en una lista
+     *
+     * @param index
+     * @param valor
+     */
     @Override
     public void SetPosicion(int index, Coleccion valor) {
         if (index > this.getValores().size() - 1) {
             this.RellenarConDefault(index - this.getValores().size());
-            this.getValores().add(valor);
+            this.getValores().add(new ValorArit(valor));
             return;
         }
         //SE ASIGNA EL NUEVO VALOR
@@ -75,11 +85,15 @@ public class ListArit extends Coleccion {
      * @param cantidad cantidad de veces que tendrá que hacerlo
      */
     private void RellenarConDefault(int cantidad) {
-        LinkedList<Object> l = new LinkedList<>();
-        l.add("null");
         for (int i = 0; i < cantidad; i++) {
-            this.getValores().add(new VectorArit(TipoPrimitivo.STRING, l));
+            this.getValores().add(new ValorArit(new VectorArit(TipoPrimitivo.STRING, "null")));
         }
+    }
+
+    @Override
+    public Object Acceder(Integer index) {
+        ValorArit v = (ValorArit) super.Acceder(index); //To change body of generated methods, choose Tools | Templates.
+        return v.getVal();
     }
 
 }

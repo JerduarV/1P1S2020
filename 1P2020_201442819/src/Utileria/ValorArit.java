@@ -27,6 +27,6 @@ public class ValorArit {
 
     @Override
     public String toString() {
-        return this.val + "";
+        return "VAL:" + this.val + "";
     }
 }

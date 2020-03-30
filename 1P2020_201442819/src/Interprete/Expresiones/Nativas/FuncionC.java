@@ -92,7 +92,8 @@ public class FuncionC extends CallFun {
             if (o.isList()) {
                 ListArit la = (ListArit) o;
                 for (Object ob : la.getValores()) {
-                    valores.add(ob);
+                    //System.out.println(ob);
+                    valores.add(((ValorArit)ob).getVal());
                 }
             } else {
                 valores.add(o);

@@ -9,6 +9,7 @@ import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Colecciones.ArrayArit;
 import Interprete.Expresiones.Colecciones.Coleccion;
+import Interprete.Expresiones.Colecciones.ListArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
 import Interprete.NodoAST;
@@ -66,6 +67,8 @@ public class For extends Instruccion {
 
             if (col instanceof VectorArit) {
                 v = new VectorArit(col.getTipo_dato(), (ValorArit)v);
+            }else if(col instanceof ListArit){
+                v = ((ValorArit)v).getVal();
             }
 
             //CAMBIO EL VALOR DE LA VARIABLE EN LA TABLA DE SÍMBOLOS

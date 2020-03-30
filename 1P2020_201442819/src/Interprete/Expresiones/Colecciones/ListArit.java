@@ -76,7 +76,8 @@ public class ListArit extends Coleccion {
             return;
         }
         //SE ASIGNA EL NUEVO VALOR
-        this.getValores().set(index, valor);
+        //this.getValores().set(index, valor);
+        ((ValorArit) this.getValores().get(index)).setVal(valor);
     }
 
     /**

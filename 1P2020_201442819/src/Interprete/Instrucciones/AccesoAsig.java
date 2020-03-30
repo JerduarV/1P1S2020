@@ -18,6 +18,7 @@ import Interprete.Expresiones.Identificador;
 import Interprete.Expresiones.Indice;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.ValorArit;
 import java.util.LinkedList;
 
 /**
@@ -397,6 +398,10 @@ public class AccesoAsig extends Instruccion {
             }
 
             Object estruct = col.Acceder(y - 1);
+            
+            if(lista_indices.get(i).isSimple()){
+                estruct = new ListArit((ValorArit)col.getValores().get(y-1));
+            }
 
             if (!(estruct instanceof Coleccion)) {
                 return VentanaErrores.getVenErrores().AgregarError("Semantico", "Se esperaba una estructura", this.getFila(), this.getColumna());

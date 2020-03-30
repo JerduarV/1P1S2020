@@ -136,7 +136,7 @@ public class ArrayArit extends Coleccion {
     }
 
     private void CastToList() {
-        System.out.println("cast");
+        //System.out.println("cast");
         for (int i = 0; i < this.getTamanio(); i++) {
             this.getValores().set(i, new ListArit(this.Acceder(i)));
         }

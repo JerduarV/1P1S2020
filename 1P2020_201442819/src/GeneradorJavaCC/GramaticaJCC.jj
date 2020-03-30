@@ -26,6 +26,7 @@ public class Gramatica {
         cad = cad.replace("\\","\\");
         cad = cad.replace("\\n","\n");
         cad = cad.replace("\\t","\t");
+        cad = cad.replace("\\\"","\"");
         return new Primitivo(fila, col, cad);
     }
 
@@ -108,12 +109,13 @@ MORE :
 
 <STRING_STATE> MORE:
 {
-    <~["\""]>
+        "\\\""
+    |   <~["\""]>
 }
 
 <STRING_STATE> TOKEN:
 {
-        < STRING:   "\"">   :   DEFAULT 
+        < STRING:   "\"">   :   DEFAULT
 }
 
 /** Fin Lexico */
@@ -168,9 +170,9 @@ NodoAST INSTR() :
     NodoAST i;
 }
 {
-        LOOKAHEAD(3) i = DEC_FUN()              {return i;}
+        LOOKAHEAD(3) i = DEC_FUN()              {return i;} //ID = EXP | FUNCION
     |   LOOKAHEAD(2) i = CALL_FUN() (<PTCOMA>)? {return i;}
-    |   LOOKAHEAD(2) i = ASIGNACION()           {return i;}
+    |   LOOKAHEAD(2) i = ASIGNACION()           {return i;} //A[] = EXP
     |   i = RETURN() (<PTCOMA>)?                {return i;}
     |   i = IF()                                {return i;}
     |   i = WHILE()                             {return i;}
@@ -343,6 +345,7 @@ Instruccion DEC_FUN() :
 {
         t = <IDENTIFICADOR> <IGUAL>
         (   
+            /*ID = ( L_PARAM ) => BLOQUE */
             LOOKAHEAD(4) <PARIZQ> (l = L_PARAM_FORM())? <PARDER> <FLECHA> b = BLOQUE()
 
             /* id = exp */
@@ -405,7 +408,7 @@ Expresion EXP() :
 {
         e = EXP_L()
         (
-            <TERNARIO> e1 = EXP_L() <DOSPUNTOS> e2 = EXP_L()    {e = new ExpTernaria(e,e1,e2,token.beginLine,token.beginColumn);}
+            <TERNARIO> e1 = EXP() <DOSPUNTOS> e2 = EXP()    {e = new ExpTernaria(e,e1,e2,token.beginLine,token.beginColumn);}
         )*
         {return e;}
         
@@ -529,6 +532,9 @@ Expresion EXP_POT() :
     {return e;}
 }
 
+/**
+    EXP_A ->    EXP_U ( L_INDEX )?
+*/
 Expresion EXP_A() :
 {
     Expresion e;
@@ -595,6 +601,7 @@ Expresion PRIMITIVO() :
     |   <DECIMAL>                           {return new Primitivo(token.beginLine, token.beginColumn, Double.parseDouble(token.image));}
     |   <RTRUE>                             {return new Primitivo(token.beginLine, token.beginColumn, true);}
     |   <RFALSE>                            {return new Primitivo(token.beginLine, token.beginColumn, false);}
+    |   <RNULL>                             {return new Primitivo(token.beginLine, token.beginColumn, "null");}
     |   LOOKAHEAD(2) e = CALL_FUN()         {return e;}
     |   t = <STRING>                        {return this.procesarCadena(t.image, token.beginLine, token.beginColumn);}
     |   <PARIZQ> e = EXP() <PARDER>         {return e;}

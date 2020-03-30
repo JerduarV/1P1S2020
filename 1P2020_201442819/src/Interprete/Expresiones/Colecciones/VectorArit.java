@@ -169,5 +169,27 @@ public class VectorArit extends Coleccion {
         }
         return new VectorArit(this.getTipo_dato(), l);
     }
+    
+    public ListArit vector_lista = null;
+
+    /**
+     * Retorna un nueva lista con los valores del vector
+     *
+     * @return ListArit
+     */
+    public ListArit vectorToList() {
+        LinkedList<Object> l = new LinkedList<>();
+        for (Object o : this.getValores()) {
+            VectorArit vec = new VectorArit(this.getTipo_dato(), o);
+            l.add(vec);
+        }
+        vector_lista = new ListArit(l);
+        this.setTipo_dato(TipoPrimitivo.LIST);
+        return vector_lista;
+    }
+    
+    public boolean meTransformeALista(){
+        return this.getTipo_dato() == TipoPrimitivo.LIST;
+    }
 
 }

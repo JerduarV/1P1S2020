@@ -263,7 +263,7 @@ EXP3 ::=
     |   PRIMITIVO:e                 {:RESULT = e;:}
     |   EXP3:e L_INDEX:l            {:RESULT = new AccesoGet(e,l);:}
     |   IDENTIFICADOR:id            {:RESULT = new Identificador(id,idleft,idright);:}  
-    |   RNULL
+    |   RNULL:e                     {:RESULT = new Primitivo(eleft,eright,"null");:}
 ;
 
 PRIMITIVO ::=

@@ -1904,7 +1904,10 @@ class CUP$Sintactico$actions {
           case 85: // EXP3 ::= RNULL 
             {
               Expresion RESULT =null;
-
+		int eleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String e = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		RESULT = new Primitivo(eleft,eright,"null");
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXP3",20, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;

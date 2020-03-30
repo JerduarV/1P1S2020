@@ -27,6 +27,12 @@ public abstract class Coleccion {
      */
     private TipoPrimitivo tipo_dato;
 
+    /**
+     * Constructor de la clase colección
+     *
+     * @param t Tipo de dato
+     * @param v Lista de valores
+     */
     public Coleccion(TipoPrimitivo t, LinkedList<Object> v) {
         this.valores = v;
         this.tipo_dato = t;
@@ -41,6 +47,11 @@ public abstract class Coleccion {
         return this.getTipo_dato().toString().toLowerCase();
     }
 
+    /**
+     * Retonar el tamanio lineal de la colección
+     *
+     * @return Integer
+     */
     public int getTamanio() {
         return this.valores.size();
     }
@@ -56,9 +67,9 @@ public abstract class Coleccion {
     }
 
     /**
-     * 
+     *
      * @param index
-     * @param valor 
+     * @param valor
      */
     public abstract void SetPosicion(int index, Coleccion valor);
 
@@ -160,28 +171,40 @@ public abstract class Coleccion {
     public void CasteoIntADouble() {
         this.setTipo_dato(TipoPrimitivo.NUMERIC);
         for (int i = 0; i < this.getValores().size(); i++) {
+            if (this.Acceder(i) instanceof Double) {
+                continue;
+            }
             Integer e = (Integer) this.Acceder(i);
             Double nuevo = e.doubleValue();
-            this.getValores().set(i, new ValorArit(nuevo));
+            ((ValorArit) this.getValores().get(i)).setVal(nuevo);
         }
     }
 
     /**
-     * Casteo de los elementos booleanos del arreglo a numericos
+     * Casteo de los elementos booleanos del arreglo a enteros
      */
     public void casteoBoolToInt() {
         this.setTipo_dato(TipoPrimitivo.INTEGER);
         for (int i = 0; i < this.getValores().size(); i++) {
+            if (this.Acceder(i) instanceof Integer) {
+                continue;
+            }
             Boolean e = (Boolean) this.Acceder(i);
-            this.getValores().set(i, new ValorArit(e ? 1 : 0));
+            ((ValorArit) this.getValores().get(i)).setVal(e ? 1 : 0);
         }
     }
 
+    /**
+     * Castea los elementos booleanos del arreglo a numeric
+     */
     public void casteoBoolToDouble() {
         this.setTipo_dato(TipoPrimitivo.NUMERIC);
         for (int i = 0; i < this.getValores().size(); i++) {
+            if (this.Acceder(i) instanceof Double) {
+                continue;
+            }
             Boolean e = (Boolean) this.Acceder(i);
-            this.getValores().set(i, new ValorArit(e ? 1.0 : 0.0));
+            ((ValorArit) this.getValores().get(i)).setVal(e ? 1.0 : 0.0);
         }
     }
 

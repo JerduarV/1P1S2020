@@ -7,6 +7,7 @@ package Interprete.Instrucciones;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
+import Interprete.Expresiones.Colecciones.ArrayArit;
 import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
@@ -58,7 +59,8 @@ public class For extends Instruccion {
 
         Coleccion col = (Coleccion) valor;
 
-        for (Object v : col.getValores()) {
+        for (int i = 0; i < col.getTamanio(); i++) {
+            Object v = col.getValores().get(i);
             TablaSimbolos nueva = new TablaSimbolos(t);
             nueva.IncrementarDisplay();
 
@@ -70,6 +72,16 @@ public class For extends Instruccion {
             nueva.GuardarVariable(id, v);
 
             Object result = this.Recorrer(nueva);
+            
+            //ESTO HACE POSIBLE EL CASTEO DE LAS ESTRUCTURAS Y SU ACTUALIZACIÓN
+            if(col instanceof VectorArit || col instanceof ArrayArit){
+                if(v instanceof VectorArit){
+                    if(((VectorArit) v).meTransformeALista()){
+                        v = ((VectorArit)v).vector_lista;
+                    }
+                }
+                col.SetPosicion(i, (Coleccion)v);
+            }
 
             if (result instanceof Break) {
                 break;

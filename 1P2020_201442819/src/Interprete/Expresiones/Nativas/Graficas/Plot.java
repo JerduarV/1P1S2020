@@ -12,6 +12,7 @@ import Interprete.Expresiones.CallFun;
 import Interprete.Expresiones.Colecciones.MatrixArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.TipoPrimitivo;
 import TablaSimbolos.TablaSimbolos;
 import java.awt.BasicStroke;
 import java.io.File;
@@ -109,7 +110,7 @@ public class Plot extends CallFun {
                 VentanaErrores.getVenErrores().AgregarError("Warning", "Line: El parámetro de tipo no coincide con ninguno conocido", this.getFila(), this.getColumna());
                 this.GraficaO(dataset, nombre, lbx.Acceder(0).toString(), lby.Acceder(0).toString());
         }
-        return null;
+        return new VectorArit(TipoPrimitivo.STRING, "null");
     }
 
     /**
@@ -153,13 +154,13 @@ public class Plot extends CallFun {
 
         JFreeChart chart = ChartFactory.createScatterPlot(nombre, lbx.Acceder(0).toString(), lby.Acceder(0).toString(), dataset, PlotOrientation.VERTICAL, true, true, true);
         int width = 640, height = 480;
-        File LineChart = new File("Graficas\\" + nombre + i + ".jpeg");
+        File LineChart = new File("Graficas\\PLOT_1" + nombre + i + ".jpeg");
         try {
             ChartUtilities.saveChartAsJPEG(LineChart, chart, width, height);
         } catch (IOException ex) {
             Logger.getLogger(Plot.class.getName()).log(Level.SEVERE, null, ex);
         }
-        VentanaEditor.InsertarGrafica("Graficas\\" + nombre + i + ".jpeg", nombre);
+        VentanaEditor.InsertarGrafica("Graficas\\PLOT_1" + nombre + i + ".jpeg", nombre);
         i++;
         return null;
     }
@@ -175,13 +176,13 @@ public class Plot extends CallFun {
     private void GraficaL(XYSeriesCollection dataset, String titulo, String lbx, String lby) {
         JFreeChart chart = ChartFactory.createXYLineChart(titulo, lbx, lby, dataset, PlotOrientation.VERTICAL, false, false, false);
         int width = 640, height = 480;
-        File LineChart = new File("Graficas\\" + titulo + i + ".jpeg");
+        File LineChart = new File("Graficas\\PLOT_2" + titulo + i + ".jpeg");
         try {
             ChartUtilities.saveChartAsJPEG(LineChart, chart, width, height);
         } catch (IOException ex) {
             Logger.getLogger(Plot.class.getName()).log(Level.SEVERE, null, ex);
         }
-        VentanaEditor.InsertarGrafica("Graficas\\" + titulo + i + ".jpeg", titulo);
+        VentanaEditor.InsertarGrafica("Graficas\\PLOT_2" + titulo + i + ".jpeg", titulo);
         i++;
     }
 
@@ -201,13 +202,13 @@ public class Plot extends CallFun {
         plot.setRenderer(renderer);
 
         int width = 640, height = 480;
-        File LineChart = new File("Graficas\\" + titulo + i + ".jpeg");
+        File LineChart = new File("Graficas\\PLOT_3" + titulo + i + ".jpeg");
         try {
             ChartUtilities.saveChartAsJPEG(LineChart, chart, width, height);
         } catch (IOException ex) {
             Logger.getLogger(Plot.class.getName()).log(Level.SEVERE, null, ex);
         }
-        VentanaEditor.InsertarGrafica("Graficas\\" + titulo + i + ".jpeg", titulo);
+        VentanaEditor.InsertarGrafica("Graficas\\PLOT_3" + titulo + i + ".jpeg", titulo);
         i++;
     }
 
@@ -228,13 +229,13 @@ public class Plot extends CallFun {
         plot.setRenderer(renderer);
 
         int width = 640, height = 480;
-        File LineChart = new File("Graficas\\" + titulo + i + ".jpeg");
+        File LineChart = new File("Graficas\\PLOT_4" + titulo + i + ".jpeg");
         try {
             ChartUtilities.saveChartAsJPEG(LineChart, chart, width, height);
         } catch (IOException ex) {
             Logger.getLogger(Plot.class.getName()).log(Level.SEVERE, null, ex);
         }
-        VentanaEditor.InsertarGrafica("Graficas\\" + titulo + i + ".jpeg", titulo);
+        VentanaEditor.InsertarGrafica("Graficas\\PLOT_4" + titulo + i + ".jpeg", titulo);
         i++;
     }
 

@@ -11,6 +11,7 @@ import Interprete.ErrorCompi;
 import Interprete.Expresiones.CallFun;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.TipoPrimitivo;
 import TablaSimbolos.TablaSimbolos;
 import java.io.File;
 import java.io.IOException;
@@ -85,7 +86,7 @@ public class Barplot extends CallFun {
             Logger.getLogger(Barplot.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return null;
+        return new VectorArit(TipoPrimitivo.STRING, "null");
 
     }
 

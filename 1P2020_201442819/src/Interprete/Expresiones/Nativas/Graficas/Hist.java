@@ -11,6 +11,7 @@ import Interprete.ErrorCompi;
 import Interprete.Expresiones.CallFun;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.TipoPrimitivo;
 import TablaSimbolos.TablaSimbolos;
 import java.io.File;
 import java.io.IOException;
@@ -79,15 +80,15 @@ public class Hist extends CallFun {
 
         JFreeChart chart = ChartFactory.createHistogram(titulo.Acceder(0).toString(), lb.Acceder(0).toString(), "", dataset, PlotOrientation.VERTICAL, false, true, true);
         int width = 640, height = 480;
-        File pie = new File("Graficas\\" + titulo.Acceder(0).toString() + i + ".jpeg");
+        File pie = new File("Graficas\\Hist_" + titulo.Acceder(0).toString() + i + ".jpeg");
         try {
             ChartUtilities.saveChartAsJPEG(pie, chart, width, height);
         } catch (IOException ex) {
             Logger.getLogger(Hist.class.getName()).log(Level.SEVERE, null, ex);
         }
-        VentanaEditor.InsertarGrafica("Graficas\\" + titulo.Acceder(0).toString() + i + ".jpeg", titulo.Acceder(0).toString());
+        VentanaEditor.InsertarGrafica("Graficas\\Hist_" + titulo.Acceder(0).toString() + i + ".jpeg", titulo.Acceder(0).toString());
         i++;
-        return null;
+        return new VectorArit(TipoPrimitivo.STRING, "null");
     }
 
 }

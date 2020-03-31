@@ -11,6 +11,7 @@ import Interprete.ErrorCompi;
 import Interprete.Expresiones.CallFun;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.TipoPrimitivo;
 import TablaSimbolos.TablaSimbolos;
 import java.io.File;
 import java.io.IOException;
@@ -90,15 +91,15 @@ public class Pie extends CallFun {
             
             JFreeChart pieChar = ChartFactory.createPieChart(nombre, dataset, true, true, false);
             int width = 640, height = 480;
-            File pie = new File("Graficas\\" + nombre + i + ".jpeg");
+            File pie = new File("Graficas\\Pie_" + nombre + i + ".jpeg");
             ChartUtilities.saveChartAsJPEG(pie, pieChar, width, height);
-            VentanaEditor.InsertarGrafica("Graficas\\" + nombre + i + ".jpeg", nombre);
+            VentanaEditor.InsertarGrafica("Graficas\\Pie_" + nombre + i + ".jpeg", nombre);
             i++;
 
         } catch (IOException ex) {
             Logger.getLogger(Pie.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return new VectorArit(TipoPrimitivo.STRING, "null");
     }
 
 }

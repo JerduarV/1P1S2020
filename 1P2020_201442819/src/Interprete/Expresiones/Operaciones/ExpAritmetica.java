@@ -97,7 +97,11 @@ public class ExpAritmetica extends Operacion {
             case MULT:
                 return this.MultiplicacionVectores(vector_izq, vector_der);
             case DIV:
+                try {
                 return this.DivisionVectores(vector_izq, vector_der);
+            } catch (ArithmeticException e) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "División por 0", this.getFila(), this.getColumna());
+            }
             case MOD:
                 return this.ModuloVectoresBase(vector_izq, vector_der);
             case POT:
@@ -270,7 +274,6 @@ public class ExpAritmetica extends Operacion {
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede sumar double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
 
-
                 case BOOL:
                     switch (vector_der.getTipo_dato()) {
                         //BOOL + STRING
@@ -440,7 +443,6 @@ public class ExpAritmetica extends Operacion {
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede restar double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
 
-
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede restar " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
             }
@@ -564,7 +566,6 @@ public class ExpAritmetica extends Operacion {
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede multiplicar double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
-
 
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede multiplicar " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
@@ -810,7 +811,6 @@ public class ExpAritmetica extends Operacion {
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede dividir double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
 
-
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede dividir " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
             }
@@ -932,7 +932,6 @@ public class ExpAritmetica extends Operacion {
                         default:
                             return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular mla potencia double con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());
                     }
-
 
                 default:
                     return VentanaErrores.getVenErrores().AgregarError("Semantico", "No se puede calcular mla potencia " + vector_izq.getTipo_dato() + " con " + vector_der.getTipo_dato(), this.getFila(), this.getColumna());

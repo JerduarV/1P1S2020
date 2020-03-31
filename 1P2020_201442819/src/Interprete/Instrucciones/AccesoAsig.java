@@ -90,8 +90,8 @@ public class AccesoAsig extends Instruccion {
         } else if (o instanceof ListArit) {
             return this.AccesoSetList((ListArit) o, t, this.lista_index);
         }
-
-        throw new UnsupportedOperationException("Todavía no tengo asignación para esa estructura"); //To change body of generated methods, choose Tools | Templates.
+        
+        return null;
     }
 
     /**
@@ -304,7 +304,7 @@ public class AccesoAsig extends Instruccion {
         if (i instanceof VectorArit) {
             index = (VectorArit) i;
         } else {
-            throw new UnsupportedOperationException("No he validado que pasa cuando vienen otras cosas diferentes a vectores en el indice -> ACCESO GET");
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Se esperaba un entero", this.getFila(), this.getColumna());
         }
 
         if (!index.isInteger()) {
@@ -340,7 +340,7 @@ public class AccesoAsig extends Instruccion {
         //SEA UNA LISTA
         if (nuevo_valor.isList()) {
             ListArit lista = vector.vectorToList();
-            lista.SetPosicion(y - 1, (Coleccion)nuevo_valor.Acceder(0));
+            lista.SetPosicion(y - 1, nuevo_valor.copiar());
             if (!estoyEnArray) {
                 t.GuardarVariable(this.id.getId(), lista);
             } else {
@@ -456,7 +456,7 @@ public class AccesoAsig extends Instruccion {
             //SEA UNA LISTA
             if (nuevo_valor.isList()) {
                 ListArit li = ((VectorArit) col).vectorToList();
-                lista.SetPosicion(h - 1, (Coleccion)nuevo_valor.Acceder(0));
+                lista.SetPosicion(h - 1, nuevo_valor.copiar());
                 col = li;
             }
 

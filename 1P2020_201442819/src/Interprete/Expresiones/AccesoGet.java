@@ -113,7 +113,7 @@ public class AccesoGet extends Expresion {
         if (i instanceof VectorArit) {
             index = (VectorArit) i;
         } else {
-            throw new UnsupportedOperationException("No he validado que pasa cuando vienen otras cosas diferentes a vectores en el indice -> ACCESO GET");
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Se espera un entero", this.getFila(), this.getColumna());
         }
 
         if (!index.isInteger()) {
@@ -155,7 +155,7 @@ public class AccesoGet extends Expresion {
         if (in instanceof VectorArit) {
             index = (VectorArit) index;
         } else {
-            throw new UnsupportedOperationException("No he validado que pasa cuando vienen otras cosas diferentes a vectores en el indice -> ACCESO GET");
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Se esperaba un entero positivo", this.getFila(), this.getColumna());
         }
 
         if (!index.isInteger()) {

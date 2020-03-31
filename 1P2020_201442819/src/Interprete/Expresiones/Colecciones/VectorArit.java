@@ -180,7 +180,7 @@ public class VectorArit extends Coleccion {
     public ListArit vectorToList() {
         LinkedList<Object> l = new LinkedList<>();
         for (Object o : this.getValores()) {
-            VectorArit vec = new VectorArit(this.getTipo_dato(), o);
+            VectorArit vec = new VectorArit(this.getTipo_dato(), ((ValorArit)o).getVal());
             l.add(vec);
         }
         vector_lista = new ListArit(l);

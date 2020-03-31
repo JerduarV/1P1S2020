@@ -88,7 +88,7 @@ public class ExpLogica extends Operacion {
             }
         }
 
-        throw new UnsupportedOperationException("No soporto operaciones lógicas que no sean vectores"); //To change body of generated methods, choose Tools | Templates.
+        return VentanaErrores.getVenErrores().AgregarError("Semantico", "Los operandos deben ser booleanos", this.getFila(), this.getColumna());
     }
 
     /**

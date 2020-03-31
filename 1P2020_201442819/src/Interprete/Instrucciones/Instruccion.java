@@ -121,7 +121,7 @@ public abstract class Instruccion extends NodoAST {
             }
             return (Boolean) vc.Acceder(0);
         } else {
-            throw new UnsupportedOperationException("Solo puedo manejar vectores en el while");
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Se esperaba un valor booleano", this.getFila(), this.getColumna());
         }
     }
 

@@ -53,7 +53,7 @@ public class ExpRelacional extends Operacion {
             VectorArit vector_der = (VectorArit) val_der;
             return this.ComparacionVectores(vector_izq, vector_der);
         }
-        throw new UnsupportedOperationException("Solo aguanto comparación de vectores"); //To change body of generated methods, choose Tools | Templates.
+        return VentanaErrores.getVenErrores().AgregarError("Semantic", "Los operandos deben ser vectores primitivos", this.getFila(), this.getColumna());
     }
 
     /**

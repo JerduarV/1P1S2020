@@ -7,13 +7,16 @@ package Interprete.Instrucciones;
 
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
+import Interprete.Expresiones.AccesoGet;
 import Interprete.Expresiones.Colecciones.ArrayArit;
 import Interprete.Expresiones.Colecciones.Coleccion;
 import Interprete.Expresiones.Colecciones.ListArit;
 import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.Identificador;
 import Interprete.NodoAST;
 import TablaSimbolos.TablaSimbolos;
+import Utileria.DumbExpresion;
 import Utileria.Retorno;
 import Utileria.ValorArit;
 import java.util.LinkedList;
@@ -76,13 +79,36 @@ public class For extends Instruccion {
 
             Object result = this.Recorrer(nueva);
             
+            v = nueva.BusarVariable(id);
+            
+            if(col instanceof VectorArit){
+                if(v instanceof ListArit){
+                    col = ((VectorArit)col).vectorToList();
+                    if(this.e instanceof Identificador){
+                        t.GuardarVariable(((Identificador)this.e).getId(), col);
+                    }else if(this.e instanceof AccesoGet){
+                        AccesoGet get = (AccesoGet)this.e;
+                        AccesoAsig asig = new AccesoAsig(get, new DumbExpresion((Coleccion)v, this.getFila(), this.getColumna()));
+                        Object res = asig.Ejecutar(t);
+                        if(res instanceof ErrorCompi){
+                            return res;
+                        }
+                    }
+                }
+                col.SetPosicion(i, (Coleccion)v);
+            }
+            
             //ESTO HACE POSIBLE EL CASTEO DE LAS ESTRUCTURAS Y SU ACTUALIZACIÓN
-            if(col instanceof VectorArit || col instanceof ArrayArit){
+            if(col instanceof ArrayArit){
                 if(v instanceof VectorArit){
                     if(((VectorArit) v).meTransformeALista()){
                         v = ((VectorArit)v).vector_lista;
                     }
                 }
+                col.SetPosicion(i, (Coleccion)v);
+            }
+            
+            if(col instanceof ListArit){
                 col.SetPosicion(i, (Coleccion)v);
             }
 

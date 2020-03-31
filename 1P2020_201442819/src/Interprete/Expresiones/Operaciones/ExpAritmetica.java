@@ -78,7 +78,7 @@ public class ExpAritmetica extends Operacion {
             }
         }
 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return VentanaErrores.getVenErrores().AgregarError("Semantico", "Operación no soportada", this.getFila(), this.getColumna());
     }
 
     /**

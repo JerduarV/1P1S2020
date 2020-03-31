@@ -76,7 +76,7 @@ public class Si extends Instruccion {
             }
             b = (Boolean) vc.Acceder(0);
         } else {
-            throw new UnsupportedOperationException("No puedo manejar otras estructuras en el if");
+            return VentanaErrores.getVenErrores().AgregarError("Semantico", "Se esperaba un vector booleano", this.getColumna(), this.getColumna());
         }
 
         TablaSimbolos nuevo = new TablaSimbolos(t);

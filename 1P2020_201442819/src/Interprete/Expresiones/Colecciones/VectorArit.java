@@ -144,11 +144,11 @@ public class VectorArit extends Coleccion {
     @Override
     public String toString() {
         if (this.getValores().size() == 1) {
-            return this.isString() ? "\"" + this.getValores().getFirst().toString() + "\"" : this.getValores().getFirst().toString();
+            return this.isString() ? this.getValores().getFirst().toString() : this.getValores().getFirst().toString();
         } else {
             String l = "", aux = "";
             for (Object e : this.getValores()) {
-                l += aux + (this.isString() ? "\"" + e.toString() + "\"" : e.toString());
+                l += aux + (this.isString() ? e.toString() : e.toString());
                 aux = ",";
             }
             return "[" + l + "]";

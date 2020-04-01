@@ -58,16 +58,16 @@ public class VectorArit extends Coleccion {
 
         VectorArit nuevo_valor = (VectorArit) valor;
 
-        //SI NO TIENEN EL MISMO TIPO DE DATO HACE FALTA CASTEAR PRIMERO
-        if (this.getTipo_dato() != nuevo_valor.getTipo_dato()) {
-            this.casteoImplicito(nuevo_valor);
-        }
-
         //SE RELLENA LAS CASILLAS INTERMEDIAS CON EL VALOR POR DEFECTO
         if (index > this.getValores().size() - 1 && !(this instanceof MatrixArit)) {
             this.RellenarConDefault(index - this.getValores().size());
             this.getValores().add(new ValorArit(nuevo_valor.Acceder(0)));
             return;
+        }
+        
+        //SI NO TIENEN EL MISMO TIPO DE DATO HACE FALTA CASTEAR PRIMERO
+        if (this.getTipo_dato() != nuevo_valor.getTipo_dato()) {
+            this.casteoImplicito(nuevo_valor);
         }
 
         //SE ASIGNA EL NUEVO VALOR

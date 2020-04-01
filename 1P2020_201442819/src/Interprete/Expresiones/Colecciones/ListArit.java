@@ -42,7 +42,7 @@ public class ListArit extends Coleccion {
     public Coleccion copiar() {
         LinkedList<Object> l = new LinkedList<>();
         for (Object o : this.getValores()) {
-            l.add(((Coleccion)((ValorArit) o).getVal()).copiar());
+            l.add(((Coleccion) ((ValorArit) o).getVal()).copiar());
         }
         return new ListArit(l);
     }
@@ -54,9 +54,25 @@ public class ListArit extends Coleccion {
      */
     @Override
     public String toString() {
-        String l = "", aux = "";
+        String l = "", aux = ">>>";
+        int i = 1;
         for (Object e : this.getValores()) {
-            l += aux + e.toString();
+            l += aux + "[[" + i++ + "]]  " + e.toString() + "\n";
+        }
+        return "LIST(\n" + l + ">>>)";
+    }
+
+    /**
+     * Método imprimir que se usará en las lista que se encuentran dentor de los
+     * array
+     *
+     * @return String
+     */
+    public String Imprimir() {
+        String l = "", aux = "";
+        for (int k = 0; k < this.getTamanio(); k++) {
+            Object e = this.Acceder(k);
+            l += aux + ((e instanceof ListArit) ? ((ListArit) e).Imprimir() : e.toString());
             aux = ",";
         }
         return "LIST(" + l + ")";

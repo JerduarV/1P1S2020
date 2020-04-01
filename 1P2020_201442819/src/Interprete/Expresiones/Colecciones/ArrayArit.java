@@ -49,18 +49,18 @@ public class ArrayArit extends Coleccion {
         if (valor.getTipo_dato() == this.getTipo_dato()) {
             this.getValores().set(index, valor);
         } else {
-            System.out.println(valor.getTipo_dato() + " " + this.getTipo_dato());
+            //System.out.println(valor.getTipo_dato() + " " + this.getTipo_dato());
             this.Casteo(valor, index);
         }
     }
 
     public void Casteo(Coleccion valor, int index) {
         if (this.isList() || valor.isList()) {
-            System.out.println("LISTA");
+            //System.out.println("LISTA");
             if (!this.isList()) {
                 this.CastToList();
             } else {
-                System.out.println("ENTRO ACA");
+                //System.out.println("ENTRO ACA");
                 this.SetPosicion(index, new ListArit(new ValorArit(valor)));
                 return;
             }
@@ -152,7 +152,7 @@ public class ArrayArit extends Coleccion {
                 cad = "";
                 String aux = "";
                 for (Object v : this.getValores()) {
-                    cad += aux + v.toString();
+                    cad += aux + ((v instanceof ListArit) ? ((ListArit)v).Imprimir() : v.toString());
                     aux = ",";
                 }
                 return cad;
@@ -220,7 +220,7 @@ public class ArrayArit extends Coleccion {
             cad += " [" + (y + 1) + "]";
             for (int k = 0; k < this.getLista_dim().get(1); k++) {
                 int index = k * this.getLista_dim().get(0) + y + suma;
-                cad += " |" + this.Acceder(index).toString()  + "|";
+                cad += " |" + ((this.Acceder(index) instanceof ListArit ? ((ListArit)this.Acceder(index)).Imprimir() : this.Acceder(index).toString()))  + "|";
             }
             cad += "\n>>>";
         }

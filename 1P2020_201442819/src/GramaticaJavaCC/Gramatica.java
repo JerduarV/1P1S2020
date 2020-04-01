@@ -192,7 +192,7 @@ l.add(i);
         Token t;
         do{
             t = getNextToken();
-        }while(t.kind != PTCOMA && t.kind != LLAVEIZQ && t.kind != EOF);
+        }while(t.kind != PTCOMA && t.kind != LLAVEDER && t.kind != EOF);
         if(t.kind == EOF){{if ("" != null) return null;}}
         {if ("" != null) return INSTR();}
     }

@@ -205,7 +205,7 @@ public abstract class Operacion extends Expresion {
             case MENORIGUAL:
                 return "<=";
             case MOD:
-                return "%";
+                return "%%";
             case MULT:
                 return "*";
             case RESTA:

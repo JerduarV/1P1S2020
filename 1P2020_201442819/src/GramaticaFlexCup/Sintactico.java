@@ -775,7 +775,7 @@ class CUP$Sintactico$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		LinkedList<NodoAST> l = (LinkedList<NodoAST>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		AST = new Arbol(l);System.out.println("PARSER FINALIZADO");
+		AST = new Arbol(l);
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("INI",0, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;

@@ -68,6 +68,9 @@ public abstract class Instruccion extends NodoAST {
             String l = NodoAST.getIdNodo("LSENT");
             Interprete.Interprete.Conectar(padre, l);
             for (NodoAST n : this.getCuerpo()) {
+                if (n == null) {
+                    continue;
+                }
                 n.dibujar(l);
             }
         }
@@ -83,6 +86,9 @@ public abstract class Instruccion extends NodoAST {
     public Object Recorrer(TablaSimbolos t) {
         if (cuerpo != null) {
             for (NodoAST i : this.cuerpo) {
+                if (i == null) {
+                    continue;
+                }
                 if (i instanceof DecFuncion) {
                     continue;
                 }

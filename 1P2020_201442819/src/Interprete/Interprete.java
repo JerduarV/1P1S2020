@@ -77,10 +77,6 @@ public class Interprete {
             Gramatica parser = new Gramatica(new BufferedReader(new StringReader(contenido)));
             Arbol a = parser.INI();
             
-            if(VentanaErrores.getVenErrores().getErrores() > 0){
-                return;
-            }
-            
             this.ConstruirDot(a,"JAVACC");
             TablaSimbolos global = new TablaSimbolos(null);
             a.Ejecutar(global);

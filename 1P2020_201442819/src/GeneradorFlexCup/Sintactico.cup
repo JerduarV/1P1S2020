@@ -132,7 +132,8 @@ INSTR ::=
     |   CALL_FUN:c          {:RESULT = c;:}
     |   CALL_FUN:c PTCOMA   {:RESULT = c;:}
     |   error PTCOMA
-    |   error
+    |   error LLAVEDER
+    |   error PARDER
 ;
 
 SWITCH ::=

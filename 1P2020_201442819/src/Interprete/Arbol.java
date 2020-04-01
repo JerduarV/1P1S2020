@@ -138,7 +138,7 @@ public class Arbol extends Instruccion {
 
     @Override
     public void dibujar(String padre) {
-        String n = NodoAST.getIdNodo("S");
+        String n = NodoAST.getIdNodo(padre);
         this.DibujarCuerpo(n);
     }
 

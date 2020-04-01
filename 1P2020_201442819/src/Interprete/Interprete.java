@@ -53,7 +53,7 @@ public class Interprete {
 
             Arbol a = pars.getAST();
             if (a != null) {
-                this.ConstruirDot(a);
+                this.ConstruirDot(a,"FLEX_CUP");
                 TablaSimbolos global = new TablaSimbolos(null);
                 a.Ejecutar(global);
             } else {
@@ -71,10 +71,17 @@ public class Interprete {
      * @param contenido Cadena de entrada
      */
     public void InterpretarJavaCC(String contenido) {
+        VentanaErrores.getVenErrores().LimpiarTabla();
+        
         try {
             Gramatica parser = new Gramatica(new BufferedReader(new StringReader(contenido)));
             Arbol a = parser.INI();
-            this.ConstruirDot(a);
+            
+            if(VentanaErrores.getVenErrores().getErrores() > 0){
+                return;
+            }
+            
+            this.ConstruirDot(a,"JAVACC");
             TablaSimbolos global = new TablaSimbolos(null);
             a.Ejecutar(global);
         } catch (ParseException e) {
@@ -89,9 +96,9 @@ public class Interprete {
      *
      * @param tree Árbol a dibujar
      */
-    private void ConstruirDot(Arbol tree) {
+    private void ConstruirDot(Arbol tree, String parser) {
         dot = "digraph G{\n\tnode[shape=\"box\"];\n";
-        tree.dibujar(null);
+        tree.dibujar(parser);
         dot += "}\n";
         this.DibujarArbol();
     }

@@ -9,6 +9,7 @@ PARSER_BEGIN(Gramatica)
 
 package GramaticaJavaCC; 
 
+import Editor.VentanaErrores;
 import Interprete.Arbol;
 import Interprete.Expresiones.*;
 import Interprete.Expresiones.Operaciones.*;
@@ -100,6 +101,9 @@ TOKEN : {
     |   < TERNARIO:     "?"         >
 
     |   <IDENTIFICADOR: ((["A"-"Z","a"-"z"])+([".","_","0"-"9","A"-"Z","a"-"z"])*)|((["."])+(["A"-"Z","a"-"z"]([".","_","0"-"9","A"-"Z","a"-"z"])*)?) >
+
+    |   <NOVAL: ~["a"-"z","0"-"9","-","\"","\n","\t","\r"," ","."]>
+        {VentanaErrores.getVenErrores().AgregarError("Lexico", "Caracter no valido: " + image, input_stream.line, input_stream.column);}
 }
 
 MORE :
@@ -170,6 +174,8 @@ NodoAST INSTR() :
     NodoAST i;
 }
 {
+    try{
+
         LOOKAHEAD(3) i = DEC_FUN()              {return i;} //ID = EXP | FUNCION
     |   LOOKAHEAD(2) i = CALL_FUN() (<PTCOMA>)? {return i;}
     |   LOOKAHEAD(2) i = ASIGNACION()           {return i;} //A[] = EXP
@@ -181,6 +187,17 @@ NodoAST INSTR() :
     |   i = SWITCH()                            {return i;}
     |   i = BREAK()                             {return i;}
     |   i = CONTINUE()                          {return i;}
+    
+    }catch(ParseException e){
+        //System.out.println(e.toString());
+        VentanaErrores.getVenErrores().AgregarError("Sintactico", "Se encontro " + e.currentToken.image, e.currentToken.beginLine + 1, e.currentToken.beginColumn + 1);
+        Token t;
+        do{
+            t = getNextToken();
+        }while(t.kind != PTCOMA && t.kind != LLAVEIZQ && t.kind != EOF);
+        if(t.kind == EOF){return null;}
+        return INSTR();
+    }
 }
 
 /**

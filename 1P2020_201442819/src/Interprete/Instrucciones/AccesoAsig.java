@@ -90,7 +90,7 @@ public class AccesoAsig extends Instruccion {
         } else if (o instanceof ListArit) {
             return this.AccesoSetList((ListArit) o, t, this.lista_index);
         }
-        
+
         return null;
     }
 
@@ -339,8 +339,16 @@ public class AccesoAsig extends Instruccion {
         //ESTA VALIDACIÓN CONVIERTE EL VECTOR EN LISTA EN CASO DE QUE EL NUEVO VALOR
         //SEA UNA LISTA
         if (nuevo_valor.isList()) {
+            
+            //SE VALIDA QUE SOLO TENGA UN ELEMENTO
+            if (nuevo_valor.getTamanio() > 1) {
+                return VentanaErrores.getVenErrores().AgregarError("Semantico", "Solo se pueden asignar de tamanio 1", this.getFila(), this.getColumna());
+            }
+
             ListArit lista = vector.vectorToList();
-            lista.SetPosicion(y - 1, nuevo_valor.copiar());
+            lista.SetPosicion(y - 1, ((Coleccion) nuevo_valor.Acceder(0)).copiar());
+            
+            //ESTO VALIDA QUE EL SETEO NO HAYA SIDO LLAMADA DESDE UN ARRAY
             if (!estoyEnArray) {
                 t.GuardarVariable(this.id.getId(), lista);
             } else {
@@ -398,9 +406,9 @@ public class AccesoAsig extends Instruccion {
             }
 
             Object estruct = col.Acceder(y - 1);
-            
-            if(lista_indices.get(i).isSimple()){
-                estruct = new ListArit((ValorArit)col.getValores().get(y-1));
+
+            if (lista_indices.get(i).isSimple()) {
+                estruct = new ListArit((ValorArit) col.getValores().get(y - 1));
             }
 
             if (!(estruct instanceof Coleccion)) {
@@ -455,9 +463,17 @@ public class AccesoAsig extends Instruccion {
             //ESTA VALIDACIÓN CONVIERTE EL VECTOR EN LISTA EN CASO DE QUE EL NUEVO VALOR
             //SEA UNA LISTA
             if (nuevo_valor.isList()) {
+
+                //SE VALIDA QUE SOLO TENGA UN ELEMENTO
+                if (nuevo_valor.getTamanio() > 1) {
+                    return VentanaErrores.getVenErrores().AgregarError("Semantico", "Solo se pueden asignar de tamanio 1", this.getFila(), this.getColumna());
+                }
+
                 ListArit li = ((VectorArit) col).vectorToList();
-                lista.SetPosicion(h - 1, nuevo_valor.copiar());
+                lista.SetPosicion(h - 1, li);
                 col = li;
+                col.SetPosicion(y - 1, ((Coleccion)nuevo_valor.Acceder(0)).copiar());
+                return null;
             }
 
             if (nuevo_valor.getTamanio() != 1) {
@@ -537,7 +553,7 @@ public class AccesoAsig extends Instruccion {
             this.AccesoSetVector((VectorArit) v, t, l_in, true);
             v = (Coleccion) array.Acceso(lista_index);
             //System.out.println("t:" + v.getTipo_dato());
-            array.SetPosicion(lista_index, ((VectorArit)v).meTransformeALista() ? ((VectorArit)v).vector_lista : v);
+            array.SetPosicion(lista_index, ((VectorArit) v).meTransformeALista() ? ((VectorArit) v).vector_lista : v);
         } else if (v.isList()) {
             this.AccesoSetList((ListArit) v, t, l_in);
         }

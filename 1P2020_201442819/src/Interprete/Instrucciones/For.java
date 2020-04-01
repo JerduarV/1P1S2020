@@ -61,55 +61,59 @@ public class For extends Instruccion {
             return VentanaErrores.getVenErrores().AgregarError("Semantico", "For: hubo un error en la expresión", this.getFila(), this.getColumna());
         }
 
-        Coleccion col = (Coleccion) valor;
+        Coleccion ColeccionAIterar = (Coleccion) valor;
 
-        for (int i = 0; i < col.getTamanio(); i++) {
-            Object v = col.getValores().get(i);
+        for (int i = 0; i < ColeccionAIterar.getTamanio(); i++) {
+            
+            Object iterador = ColeccionAIterar.getValores().get(i);
+            
             TablaSimbolos nueva = new TablaSimbolos(t);
             nueva.IncrementarDisplay();
 
-            if (col instanceof VectorArit) {
-                v = new VectorArit(col.getTipo_dato(), (ValorArit)v);
-            }else if(col instanceof ListArit){
-                v = ((ValorArit)v).getVal();
+            if (ColeccionAIterar instanceof VectorArit) {
+                iterador = new VectorArit(ColeccionAIterar.getTipo_dato(), (ValorArit)iterador);
+            }else if(ColeccionAIterar instanceof ListArit){
+                iterador = ((ValorArit)iterador).getVal();
             }
 
             //CAMBIO EL VALOR DE LA VARIABLE EN LA TABLA DE SÍMBOLOS
-            nueva.GuardarVariable(id, v);
+            nueva.GuardarVariable(id, iterador);
 
             Object result = this.Recorrer(nueva);
             
-            v = nueva.BusarVariable(id);
+            iterador = nueva.BusarVariable(id);
             
-            if(col instanceof VectorArit){
-                if(v instanceof ListArit){
-                    col = ((VectorArit)col).vectorToList();
+            if(ColeccionAIterar instanceof VectorArit){
+                if(iterador instanceof ListArit){
+                    ColeccionAIterar = ((VectorArit)ColeccionAIterar).vectorToList();
                     if(this.e instanceof Identificador){
-                        t.GuardarVariable(((Identificador)this.e).getId(), col);
+                        t.GuardarVariable(((Identificador)this.e).getId(), ColeccionAIterar);
                     }else if(this.e instanceof AccesoGet){
                         AccesoGet get = (AccesoGet)this.e;
-                        AccesoAsig asig = new AccesoAsig(get, new DumbExpresion((Coleccion)v, this.getFila(), this.getColumna()));
+                        AccesoAsig asig = new AccesoAsig(get, new DumbExpresion(ColeccionAIterar, this.getFila(), this.getColumna()));
                         Object res = asig.Ejecutar(t);
                         if(res instanceof ErrorCompi){
                             return res;
                         }
+                        ColeccionAIterar = (Coleccion)this.e.Resolver(t);
                     }
+                    iterador = ((Coleccion)((Coleccion)iterador).Acceder(0)).copiar();
                 }
-                col.SetPosicion(i, (Coleccion)v);
+                ColeccionAIterar.SetPosicion(i, (Coleccion)iterador);
             }
             
             //ESTO HACE POSIBLE EL CASTEO DE LAS ESTRUCTURAS Y SU ACTUALIZACIÓN
-            if(col instanceof ArrayArit){
-                if(v instanceof VectorArit){
-                    if(((VectorArit) v).meTransformeALista()){
-                        v = ((VectorArit)v).vector_lista;
+            if(ColeccionAIterar instanceof ArrayArit){
+                if(iterador instanceof VectorArit){
+                    if(((VectorArit) iterador).meTransformeALista()){
+                        iterador = ((VectorArit)iterador).vector_lista;
                     }
                 }
-                col.SetPosicion(i, (Coleccion)v);
+                ColeccionAIterar.SetPosicion(i, (Coleccion)iterador);
             }
             
-            if(col instanceof ListArit){
-                col.SetPosicion(i, (Coleccion)v);
+            if(ColeccionAIterar instanceof ListArit){
+                ColeccionAIterar.SetPosicion(i, (Coleccion)iterador);
             }
 
             if (result instanceof Break) {

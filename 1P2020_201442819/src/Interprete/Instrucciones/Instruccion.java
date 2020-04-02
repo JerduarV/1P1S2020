@@ -92,7 +92,6 @@ public abstract class Instruccion extends NodoAST {
                 if (i instanceof DecFuncion) {
                     continue;
                 }
-
                 Object result = i instanceof Instruccion ? ((Instruccion) i).Ejecutar(t) : ((Expresion) i).Resolver(t);
                 if (result instanceof Break || result instanceof Continue || result instanceof Retorno) {
                     return result;

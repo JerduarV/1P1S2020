@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Editor.VentanaErrores;
 import Interprete.ErrorCompi;
 import Interprete.Expresiones.Colecciones.Coleccion;
+import Interprete.Expresiones.Colecciones.VectorArit;
 import Interprete.Expresiones.Nativas.*;
 import Interprete.Expresiones.Nativas.Graficas.*;
 import Interprete.Instrucciones.DecFuncion;
@@ -96,10 +97,12 @@ public class CallFun extends Expresion {
         nueva.EntreEnFuncion();
 
         Object result = funcion.Ejecutar(nueva);
+        //SI VINO UN RETURN HAY QUE RETORNAR
         if (result instanceof Retorno) {
             return ((Retorno) result).getValor();
         }
-        return null;
+        
+        return new VectorArit(TipoPrimitivo.STRING, "null");
     }
 
     @Override

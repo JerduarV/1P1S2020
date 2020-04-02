@@ -5,6 +5,9 @@
  */
 package Utileria;
 
+import Interprete.Expresiones.Colecciones.VectorArit;
+import Interprete.Expresiones.TipoPrimitivo;
+
 /**
  * Clase que se usa en la Expresión retorno para sacar el resultado
  *
@@ -30,7 +33,7 @@ public class Retorno {
      * @return Objec con el valor
      */
     public Object getValor() {
-        return valor;
+        return valor == null ? new VectorArit(TipoPrimitivo.STRING, "null") : valor;
     }
 
 }
